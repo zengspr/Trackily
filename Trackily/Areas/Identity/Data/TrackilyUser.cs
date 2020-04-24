@@ -9,5 +9,13 @@ namespace Trackily.Areas.Identity.Data
     // Add profile data for application users by adding properties to the TrackilyUser class
     public class TrackilyUser : IdentityUser
     {
+        public enum UserType
+        {
+            Developer,
+            Manager
+        };
+
+        public UserType Type { get; set; }
+        public override string UserName { get; set; }
     }
 }

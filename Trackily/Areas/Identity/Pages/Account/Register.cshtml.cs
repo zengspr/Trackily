@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Trackily.Areas.Identity.Data;
@@ -46,6 +47,16 @@ namespace Trackily.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            [Required(ErrorMessage = "Please choose a username.")]
+            [StringLength(15, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+            [Display(Name = "Username")]
+            public string UserName { get; set; }
+
+            [Required(ErrorMessage = "Please select a role.")]
+            [EnumDataType(typeof(TrackilyUser.UserType))]
+            [Display(Name = "Role")]
+            public TrackilyUser.UserType UserType { get; set; }
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -75,7 +86,12 @@ namespace Trackily.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new TrackilyUser { UserName = Input.Email, Email = Input.Email};
+                var user = new TrackilyUser
+                {
+                    UserName = Input.UserName,
+                    Type = Input.UserType,
+                    Email = Input.Email
+                };
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
