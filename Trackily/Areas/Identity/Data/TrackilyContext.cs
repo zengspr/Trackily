@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Trackily.Areas.Identity.Data;
+using Trackily.Models.Domain;
 
 namespace Trackily.Data
 {
@@ -16,12 +17,16 @@ namespace Trackily.Data
         {
         }
 
+        public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<UserTicket> UserTickets { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            // Customize the ASP.NET Identity model and override the defaults if needed.
-            // For example, you can rename the ASP.NET Identity table names and more.
-            // Add your customizations after calling base.OnModelCreating(builder);
+
+            // Define composite primary key for User : Ticket relationship.
+            builder.Entity<UserTicket>()
+                        .HasKey(createKey => new { createKey.Id, createKey.TicketId });
         }
     }
 }

@@ -222,6 +222,69 @@ namespace Trackily.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Trackily.Models.Domain.Ticket", b =>
+                {
+                    b.Property<Guid>("TicketId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatorId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsReviewed")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RelatedFiles")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("TicketId");
+
+                    b.HasIndex("CreatorId");
+
+                    b.ToTable("Tickets");
+                });
+
+            modelBuilder.Entity("Trackily.Models.Domain.UserTicket", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TicketId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id", "TicketId");
+
+                    b.HasIndex("TicketId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserTickets");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -271,6 +334,26 @@ namespace Trackily.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Trackily.Models.Domain.Ticket", b =>
+                {
+                    b.HasOne("Trackily.Areas.Identity.Data.TrackilyUser", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId");
+                });
+
+            modelBuilder.Entity("Trackily.Models.Domain.UserTicket", b =>
+                {
+                    b.HasOne("Trackily.Models.Domain.Ticket", "Ticket")
+                        .WithMany("Assigned")
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Trackily.Areas.Identity.Data.TrackilyUser", "User")
+                        .WithMany("Assigned")
+                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

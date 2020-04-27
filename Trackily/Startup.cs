@@ -31,7 +31,7 @@ namespace Trackily
                 options.UseSqlServer(
                     Configuration.GetConnectionString("TrackilyContextConnection")));
 
-            services.AddDefaultIdentity<TrackilyUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<TrackilyUser>(options => options.SignIn.RequireConfirmedAccount = false)
                .AddEntityFrameworkStores<TrackilyContext>();
 
             if (_env.IsDevelopment())
