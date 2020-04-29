@@ -14,11 +14,6 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="TicketId" />
-            <div class="form-group">
-                <label asp-for="RelatedFiles" class="control-label"></label>
-                <input asp-for="RelatedFiles" class="form-control" />
-                <span asp-validation-for="RelatedFiles" class="text-danger"></span>
-            </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsReviewed" /> @Html.DisplayNameFor(model => model.IsReviewed)

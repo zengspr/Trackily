@@ -8,9 +8,11 @@ namespace Trackily.Models.Domain
 {
     public class UserTicket // Joining table to model many-to-many relationship b/w User : Ticket.
     {
-        public Guid Id { get; set; }
-        public TrackilyUser User { get; set; }
+        public Guid Id { get; set; }    // UserId.
         public Guid TicketId { get; set; }
+
+        // Relationships --------------------
+        public TrackilyUser User { get; set; }
         public Ticket Ticket { get; set; }
     }
 }

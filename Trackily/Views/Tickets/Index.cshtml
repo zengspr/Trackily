@@ -14,9 +14,6 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.RelatedFiles)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.IsReviewed)
             </th>
             <th>
@@ -46,9 +43,6 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.RelatedFiles)
-            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IsReviewed)
             </td>

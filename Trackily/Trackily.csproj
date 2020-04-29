@@ -8,6 +8,10 @@
   <ItemGroup>
     <Compile Remove="Data\Migrations\20200427190942_ChangeKeyOfTrackilyUser.cs" />
     <Compile Remove="Data\Migrations\20200427190942_ChangeKeyOfTrackilyUser.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200429155046_AddTicketTitleCreatorGuid.cs" />
+    <Compile Remove="Data\Migrations\20200429155046_AddTicketTitleCreatorGuid.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200429161330_AddTicketTitleCreatorId.cs" />
+    <Compile Remove="Data\Migrations\20200429161330_AddTicketTitleCreatorId.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

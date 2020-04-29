@@ -1,23 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Trackily.Areas.Identity.Data;
 using Trackily.Data;
 using Trackily.Models.Binding;
 using Trackily.Models.Domain;
+using Trackily.Models.View;
 
 namespace Trackily.Controllers
 {
     public class TicketsController : Controller
     {
         private readonly TrackilyContext _context;
+        private UserManager<TrackilyUser> _userManager;
 
-        public TicketsController(TrackilyContext context)
+        public TicketsController(TrackilyContext context, UserManager<TrackilyUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Tickets
@@ -34,14 +40,28 @@ namespace Trackily.Controllers
                 return NotFound();
             }
 
-            var ticket = await _context.Tickets
-                .FirstOrDefaultAsync(m => m.TicketId == id);
+            var ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.TicketId == id);
             if (ticket == null)
             {
                 return NotFound();
             }
 
-            return View(ticket);
+            var viewModel = new DetailsTicketViewModel
+            {
+                TicketId = ticket.TicketId,
+                Title = ticket.Title,
+                CreatedDate = (DateTime)ticket.CreatedDate,
+                UpdatedDate = (DateTime)ticket.UpdatedDate,
+                CreatorUserName = ticket.CreatorUserName,
+                IsApproved = ticket.IsApproved,
+                IsReviewed = ticket.IsReviewed,
+                // TODO: Figure out how to display assigned usernames.
+                Type = ticket.Type,
+                Status = ticket.Status,
+                Priority = ticket.Priority
+            };
+
+            return View(viewModel);
         }
 
         // GET: Tickets/Create
@@ -59,20 +79,27 @@ namespace Trackily.Controllers
         {
             if (ModelState.IsValid)
             {
-                Ticket ticket = new Ticket();
+                var ticket = new Ticket();
+                ticket.Title = Input.Title;
+                // Set the user making the request as the Creator of the ticket.
+                var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+                ticket.Creator = currentUser;
+                ticket.CreatorUserName = currentUser.UserName; // TODO: Convert to DI service? Create not satisfying SRP.
+
                 // Create UserTicket objects and add them to the Ticket's Assigned property.
-                foreach (string assignedUserName in Input.Assigned) // Assume that the usernames in Input.Assigned exist. Validated by TicketBinding model.
+                // Assume that the provided usernames exist in the user database - validated by TicketBinding model.
+                string[] usernames = Input.Assigned.Split(", "); // TODO: Make this less fragile - improve usability.
+                foreach (string username in usernames) 
                 {   
-                    var user = await _context.Users.SingleAsync(u => u.UserName == assignedUserName);
-                    UserTicket assignedUser = new UserTicket
+                    var user = await _context.Users.SingleAsync(u => u.UserName == username);
+                    var assignUser = new UserTicket
                     {
                         Id = Guid.Parse(user.Id),
                         User = user,
                         TicketId = ticket.TicketId,
-                        Ticket = ticket,
-
+                        Ticket = ticket
                     };
-                    ticket.Assigned.Add(assignedUser);
+                    ticket.Assigned.Add(assignUser);
                 }
 
                 _context.Add(ticket);
@@ -102,20 +129,20 @@ namespace Trackily.Controllers
         // The Edit method receives a Ticket's Id as part of a route parameter.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Title,Assigned,Type,Priority,IsReviewed,IsApproved,Status")] EditTicketBinding ticket)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Title,Assigned,Type,Priority,IsReviewed,IsApproved,Status")] EditTicketBinding Input)
         {
-            if (id == null) { return NotFound(); }
-
+            // Need to update the given Ticket's properties but also the Assigned property on any Users who have been
+            // assigned to the Ticket. See EF Core in Action Ch3. Also remember to update the UpdatedDate.
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(ticket);
+                    _context.Update(Input);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TicketExists(ticket.TicketId))
+                    if (!TicketExists(id))
                     {
                         return NotFound();
                     }
@@ -126,7 +153,7 @@ namespace Trackily.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(ticket);
+            return View(Input);
         }
 
         // GET: Tickets/Delete/5

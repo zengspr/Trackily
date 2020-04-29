@@ -8,11 +8,11 @@ using Trackily.Models.Domain;
 
 namespace Trackily.Models.Binding
 {
-	public class CreateTicketBinding // TODO: Should TicketId be a property of the binding model? 
+	public class CreateTicketBinding 
     {
 		public string Title { get; set; }
 		// Create a custom attribute to check that each username in the input list exists in the database.
-		public List<string> Assigned { get; set; }	// List of Developers assigned to the Ticket.
+		public string Assigned { get; set; }	// List of Developers assigned to the Ticket.
 		public Ticket.TicketType Type { get; set; }
 		public Ticket.TicketPriority Priority { get; set; }
     }

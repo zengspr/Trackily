@@ -28,6 +28,7 @@ namespace Trackily.Models.Domain
 			IsReviewed = false;
 			IsApproved = false;
 			Status = TicketStatus.Awaiting;
+			Assigned = new List<UserTicket>();
 		}
     }
 }
