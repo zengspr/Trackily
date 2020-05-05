@@ -98,6 +98,8 @@ namespace Trackily.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
+                    // TODO: Fix null value issue with GenerateEmailToken method. Might be because user's Id is null,
+                    //       since we are using UserId as the PK now.
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(

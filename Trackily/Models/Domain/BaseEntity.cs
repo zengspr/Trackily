@@ -10,7 +10,6 @@ namespace Trackily.Models.Domain
     {
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
-        public string CreatorUserName { get; set; }
         public TrackilyUser Creator { get; set; }
         public string Title { get; set; }
 

@@ -12,6 +12,24 @@
     <Compile Remove="Data\Migrations\20200429155046_AddTicketTitleCreatorGuid.Designer.cs" />
     <Compile Remove="Data\Migrations\20200429161330_AddTicketTitleCreatorId.cs" />
     <Compile Remove="Data\Migrations\20200429161330_AddTicketTitleCreatorId.Designer.cs" />
+    <Compile Remove="Migrations\20200430155756_Initial.cs" />
+    <Compile Remove="Migrations\20200430155756_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200430160042_Initial.cs" />
+    <Compile Remove="Migrations\20200430160042_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200430160926_Initial.cs" />
+    <Compile Remove="Migrations\20200430160926_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200430161224_Initial.cs" />
+    <Compile Remove="Migrations\20200430161224_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200430161330_Initial.cs" />
+    <Compile Remove="Migrations\20200430161330_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200430161608_Initial.cs" />
+    <Compile Remove="Migrations\20200430161608_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200430162113_Initial.cs" />
+    <Compile Remove="Migrations\20200430162113_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200504160028_Initial.cs" />
+    <Compile Remove="Migrations\20200504160028_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200504161058_UpdateTrackilyUserKey.cs" />
+    <Compile Remove="Migrations\20200504161058_UpdateTrackilyUserKey.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

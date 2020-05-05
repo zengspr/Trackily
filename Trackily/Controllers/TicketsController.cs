@@ -11,25 +11,34 @@ using Trackily.Areas.Identity.Data;
 using Trackily.Data;
 using Trackily.Models.Binding;
 using Trackily.Models.Domain;
+using Trackily.Models.Services;
 using Trackily.Models.View;
+using Trackily.Services.DataAccess;
 
 namespace Trackily.Controllers
 {
     public class TicketsController : Controller
     {
         private readonly TrackilyContext _context;
-        private UserManager<TrackilyUser> _userManager;
+        private readonly UserManager<TrackilyUser> _userManager;
+        private readonly TicketService _ticketService;
+        private readonly DbService _dbService;
 
-        public TicketsController(TrackilyContext context, UserManager<TrackilyUser> userManager)
+        public TicketsController(TrackilyContext context,
+                                 UserManager<TrackilyUser> userManager,
+                                 TicketService ticketService,
+                                 DbService dbService)
         {
             _context = context;
             _userManager = userManager;
+            _ticketService = ticketService;
+            _dbService = dbService;
         }
 
         // GET: Tickets
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Tickets.ToListAsync()); // List of Ticket objects - can get Id from them.
+            return View(await _context.Tickets.ToListAsync()); 
         }
 
         // GET: Tickets/Details/5
@@ -40,27 +49,13 @@ namespace Trackily.Controllers
                 return NotFound();
             }
 
-            var ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.TicketId == id);
+            var ticket = await _dbService.GetTicket(id);
             if (ticket == null)
             {
                 return NotFound();
             }
 
-            var viewModel = new DetailsTicketViewModel
-            {
-                TicketId = ticket.TicketId,
-                Title = ticket.Title,
-                CreatedDate = (DateTime)ticket.CreatedDate,
-                UpdatedDate = (DateTime)ticket.UpdatedDate,
-                CreatorUserName = ticket.CreatorUserName,
-                IsApproved = ticket.IsApproved,
-                IsReviewed = ticket.IsReviewed,
-                // TODO: Figure out how to display assigned usernames.
-                Type = ticket.Type,
-                Status = ticket.Status,
-                Priority = ticket.Priority
-            };
-
+            var viewModel = await _ticketService.DetailsTicketViewModel(ticket);
             return View(viewModel);
         }
 
@@ -79,31 +74,7 @@ namespace Trackily.Controllers
         {
             if (ModelState.IsValid)
             {
-                var ticket = new Ticket();
-                ticket.Title = Input.Title;
-                // Set the user making the request as the Creator of the ticket.
-                var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-                ticket.Creator = currentUser;
-                ticket.CreatorUserName = currentUser.UserName; // TODO: Convert to DI service? Create not satisfying SRP.
-
-                // Create UserTicket objects and add them to the Ticket's Assigned property.
-                // Assume that the provided usernames exist in the user database - validated by TicketBinding model.
-                string[] usernames = Input.Assigned.Split(", "); // TODO: Make this less fragile - improve usability.
-                foreach (string username in usernames) 
-                {   
-                    var user = await _context.Users.SingleAsync(u => u.UserName == username);
-                    var assignUser = new UserTicket
-                    {
-                        Id = Guid.Parse(user.Id),
-                        User = user,
-                        TicketId = ticket.TicketId,
-                        Ticket = ticket
-                    };
-                    ticket.Assigned.Add(assignUser);
-                }
-
-                _context.Add(ticket);
-                await _context.SaveChangesAsync();
+                await _ticketService.CreateTicket(Input, HttpContext);
                 return RedirectToAction(nameof(Index));
             }
             return View(Input);
@@ -112,17 +83,20 @@ namespace Trackily.Controllers
         // GET: Tickets/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
+            // TODO: Show each assigned developer of the given ticket as a separate text box. 
             if (id == null)
             {
                 return NotFound();
             }
 
-            var ticket = await _context.Tickets.FindAsync(id);
+            var ticket = await _dbService.GetTicket(id);
             if (ticket == null)
             {
                 return NotFound();
             }
-            return View(ticket);
+
+            var viewModel = await _ticketService.EditTicketViewModel(ticket);
+            return View(viewModel);
         }
 
         // POST: Tickets/Edit/5
@@ -133,26 +107,25 @@ namespace Trackily.Controllers
         {
             // Need to update the given Ticket's properties but also the Assigned property on any Users who have been
             // assigned to the Ticket. See EF Core in Action Ch3. Also remember to update the UpdatedDate.
+            // TODO: Add error handling.
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
-                try
+                var ticket = await _dbService.GetTicket(id); 
+                if (ticket == null)
                 {
-                    _context.Update(Input);
-                    await _context.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TicketExists(id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+
+                await _ticketService.EditTicket(ticket, Input);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(Input);
         }
 

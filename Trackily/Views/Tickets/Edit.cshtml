@@ -1,4 +1,4 @@
-﻿@model Trackily.Models.Domain.Ticket
+﻿@model Trackily.Models.View.EditTicketViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -14,15 +14,18 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="TicketId" />
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsReviewed" /> @Html.DisplayNameFor(model => model.IsReviewed)
-                </label>
+            <div class="form-group">
+                <label asp-for="CreatedDate" class="control-label"></label>
+                <p>@Html.DisplayFor(model => model.CreatedDate)</p>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsApproved" /> @Html.DisplayNameFor(model => model.IsApproved)
-                </label>
+            <div class="form-group">
+                <label asp-for="UpdatedDate" class="control-label"></label>
+                <p>@Html.DisplayFor(model => model.UpdatedDate)</p>
+            </div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Type" class="control-label"></label>
@@ -40,19 +43,22 @@
                 <span asp-validation-for="Priority" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
+                <label asp-for="Assigned" class="control-label"></label>
+                @foreach (var username in Model.Assigned)
+                { 
+                    <p>@username</p> 
+                }
+                <span asp-validation-for="Assigned" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="UpdatedDate" class="control-label"></label>
-                <input asp-for="UpdatedDate" class="form-control" />
-                <span asp-validation-for="UpdatedDate" class="text-danger"></span>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsReviewed" /> @Html.DisplayNameFor(model => model.IsReviewed)
+                </label>
             </div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsApproved" /> @Html.DisplayNameFor(model => model.IsApproved)
+                </label>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

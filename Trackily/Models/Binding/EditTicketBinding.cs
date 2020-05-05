@@ -8,7 +8,7 @@ using Trackily.Models.Domain;
 namespace Trackily.Models.Binding
 {
     public class EditTicketBinding : CreateTicketBinding
-    {
+    {   // TODO: Add validation to binding model properties.
         public bool IsReviewed { get; set; }    
         public bool IsApproved { get; set; }
         public Ticket.TicketStatus Status { get; set; }

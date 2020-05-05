@@ -8,6 +8,9 @@ using Microsoft.Extensions.Hosting;
 using System;
 using Trackily.Areas.Identity.Data;
 using Trackily.Data;
+using Trackily.Models.Services;
+using Trackily.Services.Business;
+using Trackily.Services.DataAccess;
 
 namespace Trackily
 {
@@ -48,6 +51,12 @@ namespace Trackily
                     options.Lockout.AllowedForNewUsers = false;
                 });
             }
+
+            // Custom services.
+            services.AddScoped<DbService>();
+            services.AddScoped<TicketService>();
+            services.AddScoped<UserService>();
+            services.AddScoped<UserTicketService>();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
