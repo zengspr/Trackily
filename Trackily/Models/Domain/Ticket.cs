@@ -16,8 +16,8 @@ namespace Trackily.Models.Domain
 		public bool IsApproved { get; set; }	// Has the Ticket been approved for action by a Manager?
 
 		public enum TicketType { Issue, Feature }
-		public enum TicketStatus { Unapproved, Awaiting, Approved }
-		public enum TicketPriority { Low, Normal, High }
+		public enum TicketStatus { Awaiting, Unapproved, Approved }
+		public enum TicketPriority { Normal, Low, High }
 		public TicketType Type { get; set; }
 		public TicketStatus Status { get; set; }
 		public TicketPriority Priority { get; set; }

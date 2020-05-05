@@ -33,9 +33,21 @@ namespace Trackily.Services.DataAccess
             return user;
         }
 
-        public async Task<Ticket> GetTicket(Guid? ticketId)
+        public async Task<Ticket> GetTicket(Guid? ticketId, string include = "none")
         {
-            var ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.TicketId == ticketId);
+            Ticket ticket;
+            if (include == "assigned")
+            {
+                ticket = await _context.Tickets
+                    .Include(a => a.Assigned)   // Without Include the Assigned relationships are not loaded by EF Core.
+                        .ThenInclude(a => a.User)   // Without ThenInclude the User property of UserTicket is not loaded.
+                    .SingleOrDefaultAsync(t => t.TicketId == ticketId);
+            }
+            else
+            {
+                ticket = await _context.Tickets
+                    .SingleOrDefaultAsync(t => t.TicketId == ticketId);
+            }
             return ticket;
         }
 

@@ -43,6 +43,10 @@ namespace Trackily.Models.Services
             foreach (string username in usernames)
             {
                 var user = await _dbService.GetUser(username);
+                if (user == null)
+                {
+                    throw new ArgumentNullException();
+                }
                 var assignUser = new UserTicket
                 {
                     Id = user.Id,

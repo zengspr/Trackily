@@ -49,7 +49,7 @@ namespace Trackily.Controllers
                 return NotFound();
             }
 
-            var ticket = await _dbService.GetTicket(id);
+            var ticket = await _dbService.GetTicket(id, "assigned");
             if (ticket == null)
             {
                 return NotFound();
@@ -89,7 +89,7 @@ namespace Trackily.Controllers
                 return NotFound();
             }
 
-            var ticket = await _dbService.GetTicket(id);
+            var ticket = await _dbService.GetTicket(id, "assigned");
             if (ticket == null)
             {
                 return NotFound();
