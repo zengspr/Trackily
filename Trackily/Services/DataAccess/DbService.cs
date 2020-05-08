@@ -68,42 +68,6 @@ namespace Trackily.Services.DataAccess
         {
             return user.Id;
         }
-
-        //// Code adapted from https://stackoverflow.com/a/51261289.
-        //public void UpdateManyToMany<TDependentEntity, TKey>(IEnumerable<TDependentEntity> dbEntries,
-        //                                                     IEnumerable<TDependentEntity> updatedEntries,
-        //                                                     Func<TDependentEntity, TKey> keyRetrievalFunction)
-        //                                                     where TDependentEntity : class
-        //{
-        //    var oldItems = dbEntries.ToList();
-        //    var newItems = updatedEntries.ToList();
-        //    var toBeRemoved = oldItems.LeftComplementRight(newItems, keyRetrievalFunction);
-        //    var toBeAdded = newItems.LeftComplementRight(oldItems, keyRetrievalFunction);
-        //    var toBeUpdated = oldItems.Intersect(newItems, keyRetrievalFunction);
-
-        //    _context.Set<TDependentEntity>().RemoveRange(toBeRemoved);
-        //    _context.Set<TDependentEntity>().AddRange(toBeAdded);
-        //    foreach (var entity in toBeUpdated)
-        //    {
-        //        var changed = newItems.Single(i => keyRetrievalFunction.Invoke(i).Equals(keyRetrievalFunction.Invoke(entity)));
-        //        _context.Entry(entity).CurrentValues.SetValues(changed);
-        //    }
-        //}
-
-        //public void UpdateAssigned<TDependentEntity, TKey>(ICollection<TrackilyUser> existing,
-        //                                                   IEnumerable<TDependentEntity> updated,
-        //                                                   Func<TDependentEntity, TKey> keyRetrievalFunction)
-        //                                                   where TDependentEntity : class
-        //{
-        //    var oldItems = dbEntries.ToList();
-        //    var newItems = updatedEntries.ToList();
-        //    var toBeRemoved = oldItems.LeftComplementRight(newItems, keyRetrievalFunction);
-        //    var toBeAdded = newItems.LeftComplementRight(oldItems, keyRetrievalFunction);
-        //    var toBeUpdated = oldItems.Intersect(newItems, keyRetrievalFunction);
-
-        //    _context.Set<TDependentEntity>().RemoveRange(toBeRemoved);
-        //    _context.Set<TDependentEntity>().AddRange(toBeAdded);
-        //}
     }
 }
 

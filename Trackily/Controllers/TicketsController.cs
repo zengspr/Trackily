@@ -13,6 +13,7 @@ using Trackily.Models.Binding;
 using Trackily.Models.Domain;
 using Trackily.Models.Services;
 using Trackily.Models.View;
+using Trackily.Services.Business;
 using Trackily.Services.DataAccess;
 
 namespace Trackily.Controllers
@@ -23,16 +24,22 @@ namespace Trackily.Controllers
         private readonly UserManager<TrackilyUser> _userManager;
         private readonly TicketService _ticketService;
         private readonly DbService _dbService;
+        private readonly UserTicketService _userTicketService;
+        private readonly UserService _userService;
 
         public TicketsController(TrackilyContext context,
                                  UserManager<TrackilyUser> userManager,
                                  TicketService ticketService,
-                                 DbService dbService)
+                                 DbService dbService,
+                                 UserTicketService userTicketService,
+                                 UserService userService)
         {
             _context = context;
             _userManager = userManager;
             _ticketService = ticketService;
             _dbService = dbService;
+            _userTicketService = userTicketService;
+            _userService = userService;
         }
 
         // GET: Tickets
@@ -83,7 +90,6 @@ namespace Trackily.Controllers
         // GET: Tickets/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            // TODO: Show each assigned developer of the given ticket as a separate text box. 
             if (id == null)
             {
                 return NotFound();
@@ -101,16 +107,22 @@ namespace Trackily.Controllers
 
         // POST: Tickets/Edit/5
         // The Edit method receives a Ticket's Id as part of a route parameter.
+        // TODO: Add behaviour with POSTed RemoveAssigned information to remove those users from Ticket.
+        //       Also, behaviour for adding a new user to Assigned.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Title,Assigned,Type,Priority,IsReviewed,IsApproved,Status")] EditTicketBinding Input)
+        public async Task<IActionResult> Edit(Guid id, 
+            [Bind("Title,Type,Priority,IsReviewed,IsApproved,Status,RemoveAssigned,AddAssigned")] EditTicketBinding Input)
         {
-            // Need to update the given Ticket's properties but also the Assigned property on any Users who have been
-            // assigned to the Ticket. See EF Core in Action Ch3. Also remember to update the UpdatedDate.
-            // TODO: Add error handling.
             if (id == null)
             {
                 return NotFound();
+            }
+
+            var alreadyAssigned = await _userService.UsernameAlreadyAssigned(id, Input.AddAssigned);
+            if (alreadyAssigned)
+            {
+
             }
 
             if (ModelState.IsValid)
@@ -158,9 +170,25 @@ namespace Trackily.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TicketExists(Guid id)
-        {
-            return _context.Tickets.Any(e => e.TicketId == id);
-        }
+        // TODO: Learn AJAX & Unobtrusive JQuery and use them to implement client-side validation for 
+        //       assigning new users to Tickets.
+
+        //[HttpPost, HttpGet]
+        //public async Task<IActionResult> ValidateAssigned(Guid ticketId, string username)
+        //{
+        //    var alreadyAssigned = await UsernameAlreadyAssigned(ticketId, username);
+        //    if (alreadyAssigned)
+        //    {
+        //        return Json("User is already assigned to the Ticket.");
+        //    }
+
+        //    var notExists = await UsernameNotExists(username);
+        //    if (notExists)
+        //    {
+        //        return Json("Username does not exist.");
+        //    }
+
+        //    return Json(true);
+        //}
     }
 }

@@ -26,7 +26,6 @@ namespace Trackily.Models.View
         [Display(Name = "Creator")]
         public string CreatorUserName { get; set; }
 
-        // TODO: Update Booleans to appear as "Yes" / "No" instead of the default check boxes.
         [Display(Name = "Mark as Reviewed")]
         public bool IsReviewed { get; set; }
 
@@ -39,5 +38,7 @@ namespace Trackily.Models.View
         public TicketType Type { get; set; }
         public TicketStatus Status { get; set; }
         public TicketPriority Priority { get; set; }
+
+        public Dictionary<string, bool> RemoveAssigned { get; set; }
     }
 }

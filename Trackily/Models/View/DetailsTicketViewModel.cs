@@ -32,7 +32,7 @@ namespace Trackily.Models.View
         public bool IsApproved { get; set; }
 
         [Display(Name = "Assigned Developers")]
-        public ICollection<UserTicket> Assigned { get; set; }
+        public List<string> Assigned { get; set; }
 
         public TicketType Type { get; set; }
         public TicketStatus Status { get; set; }

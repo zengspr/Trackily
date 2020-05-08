@@ -18,7 +18,7 @@ namespace Trackily.Areas.Identity.Data
         };
 
         public UserType Type { get; set; }
-        public override string UserName { get; set; } // TODO: Update to enforce uniqueness.
+        public override string UserName { get; set; }
         public ICollection<UserTicket> Assigned { get; set; } // Tickets to which the User has been assigned.
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,15 +32,12 @@ namespace Trackily.Models.Services
         }
 
          public async Task CreateTicket(CreateTicketBinding input, HttpContext request)
-            // TODO: Add exceptions / errors.
-            // TODO: Check that assigning multiple users to a ticket works and that the users are referenced
-            //       by UserId in the UserTicket object. 
         {
             var ticket = new Ticket();
             ticket.Title = input.Title;
             ticket.Creator = await _userService.GetUser(request);
 
-            string[] usernames = input.Assigned.Split(", "); // TODO: Improve this. 
+            string[] usernames = input.Assigned.Split(", "); // TODO: Improve this (very fragile).
             foreach (string username in usernames)
             {
                 var user = await _dbService.GetUser(username);
@@ -72,10 +70,7 @@ namespace Trackily.Models.Services
                 CreatorUserName = await _dbService.GetCreatorUserName(ticket),
                 IsApproved = ticket.IsApproved,
                 IsReviewed = ticket.IsReviewed,
-                // TODO: Figure out how to display assigned usernames. Can get all user IDs associated with the 
-                //       ticket using smth like ticket.Assigned.Where(t => TicketId == id) and then select all users
-                //       whose id is in the collection, but seems inefficient. Could directly store usernames in the
-                //       UserTicket entity?
+                Assigned = _userTicketService.UserTicketToNames(ticket.Assigned),
                 Type = ticket.Type,
                 Status = ticket.Status,
                 Priority = ticket.Priority
@@ -84,7 +79,7 @@ namespace Trackily.Models.Services
         }
 
         // Creates a view model for the Edit ticket page using a ticket queried from the database.
-        public async Task<EditTicketViewModel> EditTicketViewModel(Ticket ticket)
+        public async Task<EditTicketViewModel> EditTicketViewModel(Ticket ticket, string flagUser = null)
         {
             var viewModel = new EditTicketViewModel
             {
@@ -97,19 +92,29 @@ namespace Trackily.Models.Services
                 Type = ticket.Type,
                 Status = ticket.Status,
                 Priority = ticket.Priority,
-                Assigned = _userTicketService.UserTicketToNames(ticket.Assigned)
-                // TODO: Edit view still only shows one assigned user, even though two were assigned during 
-                //       ticket creation. Might be an issue with the Ticket Create method.
+                Assigned = _userTicketService.UserTicketToNames(ticket.Assigned),
+                RemoveAssigned = new Dictionary<string, bool>()
             };
+
+            foreach (string username in viewModel.Assigned)
+            {
+                if (username == flagUser)
+                {
+                    viewModel.RemoveAssigned[username] = true;
+                }
+                else
+                {
+                    viewModel.RemoveAssigned[username] = false;
+                }
+            }
 
             return viewModel;
         }
 
         public async Task EditTicket(Ticket ticket, EditTicketBinding Input)
         {
-            // Two cases: new users are added to Assigned, or some existing users are removed from Assigned
-            // (or both).
             ticket.UpdatedDate = DateTime.Now;
+
         }
     }
 }

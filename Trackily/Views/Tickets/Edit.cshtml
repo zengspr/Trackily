@@ -1,4 +1,5 @@
 ﻿@model Trackily.Models.View.EditTicketViewModel
+@using static Trackily.Models.Domain.Ticket
 
 @{
     ViewData["Title"] = "Edit";
@@ -15,12 +16,10 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="TicketId" />
             <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <p>@Html.DisplayFor(model => model.CreatedDate)</p>
+                <p><label asp-for="CreatedDate" class="control-label"></label>: @Html.DisplayFor(model => model.CreatedDate)</p>
             </div>
             <div class="form-group">
-                <label asp-for="UpdatedDate" class="control-label"></label>
-                <p>@Html.DisplayFor(model => model.UpdatedDate)</p>
+                <p><label asp-for="UpdatedDate" class="control-label"></label>: @Html.DisplayFor(model => model.UpdatedDate)</p>
             </div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
@@ -29,39 +28,57 @@
             </div>
             <div class="form-group">
                 <label asp-for="Type" class="control-label"></label>
-                <select asp-for="Type" class="form-control"></select>
+                <select asp-for="Type" asp-items="Html.GetEnumSelectList<TicketType>()" class="form-control"></select>
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control"></select>
+                <select asp-for="Status" asp-items="Html.GetEnumSelectList<TicketStatus>()" class="form-control"></select>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Priority" class="control-label"></label>
-                <select asp-for="Priority" class="form-control"></select>
+                <select asp-for="Priority" asp-items="Html.GetEnumSelectList<TicketPriority>()" class="form-control"></select>
                 <span asp-validation-for="Priority" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Assigned" class="control-label"></label>
-                @foreach (var username in Model.Assigned)
-                { 
-                    <p>@username</p> 
+                <label class="control-label" asp-for="Assigned">Remove assigned users</label>
+                @foreach (var key in Model.RemoveAssigned.Keys)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="RemoveAssigned[key]" />
+                        <label class="form-check-label" asp-for="@key">
+                            @key
+                        </label>
+                    </div>
                 }
-                <span asp-validation-for="Assigned" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsReviewed" /> @Html.DisplayNameFor(model => model.IsReviewed)
-                </label>
+            @* Implement method for adding new users to Assigned. Need to give the binding model list of username strings. *@
+            <div class="form-group">
+                <label class="control-label">Assign users</label>
+                <table id="formTable">
+                    <tbody>
+                        <tr>
+                            <td><input type="text" name="AddAssigned" placeholder="username" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a style="margin: 10px 0;" href="javascript:addRow();">Add</a>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsApproved" /> @Html.DisplayNameFor(model => model.IsApproved)
-                </label>
+
+            <div class="form-group">
+                <label asp-for="IsReviewed" class="control-label"></label>
+                <input asp-for="IsReviewed" />
+
+            </div>
+            <div class="form-group">
+                <label asp-for="IsApproved" class="control-label"></label>
+                <input asp-for="IsApproved" />
+
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
+
             </div>
         </form>
     </div>
@@ -73,4 +90,13 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        function addRow() {
+            //copy the table row and clear the value of the input, then append the row to the end of the table
+            $("#formTable tbody tr:first").clone().find("input").each(function () {
+                $(this).val('');
+            }).end().appendTo("#formTable");
+        }
+    </script>
 }
