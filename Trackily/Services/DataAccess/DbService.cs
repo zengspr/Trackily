@@ -53,8 +53,8 @@ namespace Trackily.Services.DataAccess
 
         public async Task<string> GetCreatorUserName(Ticket ticket)
         {
-            var userTicket = await _context.UserTickets.FirstOrDefaultAsync(ut => ut.TicketId == ticket.TicketId);
-            var creator = await GetUser(userTicket.Id);
+            var reloadTicket = await _context.Tickets.Include(t => t.Creator).SingleAsync(t => t.TicketId == ticket.TicketId);
+            var creator = reloadTicket.Creator;
             return creator.UserName;
         }
 
@@ -66,6 +66,12 @@ namespace Trackily.Services.DataAccess
 
         public Guid GetKey(TrackilyUser user)
         {
+            return user.Id;
+        }
+
+        public async Task<Guid> GetKey(string username)
+        {
+            var user = await GetUser(username);
             return user.Id;
         }
     }

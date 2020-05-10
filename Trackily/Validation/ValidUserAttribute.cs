@@ -14,14 +14,19 @@ namespace Trackily.Validation
         {
             var input = (EditTicketBinding)validationContext.ObjectInstance;
             var context = (TrackilyContext)validationContext.GetService(typeof(TrackilyContext));
-
-            if (input.AddAssigned == null)
-            {
-                return ValidationResult.Success;
-            }
+            int countEmpty = 0;
 
             foreach (string username in input.AddAssigned)
             {
+                if (username == null)
+                {
+                    countEmpty++;
+                    if (countEmpty == input.AddAssigned.Length) // Not assigning any users to the ticket.
+                    {
+                        return ValidationResult.Success;
+                    }
+                }
+
                 // Check whether username exists in the database.
                 if (!context.Users.Any(u => u.UserName == username))
                 {

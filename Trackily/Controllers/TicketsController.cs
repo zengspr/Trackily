@@ -116,7 +116,7 @@ namespace Trackily.Controllers
 
             if (ModelState.IsValid)
             {
-                var ticket = await _dbService.GetTicket(id); 
+                var ticket = await _dbService.GetTicket(id, "assigned"); 
                 if (ticket == null)
                 {
                     return NotFound();
@@ -124,15 +124,13 @@ namespace Trackily.Controllers
 
                 await _ticketService.EditTicket(ticket, input);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Edit", new { id = id });
             }
 
             // Validation errors have occurred.
             IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
             var errorTicket = await _dbService.GetTicket(id, "assigned");
             var viewModel = await _ticketService.EditTicketViewModel(ticket: errorTicket, errors: allErrors);
-
-            
 
             return View(viewModel);
         }

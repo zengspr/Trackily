@@ -123,10 +123,44 @@ namespace Trackily.Models.Services
             return viewModel;
         }
 
-        public async Task EditTicket(Ticket ticket, EditTicketBinding Input)
+        public async Task EditTicket(Ticket ticket, EditTicketBinding input)
         {
             ticket.UpdatedDate = DateTime.Now;
+            ticket.IsApproved = input.IsApproved;
+            ticket.IsReviewed = input.IsReviewed;
+            ticket.Type = input.Type;
+            ticket.Status = input.Status;
+            ticket.Priority = input.Priority;
+            ticket.Title = input.Title;
 
+            if (input.RemoveAssigned != null)
+            {
+                foreach (KeyValuePair<string, bool> entry in input.RemoveAssigned)
+                {
+                    if (entry.Value == true)
+                    {
+                        var userId = await _dbService.GetKey(entry.Key);
+                        var userTicket = await _userTicketService.GetUserTicket(ticket.TicketId, userId);
+                        ticket.Assigned.Remove(userTicket);
+                        _context.UserTickets.Remove(userTicket);
+                    }
+                }
+            }
+
+            foreach (string newAssign in input.AddAssigned)
+            {
+                if (newAssign != null)
+                {
+                    var userTicket = new UserTicket
+                    {
+                        Id = await _dbService.GetKey(newAssign),
+                        TicketId = ticket.TicketId,
+                        User = await _dbService.GetUser(newAssign),
+                        Ticket = ticket
+                    };
+                    ticket.Assigned.Add(userTicket);
+                }
+            }
         }
     }
 }
