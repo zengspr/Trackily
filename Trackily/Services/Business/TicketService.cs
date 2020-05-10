@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
@@ -79,7 +80,9 @@ namespace Trackily.Models.Services
         }
 
         // Creates a view model for the Edit ticket page using a ticket queried from the database.
-        public async Task<EditTicketViewModel> EditTicketViewModel(Ticket ticket, string flagUser = null)
+        public async Task<EditTicketViewModel> EditTicketViewModel(Ticket ticket, 
+                                                                   string flagUser = null,
+                                                                   IEnumerable<ModelError> errors = null)
         {
             var viewModel = new EditTicketViewModel
             {
@@ -93,7 +96,8 @@ namespace Trackily.Models.Services
                 Status = ticket.Status,
                 Priority = ticket.Priority,
                 Assigned = _userTicketService.UserTicketToNames(ticket.Assigned),
-                RemoveAssigned = new Dictionary<string, bool>()
+                RemoveAssigned = new Dictionary<string, bool>(),
+                Errors = new List<string>()
             };
 
             foreach (string username in viewModel.Assigned)
@@ -108,6 +112,14 @@ namespace Trackily.Models.Services
                 }
             }
 
+            // TODO: How to add model errors to the view model?
+            if (errors != null) // Add the errors in the binding model to the view model.
+            {
+                foreach (var error in errors)
+                {
+                    viewModel.Errors.Add(error.ErrorMessage);
+                }
+            }
             return viewModel;
         }
 

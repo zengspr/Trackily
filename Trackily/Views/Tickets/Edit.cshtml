@@ -47,38 +47,41 @@
                 {
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" asp-for="RemoveAssigned[key]" />
-                        <label class="form-check-label" asp-for="@key">
-                            @key
-                        </label>
+                        <label class="form-check-label" asp-for="@key">@key</label>
                     </div>
                 }
             </div>
-            @* Implement method for adding new users to Assigned. Need to give the binding model list of username strings. *@
             <div class="form-group">
                 <label class="control-label">Assign users</label>
                 <table id="formTable">
                     <tbody>
                         <tr>
-                            <td><input type="text" name="AddAssigned" placeholder="username" /></td>
+                            <td><input asp-for="AddAssigned" class="form-control" placeholder="username" /></td>
                         </tr>
                     </tbody>
                 </table>
-                <a style="margin: 10px 0;" href="javascript:addRow();">Add</a>
+                <a class="btn btn-primary" href="javascript:addRow();" role="button">Add</a>
+                <!--Display errors for assigning users.-->
+                <ul>
+                    @if (Model.Errors != null && Model.Errors.Count > 0)
+                    {
+                        foreach (string error in Model.Errors)
+                        {
+                            <li class="text-danger">@error</li>
+                        }
+                    }
+                </ul>
             </div>
-
             <div class="form-group">
                 <label asp-for="IsReviewed" class="control-label"></label>
                 <input asp-for="IsReviewed" />
-
             </div>
             <div class="form-group">
                 <label asp-for="IsApproved" class="control-label"></label>
                 <input asp-for="IsApproved" />
-
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
-
             </div>
         </form>
     </div>

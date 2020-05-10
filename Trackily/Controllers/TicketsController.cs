@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Trackily.Areas.Identity.Data;
@@ -24,21 +25,16 @@ namespace Trackily.Controllers
         private readonly UserManager<TrackilyUser> _userManager;
         private readonly TicketService _ticketService;
         private readonly DbService _dbService;
-        private readonly UserTicketService _userTicketService;
         private readonly UserService _userService;
 
         public TicketsController(TrackilyContext context,
-                                 UserManager<TrackilyUser> userManager,
                                  TicketService ticketService,
                                  DbService dbService,
-                                 UserTicketService userTicketService,
                                  UserService userService)
         {
             _context = context;
-            _userManager = userManager;
             _ticketService = ticketService;
             _dbService = dbService;
-            _userTicketService = userTicketService;
             _userService = userService;
         }
 
@@ -111,18 +107,11 @@ namespace Trackily.Controllers
         //       Also, behaviour for adding a new user to Assigned.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, 
-            [Bind("Title,Type,Priority,IsReviewed,IsApproved,Status,RemoveAssigned,AddAssigned")] EditTicketBinding Input)
+        public async Task<IActionResult> Edit(Guid id, EditTicketBinding input)
         {
             if (id == null)
             {
                 return NotFound();
-            }
-
-            var alreadyAssigned = await _userService.UsernameAlreadyAssigned(id, Input.AddAssigned);
-            if (alreadyAssigned)
-            {
-
             }
 
             if (ModelState.IsValid)
@@ -133,12 +122,19 @@ namespace Trackily.Controllers
                     return NotFound();
                 }
 
-                await _ticketService.EditTicket(ticket, Input);
+                await _ticketService.EditTicket(ticket, input);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(Input);
+            // Validation errors have occurred.
+            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+            var errorTicket = await _dbService.GetTicket(id, "assigned");
+            var viewModel = await _ticketService.EditTicketViewModel(ticket: errorTicket, errors: allErrors);
+
+            
+
+            return View(viewModel);
         }
 
         // GET: Tickets/Delete/5
@@ -170,25 +166,23 @@ namespace Trackily.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // TODO: Learn AJAX & Unobtrusive JQuery and use them to implement client-side validation for 
-        //       assigning new users to Tickets.
+        // TODO: Update to show which usernames are causing issues. 
+        [AcceptVerbs("GET", "POST")]
+        public async Task<IActionResult> ValidateAssigned(Guid ticketId, string[] usernames)
+        {
+            var alreadyAssigned = await _userService.UsernameAlreadyAssigned(ticketId, usernames);
+            if (alreadyAssigned)
+            {
+                return Json("Some users are already assigned to the Ticket.");
+            }
 
-        //[HttpPost, HttpGet]
-        //public async Task<IActionResult> ValidateAssigned(Guid ticketId, string username)
-        //{
-        //    var alreadyAssigned = await UsernameAlreadyAssigned(ticketId, username);
-        //    if (alreadyAssigned)
-        //    {
-        //        return Json("User is already assigned to the Ticket.");
-        //    }
+            var notExists = await _userService.UsernameNotExists(usernames);
+            if (notExists)
+            {
+                return Json("Some users do not exist.");
+            }
 
-        //    var notExists = await UsernameNotExists(username);
-        //    if (notExists)
-        //    {
-        //        return Json("Username does not exist.");
-        //    }
-
-        //    return Json(true);
-        //}
+            return Json(true);
+        }
     }
 }

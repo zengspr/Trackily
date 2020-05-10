@@ -38,12 +38,15 @@ namespace Trackily.Models.Services
             return user.UserName;
         }
 
-        public async Task<bool> UsernameNotExists(string username)
+        public async Task<bool> UsernameNotExists(string[] usernames)
         {
-            var exists = await _dbService.GetUser(username);
-            if (exists == null)
+            foreach (string username in usernames)
             {
-                return true;
+                var exists = await _dbService.GetUser(username);
+                if (exists == null)
+                {
+                    return true;
+                }
             }
             return false;
         }
