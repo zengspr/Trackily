@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
@@ -38,26 +39,50 @@ namespace Trackily.Models.Services
             ticket.Title = input.Title;
             ticket.Creator = await _userService.GetUser(request);
 
-            string[] usernames = input.Assigned.Split(", "); // TODO: Improve this (very fragile).
+            string[] usernames = input.AddAssigned;
             foreach (string username in usernames)
             {
-                var user = await _dbService.GetUser(username);
-                if (user == null)
+                if (username != null)
                 {
-                    throw new ArgumentNullException();
+                    var user = await _dbService.GetUser(username);
+                    var assignUser = new UserTicket
+                    {
+                        Id = user.Id,
+                        User = user,
+                        TicketId = ticket.TicketId,
+                        Ticket = ticket
+                    };
+                    ticket.Assigned.Add(assignUser);
                 }
-                var assignUser = new UserTicket
-                {
-                    Id = user.Id,
-                    User = user,
-                    TicketId = ticket.TicketId,
-                    Ticket = ticket
-                };
-                ticket.Assigned.Add(assignUser);
             }
 
             _context.Add(ticket);
             await _context.SaveChangesAsync();
+        }
+
+        public CreateTicketViewModel CreateTicketViewModel(CreateTicketBinding ticket = null,
+                                                           IEnumerable<ModelError> errors = null)
+        {
+            var viewModel = new CreateTicketViewModel
+            {
+                Errors = new List<string>()
+            };
+
+            if (ticket != null)
+            {
+                viewModel.Title = ticket.Title;
+                viewModel.Type = ticket.Type;
+                viewModel.Priority = ticket.Priority;
+            }
+
+            if (errors != null)
+            {
+                foreach (var error in errors)
+                {
+                    viewModel.Errors.Add(error.ErrorMessage);
+                }
+            }
+            return viewModel;
         }
 
         public async Task<DetailsTicketViewModel> DetailsTicketViewModel(Ticket ticket)
@@ -116,7 +141,7 @@ namespace Trackily.Models.Services
             {
                 foreach (var error in errors)
                 {
-                    //viewModel.Errors.Add(error.ErrorMessage);
+                    viewModel.Errors.Add(error.ErrorMessage);
                 }
             }
             return viewModel;

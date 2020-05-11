@@ -22,7 +22,6 @@ namespace Trackily.Controllers
     public class TicketsController : Controller
     {
         private readonly TrackilyContext _context;
-        private readonly UserManager<TrackilyUser> _userManager;
         private readonly TicketService _ticketService;
         private readonly DbService _dbService;
         private readonly UserService _userService;
@@ -66,7 +65,8 @@ namespace Trackily.Controllers
         // GET: Tickets/Create
         public IActionResult Create()
         {
-            return View();
+            var viewModel = _ticketService.CreateTicketViewModel();
+            return View(viewModel);
         }
 
         // POST: Tickets/Create
@@ -75,14 +75,17 @@ namespace Trackily.Controllers
         //       - Add area to input text for ticket contents. 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Assigned,Type,Priority")] CreateTicketBinding Input)
+        public async Task<IActionResult> Create(CreateTicketBinding input)
         {
             if (ModelState.IsValid)
             {
-                await _ticketService.CreateTicket(Input, HttpContext);
+                await _ticketService.CreateTicket(input, HttpContext);
                 return RedirectToAction(nameof(Index));
             }
-            return View(Input);
+
+            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+            var viewModel = _ticketService.CreateTicketViewModel(input, allErrors);
+            return View(viewModel);
         }
 
         // GET: Tickets/Edit/5

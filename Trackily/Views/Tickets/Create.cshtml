@@ -13,7 +13,6 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
@@ -30,9 +29,16 @@
                 <span asp-validation-for="Priority" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Assigned" class="control-label"></label>
-                <input asp-for="Assigned" class="form-control" />
-                <span asp-validation-for="Assigned" class="text-danger"></span>
+                <label class="control-label">Assign users</label>
+                <table id="formTable">
+                    <tbody>
+                        <tr>
+                            <td><input asp-for="AddAssigned" class="form-control" placeholder="username" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <span asp-validation-for="AddAssigned" class="text-danger"></span>
+                <a class="btn btn-primary" href="javascript:addRow();" role="button">Add</a>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -47,4 +53,13 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        function addRow() {
+            //copy the table row and clear the value of the input, then append the row to the end of the table
+            $("#formTable tbody tr:first").clone().find("input").each(function () {
+                $(this).val('');
+            }).end().appendTo("#formTable");
+        }
+    </script>
 }

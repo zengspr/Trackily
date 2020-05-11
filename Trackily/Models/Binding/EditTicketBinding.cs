@@ -10,17 +10,8 @@ using Trackily.Validation;
 
 namespace Trackily.Models.Binding
 {
-    public class EditTicketBinding
+    public class EditTicketBinding : BaseTicketBinding
     {
-        [Required]
-        public string Title { get; set; }
-
-        [Required]
-        public Ticket.TicketType Type { get; set; }
-
-        [Required]
-        public Ticket.TicketPriority Priority { get; set; }
-
         [Required]
         [Display(Name = "Mark as Reviewed")]
         public bool IsReviewed { get; set; }
@@ -32,11 +23,9 @@ namespace Trackily.Models.Binding
         [Required]
         public Ticket.TicketStatus Status { get; set; }
 
-        public Dictionary<string, bool> RemoveAssigned { get; set; }    // (username, T/F). T = will be removed.
-
-        //[Remote(action: "ValidateAssigned", controller: "TicketsController", ErrorMessage="Test")] 
-        // TODO: Need to learn AJAX & Unobtrusive JQuery. For now, just validate upon POSTing.
         [ValidUser]
-        public string[] AddAssigned { get; set; }
+        public new string[] AddAssigned { get; set; }
+
+        public Dictionary<string, bool> RemoveAssigned { get; set; }    // (username, T/F). T = will be removed.
     }
 }

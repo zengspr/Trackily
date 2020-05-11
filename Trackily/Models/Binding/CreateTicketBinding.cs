@@ -1,19 +1,19 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Trackily.Areas.Identity.Data;
 using Trackily.Models.Domain;
+using Trackily.Validation;
 
 namespace Trackily.Models.Binding
 {
-	public class CreateTicketBinding 
+	public class CreateTicketBinding : BaseTicketBinding
     {
-		public string Title { get; set; }
-		// Create a custom attribute to check that each username in the input list exists in the database.
-		public string Assigned { get; set; }	// List of Developers assigned to the Ticket.
-		public Ticket.TicketType Type { get; set; }
-		public Ticket.TicketPriority Priority { get; set; }
+        [UserExists]
+        public new string[] AddAssigned { get; set; }
     }
 }
