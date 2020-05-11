@@ -45,6 +45,7 @@ namespace Trackily.Controllers
         }
 
         // GET: Tickets/Details/5
+        // TODO: Improve details view.
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -69,8 +70,9 @@ namespace Trackily.Controllers
         }
 
         // POST: Tickets/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // TODO: - Update view to have cascading text boxes for assigning users. 
+        //       - Add validation: cannot assign a user who does not exist. 
+        //       - Add area to input text for ticket contents. 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Title,Assigned,Type,Priority")] CreateTicketBinding Input)
@@ -102,9 +104,6 @@ namespace Trackily.Controllers
         }
 
         // POST: Tickets/Edit/5
-        // The Edit method receives a Ticket's Id as part of a route parameter.
-        // TODO: Add behaviour with POSTed RemoveAssigned information to remove those users from Ticket.
-        //       Also, behaviour for adding a new user to Assigned.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, EditTicketBinding input)
@@ -162,25 +161,6 @@ namespace Trackily.Controllers
             _context.Tickets.Remove(ticket);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        // TODO: Update to show which usernames are causing issues. 
-        [AcceptVerbs("GET", "POST")]
-        public async Task<IActionResult> ValidateAssigned(Guid ticketId, string[] usernames)
-        {
-            var alreadyAssigned = await _userService.UsernameAlreadyAssigned(ticketId, usernames);
-            if (alreadyAssigned)
-            {
-                return Json("Some users are already assigned to the Ticket.");
-            }
-
-            var notExists = await _userService.UsernameNotExists(usernames);
-            if (notExists)
-            {
-                return Json("Some users do not exist.");
-            }
-
-            return Json(true);
         }
     }
 }

@@ -230,7 +230,7 @@ namespace Trackily.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatorId")
+                    b.Property<Guid>("CreatorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsApproved")
@@ -330,8 +330,10 @@ namespace Trackily.Migrations
             modelBuilder.Entity("Trackily.Models.Domain.Ticket", b =>
                 {
                     b.HasOne("Trackily.Areas.Identity.Data.TrackilyUser", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatorId");
+                        .WithMany("CreatedTicket")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Trackily.Models.Domain.UserTicket", b =>

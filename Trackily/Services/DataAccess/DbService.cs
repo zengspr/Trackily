@@ -51,6 +51,8 @@ namespace Trackily.Services.DataAccess
             return ticket;
         }
 
+        // Creator object is still null after Include()
+        // Select user id where u.id == creatorId 
         public async Task<string> GetCreatorUserName(Ticket ticket)
         {
             var reloadTicket = await _context.Tickets.Include(t => t.Creator).SingleAsync(t => t.TicketId == ticket.TicketId);

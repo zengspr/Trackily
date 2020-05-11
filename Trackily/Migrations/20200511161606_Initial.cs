@@ -160,7 +160,7 @@ namespace Trackily.Migrations
                     TicketId = table.Column<Guid>(nullable: false),
                     CreatedDate = table.Column<DateTime>(nullable: true),
                     UpdatedDate = table.Column<DateTime>(nullable: true),
-                    CreatorId = table.Column<Guid>(nullable: true),
+                    CreatorId = table.Column<Guid>(nullable: false),
                     Title = table.Column<string>(nullable: true),
                     IsReviewed = table.Column<bool>(nullable: false),
                     IsApproved = table.Column<bool>(nullable: false),
@@ -175,8 +175,7 @@ namespace Trackily.Migrations
                         name: "FK_Tickets_AspNetUsers_CreatorId",
                         column: x => x.CreatorId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(

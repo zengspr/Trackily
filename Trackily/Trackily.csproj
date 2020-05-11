@@ -30,6 +30,16 @@
     <Compile Remove="Migrations\20200504160028_Initial.Designer.cs" />
     <Compile Remove="Migrations\20200504161058_UpdateTrackilyUserKey.cs" />
     <Compile Remove="Migrations\20200504161058_UpdateTrackilyUserKey.Designer.cs" />
+    <Compile Remove="Migrations\20200505132911_Initial.cs" />
+    <Compile Remove="Migrations\20200505132911_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200511015740_Initial.cs" />
+    <Compile Remove="Migrations\20200511015740_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200511155005_Initial.cs" />
+    <Compile Remove="Migrations\20200511155005_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200511160401_Initial.cs" />
+    <Compile Remove="Migrations\20200511160401_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200511161129_Initial.cs" />
+    <Compile Remove="Migrations\20200511161129_Initial.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

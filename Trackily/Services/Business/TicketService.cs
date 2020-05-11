@@ -112,12 +112,11 @@ namespace Trackily.Models.Services
                 }
             }
 
-            // TODO: How to add model errors to the view model?
             if (errors != null) // Add the errors in the binding model to the view model.
             {
                 foreach (var error in errors)
                 {
-                    viewModel.Errors.Add(error.ErrorMessage);
+                    //viewModel.Errors.Add(error.ErrorMessage);
                 }
             }
             return viewModel;

@@ -10,7 +10,7 @@ using Trackily.Data;
 namespace Trackily.Migrations
 {
     [DbContext(typeof(TrackilyContext))]
-    [Migration("20200505132911_Initial")]
+    [Migration("20200511161606_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -232,7 +232,7 @@ namespace Trackily.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatorId")
+                    b.Property<Guid>("CreatorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsApproved")
@@ -332,8 +332,10 @@ namespace Trackily.Migrations
             modelBuilder.Entity("Trackily.Models.Domain.Ticket", b =>
                 {
                     b.HasOne("Trackily.Areas.Identity.Data.TrackilyUser", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatorId");
+                        .WithMany("CreatedTicket")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Trackily.Models.Domain.UserTicket", b =>
