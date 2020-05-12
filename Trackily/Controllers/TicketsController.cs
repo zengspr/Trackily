@@ -70,9 +70,7 @@ namespace Trackily.Controllers
         }
 
         // POST: Tickets/Create
-        // TODO: - Update view to have cascading text boxes for assigning users. 
-        //       - Add validation: cannot assign a user who does not exist. 
-        //       - Add area to input text for ticket contents. 
+        // Note: Must be logged in for Create to work!
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateTicketBinding input)

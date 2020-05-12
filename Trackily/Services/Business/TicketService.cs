@@ -25,7 +25,10 @@ namespace Trackily.Models.Services
         private readonly DbService _dbService;
         private readonly TrackilyContext _context;
 
-        public TicketService(UserService userService, DbService dbService, TrackilyContext context, UserTicketService userTicketService)
+        public TicketService(UserService userService, 
+                             DbService dbService, 
+                             TrackilyContext context, 
+                             UserTicketService userTicketService)
         {
             _userService = userService;
             _userTicketService = userTicketService;
@@ -38,6 +41,7 @@ namespace Trackily.Models.Services
             var ticket = new Ticket();
             ticket.Title = input.Title;
             ticket.Creator = await _userService.GetUser(request);
+            ticket.Content = input.Content;
 
             string[] usernames = input.AddAssigned;
             foreach (string username in usernames)
@@ -121,6 +125,7 @@ namespace Trackily.Models.Services
                 Status = ticket.Status,
                 Priority = ticket.Priority,
                 Assigned = _userTicketService.UserTicketToNames(ticket.Assigned),
+                Content = ticket.Content,
                 RemoveAssigned = new Dictionary<string, bool>(),
                 Errors = new List<string>()
             };

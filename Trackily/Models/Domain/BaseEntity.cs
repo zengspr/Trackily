@@ -12,6 +12,7 @@ namespace Trackily.Models.Domain
         public DateTime? UpdatedDate { get; set; }
         public TrackilyUser Creator { get; set; }
         public string Title { get; set; }
+        public string Content { get; set; }
 
         public BaseEntity()
         {

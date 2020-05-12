@@ -7,6 +7,7 @@ using Trackily.Areas.Identity.Data;
 
 namespace Trackily.Models.Domain
 {
+	// TODO: Add text editor to Tickets.
 	public class Ticket : BaseEntity
     {
 		public Guid TicketId { get; set; }

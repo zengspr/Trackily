@@ -8,7 +8,7 @@ using Trackily.Models.Domain;
 
 namespace Trackily.Areas.Identity.Data
 {
-    // Add profile data for application users by adding properties to the TrackilyUser class
+    // TODO: Add authorization to Ticket methods and claims to Users.
     public class TrackilyUser : IdentityUser<Guid>
     {
         public enum UserType

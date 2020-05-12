@@ -15,6 +15,9 @@ namespace Trackily.Models.Binding
 		[UniqueTitle]
 		public string Title { get; set; }
 
+		[Required]
+		public string Content { get; set; }
+
 		[DisplayName("Assigned Developers")]
 		public string[] AddAssigned { get; set; }   
 

@@ -24,7 +24,6 @@ namespace Trackily.Models.View
         [Display(Name = "Creator")]
         public string CreatorUserName { get; set; }  
 
-        // TODO: Update Booleans to appear as "Yes" / "No" instead of the default check boxes.
         [Display(Name = "Reviewed?")]
         public bool IsReviewed { get; set; }
 

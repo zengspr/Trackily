@@ -11,7 +11,7 @@
 <h4>Ticket</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-10">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="TicketId" />
@@ -87,6 +87,10 @@
                 <input asp-for="IsApproved" />
             </div>
             <div class="form-group">
+                <span asp-validation-for="Content" class="text-danger"></span>
+                <textarea asp-for="Content" id="Content"></textarea>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
@@ -99,13 +103,4 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-
-    <script>
-        function addRow() {
-            //copy the table row and clear the value of the input, then append the row to the end of the table
-            $("#formTable tbody tr:first").clone().find("input").each(function () {
-                $(this).val('');
-            }).end().appendTo("#formTable");
-        }
-    </script>
 }

@@ -11,7 +11,7 @@
 <h4>Ticket</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-10">
         <form asp-action="Create">
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
@@ -41,6 +41,10 @@
                 <a class="btn btn-primary" href="javascript:addRow();" role="button">Add</a>
             </div>
             <div class="form-group">
+                <span asp-validation-for="Content" class="text-danger"></span>
+                <textarea asp-for="Content" id="Content"></textarea>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -53,13 +57,4 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-
-    <script>
-        function addRow() {
-            //copy the table row and clear the value of the input, then append the row to the end of the table
-            $("#formTable tbody tr:first").clone().find("input").each(function () {
-                $(this).val('');
-            }).end().appendTo("#formTable");
-        }
-    </script>
 }
