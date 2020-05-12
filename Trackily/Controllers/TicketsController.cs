@@ -40,7 +40,9 @@ namespace Trackily.Controllers
         // GET: Tickets
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Tickets.ToListAsync()); 
+            var indexViewModel = _ticketService.CreateIndexViewModel(
+                await _context.Tickets.Include(a => a.Assigned).ToListAsync());
+            return View(indexViewModel); 
         }
 
         // GET: Tickets/Details/5
@@ -100,7 +102,7 @@ namespace Trackily.Controllers
                 return NotFound();
             }
 
-            var viewModel = await _ticketService.EditTicketViewModel(ticket);
+            var viewModel = await _ticketService.EditTicketViewModel(ticket: ticket, ticketId: id.Value);
             return View(viewModel);
         }
 
@@ -130,7 +132,7 @@ namespace Trackily.Controllers
             // Validation errors have occurred.
             IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
             var errorTicket = await _dbService.GetTicket(id, "assigned");
-            var viewModel = await _ticketService.EditTicketViewModel(ticket: errorTicket, errors: allErrors);
+            var viewModel = await _ticketService.EditTicketViewModel(ticket: errorTicket, errors: allErrors, ticketId: id);
 
             return View(viewModel);
         }

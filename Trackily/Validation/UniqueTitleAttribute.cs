@@ -18,9 +18,13 @@ namespace Trackily.Validation
             if (validationContext.ObjectType.Name == "EditTicketBinding")
             {
                 var input = (EditTicketBinding)validationContext.ObjectInstance;
+                if (context.Tickets.Single(t => t.TicketId == input.TicketId).Title == input.Title)
+                {
+                    return ValidationResult.Success; // Title of the ticket was not changed. 
+                }
                 if (context.Tickets.Any(t => t.Title == input.Title))
                 {
-                    return new ValidationResult("Title has already been used in another ticket.");
+                    return new ValidationResult("Title cannot be identical to another ticket.");
                 }
             }
             else if (validationContext.ObjectType.Name == "CreateTicketBinding")
@@ -28,7 +32,7 @@ namespace Trackily.Validation
                 var input = (CreateTicketBinding)validationContext.ObjectInstance;
                 if (context.Tickets.Any(t => t.Title == input.Title))
                 {
-                    return new ValidationResult("Title has already been used in another ticket.");
+                    return new ValidationResult("Title cannot be identical to another ticket.");
                 }
             }
             else

@@ -36,6 +36,29 @@ namespace Trackily.Models.Services
             _context = context;
         }
 
+        public IEnumerable<IndexViewModel> CreateIndexViewModel(IEnumerable<Ticket> allTickets)
+        {
+            var indexViewTickets = new List<IndexViewModel>();
+            foreach (var ticket in allTickets)
+            {
+                var viewModel = new IndexViewModel
+                {
+                    TicketId = ticket.TicketId,
+                    Title = ticket.Title,
+                    Priority = ticket.Priority,
+                    Type = ticket.Type,
+                    Status = ticket.Status,
+                    NumAssignedUsers = ticket.Assigned.Count,
+                    CreatedDate = ticket.CreatedDate.Value,
+                    UpdatedDate = ticket.UpdatedDate.Value,
+                    IsReviewed = ticket.IsReviewed,
+                    IsApproved = ticket.IsApproved
+                };
+                indexViewTickets.Add(viewModel);
+            }
+            return indexViewTickets;
+        }
+
          public async Task CreateTicket(CreateTicketBinding input, HttpContext request)
         {
             var ticket = new Ticket();
@@ -109,12 +132,14 @@ namespace Trackily.Models.Services
         }
 
         // Creates a view model for the Edit ticket page using a ticket queried from the database.
-        public async Task<EditTicketViewModel> EditTicketViewModel(Ticket ticket, 
+        public async Task<EditTicketViewModel> EditTicketViewModel(Ticket ticket,
+                                                                   Guid ticketId,
                                                                    string flagUser = null,
                                                                    IEnumerable<ModelError> errors = null)
         {
             var viewModel = new EditTicketViewModel
             {
+                TicketId = ticketId,  
                 Title = ticket.Title,
                 CreatedDate = (DateTime)ticket.CreatedDate,
                 UpdatedDate = (DateTime)ticket.UpdatedDate,

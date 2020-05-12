@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -11,6 +12,8 @@ namespace Trackily.Models.Binding
 {
     public class BaseTicketBinding
     {
+		public Guid TicketId { get; set; } // TODO: Protect against overposting attack?
+
 		[Required]
 		[UniqueTitle]
 		public string Title { get; set; }

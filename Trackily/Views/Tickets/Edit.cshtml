@@ -48,13 +48,19 @@
                 <span asp-validation-for="Priority" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label class="control-label" asp-for="Assigned">Remove assigned users</label>
+                <label class="control-label" asp-for="RemoveAssigned"></label>
                 @foreach (var key in Model.RemoveAssigned.Keys)
                 {
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" asp-for="RemoveAssigned[key]" />
                         <label class="form-check-label" asp-for="@key">@key</label>
                     </div>
+                    <!--Change this to buttons which can be toggled with JQuery to indicate removing the user.-->
+                    @*<div class="btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-secondary active" asp-for="@key">
+                            <input type="checkbox" asp-for="RemoveAssigned[key]" checked autocomplete="off"> @key
+                        </label>
+                    </div>*@
                 }
             </div>
             <div class="form-group">
@@ -67,16 +73,7 @@
                     </tbody>
                 </table>
                 <a class="btn btn-primary" href="javascript:addRow();" role="button">Add</a>
-                <!--Display errors for assigning users.-->
-                <ul>
-                    @if (Model.Errors != null && Model.Errors.Count > 0)
-                    {
-                        foreach (string error in Model.Errors)
-                        {
-                            <li class="text-danger">@error</li>
-                        }
-                    }
-                </ul>
+                <span asp-validation-for="AddAssigned" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="IsReviewed" class="control-label"></label>
@@ -92,13 +89,14 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
+                <button type="button" class="btn btn-danger" align="right" asp-action="Delete" asp-route-id="@Model.TicketId">Delete</button>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="row">
+    <button type="button" class="btn btn-link" asp-action="Index">Back to Index</button>
 </div>
 
 @section Scripts {

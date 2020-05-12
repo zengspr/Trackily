@@ -11,8 +11,6 @@ namespace Trackily.Models.View
 {
     public class EditTicketViewModel : EditTicketBinding
     {
-        public Guid TicketId { get; set; }
-
         [Display(Name = "Created")]
         [DataType(DataType.DateTime)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:f}")]

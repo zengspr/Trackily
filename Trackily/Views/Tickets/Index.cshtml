@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Trackily.Models.Domain.Ticket>
+﻿@model IEnumerable<Trackily.Models.View.IndexViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -8,69 +8,38 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Create New Ticket</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IsReviewed)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsApproved)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Priority)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th></th>
+            <th scope="col" align="center">@Html.DisplayNameFor(model => model.Title)</th>
+            <th scope="col" align="center">@Html.DisplayNameFor(model => model.Priority)</th>
+            <th scope="col" align="center">@Html.DisplayNameFor(model => model.Type)</th>
+            <th scope="col" align="center">@Html.DisplayNameFor(model => model.Status)</th>
+            <th scope="col" align="center">@Html.DisplayNameFor(model => model.NumAssignedUsers)</th>
+            <th scope="col" align="center">@Html.DisplayNameFor(model => model.CreatedDate)</th>
+            <th scope="col" align="center">@Html.DisplayNameFor(model => model.UpdatedDate)</th>
+            <th scope="col" align="center">@Html.DisplayNameFor(model => model.IsReviewed)</th>
+            <th scope="col" align="center">@Html.DisplayNameFor(model => model.IsApproved)</th>
+            <th scope="col" align="center"></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsReviewed)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsApproved)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Priority)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
+            <td scope="col" align="center">@Html.DisplayFor(modelItem => item.Title)</td>
+            <td scope="col" align="center">@Html.DisplayFor(modelItem => item.Priority)</td>
+            <td scope="col" align="center">@Html.DisplayFor(modelItem => item.Type)</td>
+            <td scope="col" align="center">@Html.DisplayFor(modelItem => item.Status)</td>
+            <td scope="col" align="center">@Html.DisplayFor(modelItem => item.NumAssignedUsers)</td>
+            <td scope="col" align="center">@Html.DisplayFor(modelItem => item.CreatedDate)</td>
+            <td scope="col" align="center">@Html.DisplayFor(modelItem => item.UpdatedDate)</td>
+            <td scope="col" align="center">@Html.DisplayFor(modelItem => item.IsReviewed)</td>
+            <td scope="col" align="center">@Html.DisplayFor(modelItem => item.IsApproved)</td>
+            <td scope="col" align="center">
                 <a asp-action="Edit" asp-route-id="@item.TicketId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.TicketId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.TicketId">Delete</a>
+                <a asp-action="Details" asp-route-id="@item.TicketId">Details</a> 
             </td>
         </tr>
 }
