@@ -21,7 +21,9 @@ namespace Trackily.Areas.Identity.Data
         public override string UserName { get; set; }
 
         // Relationships -----------------
-        public ICollection<Ticket> CreatedTicket { get; set; } // Each Ticket has one User that is its Creator.
-        public ICollection<UserTicket> Assigned { get; set; } // Tickets to which the User has been assigned.
+        public ICollection<Ticket>? CreatedTickets { get; set; } 
+        public ICollection<UserTicket>? AssignedTo { get; set; } 
+        public ICollection<CommentThread>? CreatedThreads { get; set; }  
+        public ICollection<Comment>? CreatedComments { get; set; }
     }
 }

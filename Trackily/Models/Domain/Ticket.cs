@@ -8,7 +8,7 @@ using Trackily.Areas.Identity.Data;
 namespace Trackily.Models.Domain
 {
 	// TODO: Add text editor to Tickets.
-	public class Ticket : BaseEntity
+	public class Ticket : BaseTicket
     {
 		public Guid TicketId { get; set; }
 		public ICollection<UserTicket> Assigned { get; set; }	// List of Developers assigned to the Ticket.
@@ -22,6 +22,7 @@ namespace Trackily.Models.Domain
 		public TicketType Type { get; set; }
 		public TicketStatus Status { get; set; }
 		public TicketPriority Priority { get; set; }
+		public ICollection<CommentThread>? CommentThreads { get; set; }
 
 		public Ticket()
 		{
@@ -29,7 +30,6 @@ namespace Trackily.Models.Domain
 			IsReviewed = false;
 			IsApproved = false;
 			Status = TicketStatus.Awaiting;
-			Assigned = new List<UserTicket>();
 		}
     }
 }

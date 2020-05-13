@@ -40,6 +40,16 @@
     <Compile Remove="Migrations\20200511160401_Initial.Designer.cs" />
     <Compile Remove="Migrations\20200511161129_Initial.cs" />
     <Compile Remove="Migrations\20200511161129_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200513173200_AddComments.cs" />
+    <Compile Remove="Migrations\20200513173200_AddComments.Designer.cs" />
+    <Compile Remove="Migrations\20200513173605_AddComments.cs" />
+    <Compile Remove="Migrations\20200513173605_AddComments.Designer.cs" />
+    <Compile Remove="Migrations\20200513174348_AddComments.cs" />
+    <Compile Remove="Migrations\20200513174348_AddComments.Designer.cs" />
+    <Compile Remove="Migrations\20200513181113_AddComments.cs" />
+    <Compile Remove="Migrations\20200513181113_AddComments.Designer.cs" />
+    <Compile Remove="Migrations\20200513181444_AddComments.cs" />
+    <Compile Remove="Migrations\20200513181444_AddComments.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -59,12 +59,13 @@ namespace Trackily.Models.Services
             return indexViewTickets;
         }
 
-         public async Task CreateTicket(CreateTicketBinding input, HttpContext request)
+        public async Task CreateTicket(CreateTicketBinding input, HttpContext request)
         {
             var ticket = new Ticket();
             ticket.Title = input.Title;
             ticket.Creator = await _userService.GetUser(request);
             ticket.Content = input.Content;
+            ticket.Assigned = new List<UserTicket>();
 
             string[] usernames = input.AddAssigned;
             foreach (string username in usernames)

@@ -25,17 +25,33 @@ namespace Trackily.Data
         {
             base.OnModelCreating(builder);
 
-            // Manually define one-to-many relationship between User : Ticket to prevent the relationship
-            // being optional. This ensures that Identity performs cascading deletion of Tickets.
+            // Note: To delete a user, they must have all their created tickets deleted first. 
+            //       Also, have to manually delete their created threads and comments afterwards. 
             builder.Entity<TrackilyUser>()
-                .HasMany(c => c.CreatedTicket)
+                .HasMany(c => c.CreatedTickets)
                 .WithOne(e => e.Creator)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.NoAction); // Prevent deletion of User if they have created Tickets.
+                .OnDelete(DeleteBehavior.NoAction);
 
-            // Define composite primary key for User : Ticket relationship. 
-            builder.Entity<UserTicket>()
-                        .HasKey(createKey => new { createKey.Id, createKey.TicketId });
+            builder.Entity<TrackilyUser>()
+                .HasMany(c => c.CreatedThreads)
+                .WithOne(e => e.Creator)
+                .OnDelete(DeleteBehavior.NoAction); 
+
+            builder.Entity<TrackilyUser>()
+                .HasMany(c => c.CreatedComments)
+                .WithOne(e => e.Creator)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Ticket>()
+                .HasMany(t => t.CommentThreads)
+                .WithOne(c => c.Parent)
+                .IsRequired(); // Delete threads associated with the ticket.
+
+            builder.Entity<CommentThread>()
+                .HasMany(t => t.Comments)
+                .WithOne(c => c.Parent)
+                .IsRequired(); // Delete comments associated with the thread. 
 
             // Manually define many-to-many relationship due to issue with conventions: TrackilyUser PK is called
             // Id instead of UserId due to derivation from IdentityUser. Changing TrackilyUser PK causes issues
@@ -44,16 +60,20 @@ namespace Trackily.Data
             //      - If a Ticket is deleted, all UserTickets with that TicketId should be deleted.
             //      - If a User is deleted, all UserTickets with that UserId should be deleted.
             builder.Entity<UserTicket>()
-                        .HasOne(pt => pt.User)
-                        .WithMany(p => p.Assigned)
-                        .HasForeignKey(pt => pt.Id)
-                        .OnDelete(DeleteBehavior.Cascade);
+                .HasKey(createKey => new { createKey.Id, createKey.TicketId });
 
             builder.Entity<UserTicket>()
-                        .HasOne(pt => pt.Ticket)
-                        .WithMany(t => t.Assigned)
-                        .HasForeignKey(pt => pt.TicketId)
-                        .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(pt => pt.User)
+                .WithMany(p => p.AssignedTo)
+                .HasForeignKey(pt => pt.Id)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<UserTicket>()
+                .HasOne(pt => pt.Ticket)
+                .WithMany(t => t.Assigned)
+                .HasForeignKey(pt => pt.TicketId)
+                .OnDelete(DeleteBehavior.Cascade); 
         }
+
     }
 }
