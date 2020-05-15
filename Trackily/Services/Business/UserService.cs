@@ -53,7 +53,7 @@ namespace Trackily.Models.Services
 
         public async Task<bool> UsernameAlreadyAssigned(Guid ticketId, string[] usernames)
         {
-            var ticket = await _dbService.GetTicket(ticketId, "assigned");
+            var ticket = await _dbService.GetTicket(ticketId);
             var assignedNames = _userTicketService.UserTicketToNames(ticket.Assigned);
             foreach (string username in usernames)
             {

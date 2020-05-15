@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Trackily.Models.Domain;
+#nullable enable
 
 namespace Trackily.Areas.Identity.Data
 {

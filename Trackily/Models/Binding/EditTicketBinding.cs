@@ -27,6 +27,9 @@ namespace Trackily.Models.Binding
         public new string[] AddAssigned { get; set; }
 
         [Display(Name = "Unassign Users")]
-        public Dictionary<string, bool> RemoveAssigned { get; set; }    // (username, T/F). T = will be removed.
+        public Dictionary<string, bool> RemoveAssigned { get; set; }    // RemoveAssigned[username] = true -> Unassign user.
+
+        public string CommentThreadContent { get; set; }
+        public string CommentContent { get; set; }
     }
 }

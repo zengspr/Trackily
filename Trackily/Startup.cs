@@ -58,7 +58,7 @@ namespace Trackily
             services.AddScoped<UserService>();
             services.AddScoped<UserTicketService>();
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
         }
 

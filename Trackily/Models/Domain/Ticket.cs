@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Trackily.Areas.Identity.Data;
+#nullable enable
 
 namespace Trackily.Models.Domain
 {

@@ -54,7 +54,7 @@ namespace Trackily.Controllers
                 return NotFound();
             }
 
-            var ticket = await _dbService.GetTicket(id, "assigned");
+            var ticket = await _dbService.GetTicket(id);
             if (ticket == null)
             {
                 return NotFound();
@@ -96,7 +96,7 @@ namespace Trackily.Controllers
                 return NotFound();
             }
 
-            var ticket = await _dbService.GetTicket(id, "assigned");
+            var ticket = await _dbService.GetTicket(id);
             if (ticket == null)
             {
                 return NotFound();
@@ -118,7 +118,7 @@ namespace Trackily.Controllers
 
             if (ModelState.IsValid)
             {
-                var ticket = await _dbService.GetTicket(id, "assigned"); 
+                var ticket = await _dbService.GetTicket(id); 
                 if (ticket == null)
                 {
                     return NotFound();
@@ -131,7 +131,7 @@ namespace Trackily.Controllers
 
             // Validation errors have occurred.
             IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
-            var errorTicket = await _dbService.GetTicket(id, "assigned");
+            var errorTicket = await _dbService.GetTicket(id);
             var viewModel = await _ticketService.EditTicketViewModel(ticket: errorTicket, errors: allErrors, ticketId: id);
 
             return View(viewModel);
