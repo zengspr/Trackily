@@ -28,5 +28,7 @@ namespace Trackily.Models.View
         public List<string> Assigned { get; set; }
 
         public List<string> Errors { get; set; }
+
+        public List<CommentThread> CommentThreads { get; set; }
     }
 }

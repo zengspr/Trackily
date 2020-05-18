@@ -92,7 +92,7 @@
         </form>
     </div>
     <div class="col-md-6">
-        <!--Inject CommentThread view component.-->
+        @await Html.PartialAsync("_CommentsPartial", Model)
     </div>
 </div>
 

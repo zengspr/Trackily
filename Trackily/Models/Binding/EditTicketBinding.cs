@@ -29,7 +29,9 @@ namespace Trackily.Models.Binding
         [Display(Name = "Unassign Users")]
         public Dictionary<string, bool> RemoveAssigned { get; set; }    // RemoveAssigned[username] = true -> Unassign user.
 
-        public string CommentThreadContent { get; set; }
-        public string CommentContent { get; set; }
+        // A user can submit content for at most one CommentThread and may make any number of replies to
+        // different threads. 
+        public string? CommentThreadContent { get; set; } 
+        public Dictionary<Guid, string>? CommentContent { get; set; } // Guid specifies CommentThread, Content specifies reply.
     }
 }

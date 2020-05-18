@@ -1,0 +1,121 @@
+﻿<!--Model should have all CommentThreads and Comments for a particular Ticket.-->
+
+<h1>Comments</h1>
+<hr />
+
+<!--We need to display the existing CommentThread & Comments but also bind the CommentThread & Comment dictionary
+    Need to figure out how to bind to Dictionary<Guid, string>
+    -->
+@foreach (var commentThread in Model.CommentThreads)
+{
+<div class="container pt-3">
+    <div class="row">
+        <div class="col-sm">
+            <div class="card">
+                <div class="card-header pb-0">
+                    <div class="row">
+                        <div class="col-sm float-left">
+                            <h5>@commentThread.Creator.UserName</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm float-left">
+                            <p>@commentThread.CreatedDate</p>
+                        </div>
+                        <div class="col-sm float-right">
+                            <p>@commentThread.UpdatedDate</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="form-group">
+                        <textarea class="form-control"
+                                  rows="3"
+                                  placeholder="Content goes here."
+                                  id="@commentThread.CommentThreadId"
+                                  name="@commentThread.CommentThreadId"></textarea>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <ul class="list-group list-group-horizontal-sm float-right">
+                        <li class="list-group-item">Reply</li>
+                        <li class="list-group-item">Edit</li>
+                        <li class="list-group-item">Delete</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Toggle new CommentThread box.-->
+    <!--Toggle new Comment reply box.-->
+    <div class="row">
+        <div class="col-sm">
+            <div class="card">
+                <div class="card-header pb-0">
+                    <div class="row">
+                        <div class="col-sm float-left">
+                            <h6>Reply to thread</h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="form-group">
+                        <textarea class="form-control" 
+                                  rows="5" 
+                                  placeholder="Content goes here."
+                                  id="@commentThread.CommentThreadId"
+                                  name="CommentContent"></textarea>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <ul class="list-group list-group-horizontal-sm float-right">
+                        <li class="list-group-item">Submit</li>
+                        <li class="list-group-item">Cancel</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Replies to the comment thread-->
+    @foreach (var comment in commentThread)
+    {
+        <div class="row">
+            <div class="col-sm offset-sm-2">
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <div class="row">
+                            <div class="col-sm float-left">
+                                <h6>@comment.Creator.UserName</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm float-left">
+                                <p><small>@comment.CreatedDate</small></p>
+                            </div>
+                            <div class="col-sm float-right">
+                                <p><small>@comment.UpdatedDate</small></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="form-group">
+                            <textarea class="form-control" 
+                                      rows="3" 
+                                      placeholder="Content goes here."
+                                      id="@comment.CommentId"
+                                      name="@comment.CommentId"></textarea>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <ul class="list-group list-group-horizontal-sm float-right">
+                            <li class="list-group-item">Edit</li>
+                            <li class="list-group-item">Delete</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+}
