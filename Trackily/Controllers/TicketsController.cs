@@ -12,7 +12,6 @@ using Trackily.Areas.Identity.Data;
 using Trackily.Data;
 using Trackily.Models.Binding;
 using Trackily.Models.Domain;
-using Trackily.Models.Services;
 using Trackily.Models.View;
 using Trackily.Services.Business;
 using Trackily.Services.DataAccess;
@@ -24,23 +23,18 @@ namespace Trackily.Controllers
         private readonly TrackilyContext _context;
         private readonly TicketService _ticketService;
         private readonly DbService _dbService;
-        private readonly UserService _userService;
 
-        public TicketsController(TrackilyContext context,
-                                 TicketService ticketService,
-                                 DbService dbService,
-                                 UserService userService)
+        public TicketsController(TrackilyContext context, TicketService ticketService, DbService dbService)
         {
             _context = context;
             _ticketService = ticketService;
             _dbService = dbService;
-            _userService = userService;
         }
 
         // GET: Tickets
         public async Task<IActionResult> Index()
         {
-            var indexViewModel = _ticketService.CreateIndexViewModel(
+            List<IndexViewModel> indexViewModel = _ticketService.CreateIndexViewModel(
                 await _context.Tickets.Include(a => a.Assigned).ToListAsync());
             return View(indexViewModel); 
         }
@@ -77,64 +71,50 @@ namespace Trackily.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateTicketBinding input)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _ticketService.CreateTicket(input, HttpContext);
-                return RedirectToAction(nameof(Index));
+                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+                var viewModel = _ticketService.CreateTicketViewModel(input, allErrors);
+                return View(viewModel);
             }
 
-            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
-            var viewModel = _ticketService.CreateTicketViewModel(input, allErrors);
-            return View(viewModel);
+            await _ticketService.CreateTicket(input, HttpContext);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Tickets/Edit/5
+        // TODO: Make (id == null) check into a validation attribute.
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) { return NotFound(); }
 
             var ticket = await _dbService.GetTicket(id);
-            if (ticket == null)
-            {
-                return NotFound();
-            }
+            if (ticket == null) { return NotFound(); }
 
-            var viewModel = await _ticketService.EditTicketViewModel(ticket: ticket, ticketId: id.Value);
+            var viewModel = await _ticketService.EditTicketViewModel(ticket: ticket);
             return View(viewModel);
         }
 
         // POST: Tickets/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, EditTicketBinding input)
+        public async Task<IActionResult> Edit(Guid? id, EditTicketBinding input)
         {
-            if (id == null)
+            if (id == null) { return NotFound(); }
+
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(m => m.Errors);
+                var viewModel = _ticketService.EditTicketViewModel(input, allErrors);
+                return View(viewModel);
             }
 
-            if (ModelState.IsValid)
-            {
-                var ticket = await _dbService.GetTicket(id); 
-                if (ticket == null)
-                {
-                    return NotFound();
-                }
+            var ticket = await _dbService.GetTicket(id); 
+            if (ticket == null) { return NotFound(); }
 
-                await _ticketService.EditTicket(ticket, input);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Edit", new { id = id });
-            }
-
-            // Validation errors have occurred.
-            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
-            var errorTicket = await _dbService.GetTicket(id);
-            var viewModel = await _ticketService.EditTicketViewModel(ticket: errorTicket, errors: allErrors, ticketId: id);
-
-            return View(viewModel);
+            await _ticketService.EditTicket(ticket, input);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Edit", new { id = id.Value });
         }
 
         // GET: Tickets/Delete/5

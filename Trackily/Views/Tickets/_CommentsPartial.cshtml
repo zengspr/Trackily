@@ -6,6 +6,13 @@
 <!--We need to display the existing CommentThread & Comments but also bind the CommentThread & Comment dictionary
     Need to figure out how to bind to Dictionary<Guid, string>
     -->
+@if (Model.CommentThreads == null)
+{
+
+}
+
+
+
 @foreach (var commentThread in Model.CommentThreads)
 {
 <div class="container pt-3">
@@ -29,10 +36,10 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="form-group">
-                        <textarea class="form-control"
+                        <textarea readonly
+                                  class="form-control"
                                   rows="3"
                                   placeholder="Content goes here."
-                                  id="@commentThread.CommentThreadId"
                                   name="@commentThread.CommentThreadId"></textarea>
                     </div>
                 </div>
@@ -47,7 +54,7 @@
         </div>
     </div>
     <!--Toggle new CommentThread box.-->
-    <!--Toggle new Comment reply box.-->
+    <!--Input to submit a new reply to the current comment thread.-->
     <div class="row">
         <div class="col-sm">
             <div class="card">
@@ -63,8 +70,7 @@
                         <textarea class="form-control" 
                                   rows="5" 
                                   placeholder="Content goes here."
-                                  id="@commentThread.CommentThreadId"
-                                  name="CommentContent"></textarea>
+                                  name="NewReplies[@commentThread.CommentThreadId]"></textarea>
                     </div>
                 </div>
                 <div class="card-footer">
@@ -76,7 +82,7 @@
             </div>
         </div>
     </div>
-    <!--Replies to the comment thread-->
+    <!--Show the replies to the current comment thread.-->
     @foreach (var comment in commentThread)
     {
         <div class="row">
@@ -99,10 +105,10 @@
                     </div>
                     <div class="card-body p-0">
                         <div class="form-group">
-                            <textarea class="form-control" 
+                            <textarea readonly
+                                      class="form-control" 
                                       rows="3" 
                                       placeholder="Content goes here."
-                                      id="@comment.CommentId"
                                       name="@comment.CommentId"></textarea>
                         </div>
                     </div>

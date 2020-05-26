@@ -12,8 +12,8 @@ using Trackily.Validation;
 namespace Trackily.Models.Binding
 {
 	public class CreateTicketBinding : BaseTicketBinding
-    {
-        [UserExists]
-        public new string[] AddAssigned { get; set; }
-    }
+	{
+		[UserExists]
+		public new string[] AddAssigned { get; set; }
+	}
 }

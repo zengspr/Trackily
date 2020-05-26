@@ -8,11 +8,10 @@ using Trackily.Areas.Identity.Data;
 
 namespace Trackily.Models.Domain
 {
-	// TODO: Add text editor to Tickets.
 	public class Ticket : BaseTicket
-    {
+	{
 		public Guid TicketId { get; set; }
-		public ICollection<UserTicket> Assigned { get; set; }	// List of Developers assigned to the Ticket.
+		public ICollection<UserTicket>? Assigned { get; set; }	// List of Developers assigned to the Ticket.
 		// public string RelatedFiles { get; set; }	// Name of files related to the Ticket.
 		public bool IsReviewed { get; set; }	// Has the Ticket been reviewed by a Manager?
 		public bool IsApproved { get; set; }	// Has the Ticket been approved for action by a Manager?
@@ -32,5 +31,5 @@ namespace Trackily.Models.Domain
 			IsApproved = false;
 			Status = TicketStatus.Awaiting;
 		}
-    }
+	}
 }

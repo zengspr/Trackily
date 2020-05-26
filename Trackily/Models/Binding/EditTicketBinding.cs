@@ -1,10 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using Trackily.Models.Domain;
 using Trackily.Validation;
 
@@ -12,6 +8,19 @@ namespace Trackily.Models.Binding
 {
     public class EditTicketBinding : BaseTicketBinding
     {
+        [Display(Name = "Created")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:f}")]
+        public DateTime CreatedDate { get; set; }
+
+        [Display(Name = "Last Updated")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:f}")]
+        public DateTime UpdatedDate { get; set; }
+
+        [Display(Name = "Creator")]
+        public string CreatorUserName { get; set; }
+
         [Required]
         [Display(Name = "Mark as Reviewed")]
         public bool IsReviewed { get; set; }
@@ -31,7 +40,7 @@ namespace Trackily.Models.Binding
 
         // A user can submit content for at most one CommentThread and may make any number of replies to
         // different threads. 
-        public string? CommentThreadContent { get; set; } 
-        public Dictionary<Guid, string>? CommentContent { get; set; } // Guid specifies CommentThread, Content specifies reply.
+        public string CommentThreadContent { get; set; } 
+        public Dictionary<Guid, string> NewReplies { get; set; } // Guid specifies CommentThread, Content specifies reply.
     }
 }

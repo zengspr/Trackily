@@ -15,6 +15,7 @@ namespace Trackily.Models.Domain
         public CommentThread()
         {
             CommentThreadId = new Guid();
+            // Parent of CommentThread is set when creating a Ticket. 
         }
     }
 }
