@@ -167,7 +167,7 @@ namespace Trackily.Services.Business
         /// <returns>EditTicketViewModel object.</returns>
         public async Task<EditTicketViewModel> EditTicketViewModel(Ticket ticket)
         {
-            return new EditTicketViewModel
+            var viewModel = new EditTicketViewModel
             {
                 TicketId = ticket.TicketId,  
                 Title = ticket.Title,
@@ -179,11 +179,24 @@ namespace Trackily.Services.Business
                 Type = ticket.Type,
                 Status = ticket.Status,
                 Priority = ticket.Priority,
-                Assigned = _userTicketService.UserTicketToNames(ticket.Assigned), 
                 Content = ticket.Content,
+                CommentThreads = new List<CommentThread>(),
                 RemoveAssigned = new Dictionary<string, bool>(),
                 Errors = new List<string>()
             };
+
+            if (ticket.CommentThreads != null)
+            {
+                foreach (var commentThread in ticket.CommentThreads)
+                {
+                    viewModel.CommentThreads.Add(commentThread);
+                }
+            }
+            foreach (string username in _userTicketService.UserTicketToNames(ticket.Assigned))
+            {
+                viewModel.RemoveAssigned.Add(username, false);
+            }
+            return viewModel;
         }
 
         /// <summary>
@@ -210,8 +223,9 @@ namespace Trackily.Services.Business
                 Type = invalidInput.Type,
                 Status = invalidInput.Status,
                 Priority = invalidInput.Priority,
-                Assigned = invalidInput.RemoveAssigned.Keys.ToList(),
                 Content = invalidInput.Content,
+                CommentThreadContent = invalidInput.CommentThreadContent,
+                CommentThreads = new List<CommentThread>(),
                 RemoveAssigned = new Dictionary<string, bool>(),
                 Errors = new List<string>()
             };
@@ -232,8 +246,9 @@ namespace Trackily.Services.Business
         /// </summary>
         /// <param name="ticket">Ticket object to be updated.</param>
         /// <param name="input">EditTicketBinding model containing POSTed values.</param>
+        /// <param name="request"></param>
         /// <returns>N/A</returns>
-        public async Task EditTicket(Ticket ticket, EditTicketBinding input)
+        public async Task EditTicket(Ticket ticket, EditTicketBinding input, HttpContext request)
         {
             ticket.UpdatedDate = DateTime.Now;
             ticket.IsApproved = input.IsApproved;
@@ -242,6 +257,7 @@ namespace Trackily.Services.Business
             ticket.Status = input.Status;
             ticket.Priority = input.Priority;
             ticket.Title = input.Title;
+            ticket.CommentThreads = null;
 
             if (input.RemoveAssigned != null)
             {
@@ -266,6 +282,18 @@ namespace Trackily.Services.Business
                     Ticket = ticket
                 };
                 ticket.Assigned.Add(userTicket);
+            }
+
+            if (input.CommentThreadContent != null) // Create a new CommentThread.
+            {
+                ticket.CommentThreads = new List<CommentThread>();
+                var commentThread = new CommentThread
+                {
+                    Parent = ticket,
+                    Content = input.CommentThreadContent,
+                    Creator = await _userManager.GetUserAsync(request.User)
+                };
+                ticket.CommentThreads.Add(commentThread);
             }
         }
 

@@ -40,7 +40,7 @@ namespace Trackily.Migrations
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     Type = table.Column<int>(nullable: false),
-                    UserName = table.Column<string>(maxLength: 256, nullable: true)
+                    UserName = table.Column<string>(maxLength: 256, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -158,10 +158,11 @@ namespace Trackily.Migrations
                 columns: table => new
                 {
                     TicketId = table.Column<Guid>(nullable: false),
-                    CreatedDate = table.Column<DateTime>(nullable: true),
-                    UpdatedDate = table.Column<DateTime>(nullable: true),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    UpdatedDate = table.Column<DateTime>(nullable: false),
                     CreatorId = table.Column<Guid>(nullable: false),
                     Title = table.Column<string>(nullable: true),
+                    Content = table.Column<string>(nullable: true),
                     IsReviewed = table.Column<bool>(nullable: false),
                     IsApproved = table.Column<bool>(nullable: false),
                     Type = table.Column<int>(nullable: false),
@@ -176,6 +177,33 @@ namespace Trackily.Migrations
                         column: x => x.CreatorId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CommentThreads",
+                columns: table => new
+                {
+                    CommentThreadId = table.Column<Guid>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    UpdatedDate = table.Column<DateTime>(nullable: false),
+                    CreatorId = table.Column<Guid>(nullable: true),
+                    Content = table.Column<string>(nullable: true),
+                    ParentTicketId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CommentThreads", x => x.CommentThreadId);
+                    table.ForeignKey(
+                        name: "FK_CommentThreads_AspNetUsers_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CommentThreads_Tickets_ParentTicketId",
+                        column: x => x.ParentTicketId,
+                        principalTable: "Tickets",
+                        principalColumn: "TicketId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -199,6 +227,33 @@ namespace Trackily.Migrations
                         column: x => x.TicketId,
                         principalTable: "Tickets",
                         principalColumn: "TicketId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    CommentId = table.Column<Guid>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    UpdatedDate = table.Column<DateTime>(nullable: false),
+                    CreatorId = table.Column<Guid>(nullable: true),
+                    Content = table.Column<string>(nullable: true),
+                    ParentCommentThreadId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.CommentId);
+                    table.ForeignKey(
+                        name: "FK_Comments_AspNetUsers_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Comments_CommentThreads_ParentCommentThreadId",
+                        column: x => x.ParentCommentThreadId,
+                        principalTable: "CommentThreads",
+                        principalColumn: "CommentThreadId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -242,6 +297,26 @@ namespace Trackily.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Comments_CreatorId",
+                table: "Comments",
+                column: "CreatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_ParentCommentThreadId",
+                table: "Comments",
+                column: "ParentCommentThreadId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CommentThreads_CreatorId",
+                table: "CommentThreads",
+                column: "CreatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CommentThreads_ParentTicketId",
+                table: "CommentThreads",
+                column: "ParentTicketId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Tickets_CreatorId",
                 table: "Tickets",
                 column: "CreatorId");
@@ -270,10 +345,16 @@ namespace Trackily.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Comments");
+
+            migrationBuilder.DropTable(
                 name: "UserTickets");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "CommentThreads");
 
             migrationBuilder.DropTable(
                 name: "Tickets");

@@ -20,12 +20,7 @@ namespace Trackily.Services.Business
 
         public List<string> UserTicketToNames(ICollection<UserTicket> userTickets)
         {
-            var usernames = new List<string>();
-            foreach (var userTicket in userTickets)
-            {
-                usernames.Add(userTicket.User.UserName);
-            }
-            return usernames;
+            return userTickets.Select(userTicket => userTicket.User.UserName).ToList();
         }
 
         public async Task<UserTicket> GetUserTicket(Guid ticketId, Guid userId)

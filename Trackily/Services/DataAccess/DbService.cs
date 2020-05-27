@@ -33,13 +33,13 @@ namespace Trackily.Services.DataAccess
             return user;
         }
 
-        public async Task<Ticket> GetTicket(Guid? ticketId)
+        public async Task<Ticket> GetTicket(Guid ticketId)
         {
             var ticket = await _context.Tickets
                             .Include(t => t.Assigned)   
                                 .ThenInclude(a => a.User)   
-                            //.Include(t => t.CommentThreads)
-                            //    .ThenInclude(ct => ct.Comments)
+                            .Include(t => t.CommentThreads)
+                                .ThenInclude(ct => ct.Comments)
                             .SingleOrDefaultAsync(t => t.TicketId == ticketId);
             return ticket;
         }

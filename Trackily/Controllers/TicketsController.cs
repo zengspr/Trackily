@@ -48,7 +48,7 @@ namespace Trackily.Controllers
                 return NotFound();
             }
 
-            var ticket = await _dbService.GetTicket(id);
+            var ticket = await _dbService.GetTicket(id.Value);
             if (ticket == null)
             {
                 return NotFound();
@@ -88,7 +88,7 @@ namespace Trackily.Controllers
         {
             if (id == null) { return NotFound(); }
 
-            var ticket = await _dbService.GetTicket(id);
+            var ticket = await _dbService.GetTicket(id.Value);
             if (ticket == null) { return NotFound(); }
 
             var viewModel = await _ticketService.EditTicketViewModel(ticket: ticket);
@@ -109,10 +109,10 @@ namespace Trackily.Controllers
                 return View(viewModel);
             }
 
-            var ticket = await _dbService.GetTicket(id); 
+            var ticket = await _dbService.GetTicket(id.Value); 
             if (ticket == null) { return NotFound(); }
 
-            await _ticketService.EditTicket(ticket, input);
+            await _ticketService.EditTicket(ticket, input, HttpContext);
             await _context.SaveChangesAsync();
             return RedirectToAction("Edit", new { id = id.Value });
         }

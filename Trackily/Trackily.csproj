@@ -50,6 +50,12 @@
     <Compile Remove="Migrations\20200513181113_AddComments.Designer.cs" />
     <Compile Remove="Migrations\20200513181444_AddComments.cs" />
     <Compile Remove="Migrations\20200513181444_AddComments.Designer.cs" />
+    <Compile Remove="Migrations\20200527000533_Update.cs" />
+    <Compile Remove="Migrations\20200527000533_Update.Designer.cs" />
+    <Compile Remove="Migrations\20200527000906_RemoveNullableDates.cs" />
+    <Compile Remove="Migrations\20200527000906_RemoveNullableDates.Designer.cs" />
+    <Compile Remove="Migrations\20200527051543_FixCommentThreadCreator.cs" />
+    <Compile Remove="Migrations\20200527051543_FixCommentThreadCreator.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

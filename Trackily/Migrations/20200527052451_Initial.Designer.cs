@@ -10,8 +10,8 @@ using Trackily.Data;
 namespace Trackily.Migrations
 {
     [DbContext(typeof(TrackilyContext))]
-    [Migration("20200513181931_AddComments")]
-    partial class AddComments
+    [Migration("20200527052451_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -207,6 +207,7 @@ namespace Trackily.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
@@ -250,7 +251,7 @@ namespace Trackily.Migrations
 
                     b.HasIndex("ParentCommentThreadId");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Trackily.Models.Domain.CommentThread", b =>
@@ -280,7 +281,7 @@ namespace Trackily.Migrations
 
                     b.HasIndex("ParentTicketId");
 
-                    b.ToTable("CommentThread");
+                    b.ToTable("CommentThreads");
                 });
 
             modelBuilder.Entity("Trackily.Models.Domain.Ticket", b =>
@@ -292,7 +293,7 @@ namespace Trackily.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("CreatedDate")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("CreatorId")
@@ -316,7 +317,7 @@ namespace Trackily.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdatedDate")
+                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("TicketId");
