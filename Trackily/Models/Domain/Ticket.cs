@@ -26,8 +26,7 @@ namespace Trackily.Models.Domain
 
 		public Ticket()
 		{
-			TicketId = Guid.NewGuid();
-			IsReviewed = false;
+            IsReviewed = false;
 			IsApproved = false;
 			Status = TicketStatus.Awaiting;
 		}

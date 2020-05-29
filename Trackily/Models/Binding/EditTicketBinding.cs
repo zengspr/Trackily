@@ -33,14 +33,9 @@ namespace Trackily.Models.Binding
         public Ticket.TicketStatus Status { get; set; }
 
         [ValidUser]
-        public new string[] AddAssigned { get; set; }
+        public string[] AddAssigned { get; set; }
 
         [Display(Name = "Unassign Users")]
         public Dictionary<string, bool> RemoveAssigned { get; set; }    // RemoveAssigned[username] = true -> Unassign user.
-
-        // A user can submit content for at most one CommentThread and may make any number of replies to
-        // different threads. 
-        public string CommentThreadContent { get; set; } 
-        public Dictionary<Guid, string> NewReplies { get; set; } // Guid specifies CommentThread, Content specifies reply.
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -18,20 +19,25 @@ using Trackily.Services.DataAccess;
 
 namespace Trackily.Controllers
 {
+    [Authorize] // Redirects to login page if user tries to access any page while not being logged in.
     public class TicketsController : Controller
     {
         private readonly TrackilyContext _context;
         private readonly TicketService _ticketService;
         private readonly DbService _dbService;
+        private readonly CommentService _commentService;
 
-        public TicketsController(TrackilyContext context, TicketService ticketService, DbService dbService)
+        public TicketsController(TrackilyContext context, 
+            TicketService ticketService, DbService dbService, CommentService commentService)
         {
             _context = context;
             _ticketService = ticketService;
             _dbService = dbService;
+            _commentService = commentService;
         }
 
         // GET: Tickets
+
         public async Task<IActionResult> Index()
         {
             List<IndexViewModel> indexViewModel = _ticketService.CreateIndexViewModel(
@@ -40,7 +46,6 @@ namespace Trackily.Controllers
         }
 
         // GET: Tickets/Details/5
-        // TODO: Improve details view.
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -54,8 +59,37 @@ namespace Trackily.Controllers
                 return NotFound();
             }
 
-            var viewModel = await _ticketService.DetailsTicketViewModel(ticket);
+            var viewModel = _ticketService.DetailsTicketViewModel(ticket);
             return View(viewModel);
+        }
+
+        // POST: Tickets/Details/5  
+        [HttpPost]
+        public async Task<IActionResult> Details(Guid? ticketId, DetailsTicketBinding input)
+        {
+            if (ticketId == null) { return NotFound(); }
+
+            var ticket = await _dbService.GetTicket(ticketId.Value);
+            if (ticket == null) { return NotFound(); }
+
+            if (!ModelState.IsValid)
+            {
+                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+                var viewModel = _ticketService.DetailsTicketViewModel(ticket, allErrors);
+                return View(viewModel);
+            }
+
+            if (input.CommentThreadContent != null)
+            {
+                await _commentService.AddCommentThread(ticket, input, HttpContext);
+            }
+            if (input.NewReplies != null)
+            {
+                await _commentService.AddComments(ticket, input, HttpContext);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", new { id = ticketId });
         }
 
         // GET: Tickets/Create

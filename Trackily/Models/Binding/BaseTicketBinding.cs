@@ -21,9 +21,6 @@ namespace Trackily.Models.Binding
 		[Required]
 		public string Content { get; set; }
 
-		[DisplayName("Assigned Developers")]
-		public string[] AddAssigned { get; set; }   
-
 		[Required]
 		public TicketType Type { get; set; }
 

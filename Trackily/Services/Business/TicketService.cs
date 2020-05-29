@@ -1,21 +1,17 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Identity;
 using Trackily.Areas.Identity.Data;
 using Trackily.Data;
 using Trackily.Models.Binding;
 using Trackily.Models.Domain;
 using Trackily.Models.View;
-using Trackily.Services.Business;
 using Trackily.Services.DataAccess;
 
 namespace Trackily.Services.Business
@@ -29,16 +25,19 @@ namespace Trackily.Services.Business
         private readonly UserTicketService _userTicketService;
         private readonly DbService _dbService;
         private readonly TrackilyContext _context;
+        private readonly CommentService _commentService;
 
         public TicketService(UserManager<TrackilyUser> userManager, 
                              DbService dbService, 
                              TrackilyContext context, 
-                             UserTicketService userTicketService)
+                             UserTicketService userTicketService,
+                             CommentService commentService)
         {
             _userManager = userManager;
             _userTicketService = userTicketService;
             _dbService = dbService;
             _context = context;
+            _commentService = commentService;
         }
 
         /// <summary>
@@ -84,14 +83,8 @@ namespace Trackily.Services.Business
             foreach (string username in input.AddAssigned.Where(entry => entry != null))
             {
                 var user = await _dbService.GetUser(username);
-                var assignUser = new UserTicket
-                {
-                    Id = user.Id,
-                    User = user,
-                    TicketId = ticket.TicketId,
-                    Ticket = ticket
-                };
-                ticket.Assigned.Add(assignUser);
+                var userTicket = _userTicketService.CreateUserTicket(user, ticket);
+                ticket.Assigned.Add(userTicket);
             }
 
             _context.Add(ticket);
@@ -137,22 +130,42 @@ namespace Trackily.Services.Business
         /// </summary>
         /// <param name="ticket">Ticket object to create the Details view for.</param>
         /// <returns>DetailsTicketViewModel object</returns>
-        public async Task<DetailsTicketViewModel> DetailsTicketViewModel(Ticket ticket)
+        public DetailsTicketViewModel DetailsTicketViewModel(Ticket ticket, IEnumerable<ModelError> allErrors = null)
         {
             var viewModel = new DetailsTicketViewModel
             {
                 TicketId = ticket.TicketId,
                 Title = ticket.Title,
-                CreatedDate = (DateTime)ticket.CreatedDate,
-                UpdatedDate = (DateTime)ticket.UpdatedDate,
-                CreatorUserName = await _dbService.GetCreatorUserName(ticket),
+                CreatedDate = ticket.CreatedDate,
+                UpdatedDate = ticket.UpdatedDate,
+                CreatorUserName = ticket.Creator.UserName,
                 IsApproved = ticket.IsApproved,
                 IsReviewed = ticket.IsReviewed,
                 Assigned = _userTicketService.UserTicketToNames(ticket.Assigned),
                 Type = ticket.Type,
                 Status = ticket.Status,
-                Priority = ticket.Priority
+                Priority = ticket.Priority,
+                Content = ticket.Content
             };
+
+            if (ticket.CommentThreads != null)
+            {
+                viewModel.CommentThreads = new List<CommentThread>();
+                foreach (var commentThread in ticket.CommentThreads)
+                {
+                    viewModel.CommentThreads.Add(commentThread);
+                }
+            }
+
+            if (allErrors != null)
+            {
+                viewModel.Errors = new List<string>();
+                foreach (var error in allErrors)
+                {
+                    viewModel.Errors.Add(error.ErrorMessage);
+                }
+            }
+            
             return viewModel;
         }
 
@@ -180,18 +193,9 @@ namespace Trackily.Services.Business
                 Status = ticket.Status,
                 Priority = ticket.Priority,
                 Content = ticket.Content,
-                CommentThreads = new List<CommentThread>(),
-                RemoveAssigned = new Dictionary<string, bool>(),
-                Errors = new List<string>()
+                RemoveAssigned = new Dictionary<string, bool>()
             };
 
-            if (ticket.CommentThreads != null)
-            {
-                foreach (var commentThread in ticket.CommentThreads)
-                {
-                    viewModel.CommentThreads.Add(commentThread);
-                }
-            }
             foreach (string username in _userTicketService.UserTicketToNames(ticket.Assigned))
             {
                 viewModel.RemoveAssigned.Add(username, false);
@@ -224,8 +228,6 @@ namespace Trackily.Services.Business
                 Status = invalidInput.Status,
                 Priority = invalidInput.Priority,
                 Content = invalidInput.Content,
-                CommentThreadContent = invalidInput.CommentThreadContent,
-                CommentThreads = new List<CommentThread>(),
                 RemoveAssigned = new Dictionary<string, bool>(),
                 Errors = new List<string>()
             };
@@ -250,6 +252,8 @@ namespace Trackily.Services.Business
         /// <returns>N/A</returns>
         public async Task EditTicket(Ticket ticket, EditTicketBinding input, HttpContext request)
         {
+            var currentUser = await _userManager.GetUserAsync(request.User);
+
             ticket.UpdatedDate = DateTime.Now;
             ticket.IsApproved = input.IsApproved;
             ticket.IsReviewed = input.IsReviewed;
@@ -257,43 +261,28 @@ namespace Trackily.Services.Business
             ticket.Status = input.Status;
             ticket.Priority = input.Priority;
             ticket.Title = input.Title;
-            ticket.CommentThreads = null;
+            ticket.Creator = currentUser;
+            ticket.Content = input.Content;
 
             if (input.RemoveAssigned != null)
             {
                 // Unassign the flagged users from the Ticket. 
-                foreach (KeyValuePair<string, bool> entry in input.RemoveAssigned
+                foreach (var (userKey, remove) in input.RemoveAssigned
                                                                   .Where(entry => entry.Value == true))
                 {
-                    var userId = await _dbService.GetKey(entry.Key);
+                    var userId = await _dbService.GetKey(userKey);
                     var userTicket = await _userTicketService.GetUserTicket(ticket.TicketId, userId);
                     ticket.Assigned.Remove(userTicket);
                     _context.UserTickets.Remove(userTicket);
                 }
             }
 
-            foreach (string newAssign in input.AddAssigned.Where(entry => entry != null)) // Assign the users to the ticket. 
+            // Assign the users to the ticket by creating new UserTickets.
+            foreach (string username in input.AddAssigned.Where(entry => entry != null))
             {
-                var userTicket = new UserTicket
-                {
-                    Id = await _dbService.GetKey(newAssign),
-                    TicketId = ticket.TicketId,
-                    User = await _dbService.GetUser(newAssign),
-                    Ticket = ticket
-                };
+                var user = await _dbService.GetUser(username);
+                var userTicket = _userTicketService.CreateUserTicket(user, ticket);
                 ticket.Assigned.Add(userTicket);
-            }
-
-            if (input.CommentThreadContent != null) // Create a new CommentThread.
-            {
-                ticket.CommentThreads = new List<CommentThread>();
-                var commentThread = new CommentThread
-                {
-                    Parent = ticket,
-                    Content = input.CommentThreadContent,
-                    Creator = await _userManager.GetUserAsync(request.User)
-                };
-                ticket.CommentThreads.Add(commentThread);
             }
         }
 

@@ -10,11 +10,6 @@ namespace Trackily.Models.Domain
     {
         public Guid CommentId { get; set; }
         public CommentThread Parent { get; set; }
-
-        public Comment()
-        {
-            CommentId = new Guid();
-        }
     }
 }
  

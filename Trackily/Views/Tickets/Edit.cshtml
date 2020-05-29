@@ -9,7 +9,7 @@
 
 <form asp-action="Edit" class="container">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <h1>Edit Ticket</h1>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -88,9 +88,6 @@
                 <input type="submit" value="Save" class="btn btn-primary"/>
                 <a class="btn btn-danger float-right" asp-action="Delete" asp-route-id="@Model.TicketId">Delete</a>
             </div>
-        </div>
-        <div class="col-md-6">
-            @await Html.PartialAsync("_CommentsPartial", Model)
         </div>
     </div>
 </form>

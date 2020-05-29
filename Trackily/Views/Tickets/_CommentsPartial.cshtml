@@ -6,7 +6,7 @@
 <!--We need to display the existing CommentThread & Comments but also bind the CommentThread & Comment dictionary
     Need to figure out how to bind to Dictionary<Guid, string>
     -->
-@if (Model.CommentThreads != null && Model.CommentThreads.Count == 0)
+@if (Model.CommentThreads == null || Model.CommentThreads.Count == 0)
 {
     <h4>Start the first comment thread.</h4>
     <div class="row">
@@ -52,9 +52,8 @@ else
                     </div>
                     <div class="card-body p-0">
                         <div class="form-group">
-                            <!--readonly won't work, make this a different class and use another tinymce 
-                                https://stackoverflow.com/questions/13881812/make-readonly-disable-tinymce-textarea-->
-                            <textarea class="TinyMCE">@commentThread.Content</textarea>
+                            <textarea class="TinyMCE-Readonly">@commentThread.Content</textarea>
+                            <input type="hidden" name="CommentThreadContent" value="@commentThread.Content"/>
                         </div>
                     </div>
                     <div class="card-footer">
@@ -70,7 +69,7 @@ else
         <!--Toggle new CommentThread box.-->
         <!--Input to submit a new reply to the current comment thread.-->
         <div class="row">
-            <div class="col-sm">
+            <div class="col-sm offset-sm-2">
                 <div class="card">
                     <div class="card-header pb-0">
                         <div class="row">
@@ -81,20 +80,15 @@ else
                     </div>
                     <div class="card-body p-0">
                         <div class="form-group">
-                            <textarea class="TinyMCE" name="CommentContent"></textarea>
+                            <!--Bind to NewReplies dictionary.-->
+                            <textarea class="TinyMCE" name="NewReplies[@commentThread.CommentThreadId]"></textarea>
                         </div>
-                    </div>
-                    <div class="card-footer">
-                        <ul class="list-group list-group-horizontal-sm float-right">
-                            <li class="list-group-item">Submit</li>
-                            <li class="list-group-item">Cancel</li>
-                        </ul>
                     </div>
                 </div>
             </div>
         </div>
         <!--Show the replies to the current comment thread.-->
-        @if (commentThread.Comments != null && commentThread.Comments.Count != 0)
+        @if (commentThread.Comments != null && commentThread.Comments.Count > 0)
         {
             foreach (var comment in commentThread.Comments)
             {
@@ -118,7 +112,8 @@ else
                             </div>
                             <div class="card-body p-0">
                                 <div class="form-group">
-                                    <textarea readonly class="TinyMCE">@comment.Content</textarea>
+                                    <textarea readonly class="TinyMCE-Readonly">@comment.Content</textarea>
+                                    <input type="hidden" name="CommentContent" value="@comment.Content"/>
                                 </div>
                             </div>
                             <div class="card-footer">

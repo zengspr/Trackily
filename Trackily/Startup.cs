@@ -55,6 +55,7 @@ namespace Trackily
             services.AddScoped<DbService>();
             services.AddScoped<TicketService>();
             services.AddScoped<UserTicketService>();
+            services.AddScoped<CommentService>();
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
