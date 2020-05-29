@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<!--Make the new comment thread & reply boxes dynamic and pop in. Also make all replies to comment thread hidden by default.-->
 
 <div class="row">
     <div class="col-md-6">
@@ -61,12 +62,13 @@
     </div>
     <form asp-action="Details" class="col-md-6">
         <h1>Comments</h1>
+        <button type="button" class="btn btn-primary" id="CommentThreadButton">Start a new comment thread</button>
         <hr />
         <div asp-validation-summary="All" class="text-danger"></div>
 
         <div class="form-group">
             <div class="col-sm">
-                <div class="card">
+                <div class="card" id="NewCommentThread" style="display: none">
                     <div class="card-header pb-0">
                         <div class="row">
                             <div class="col-sm float-left">
@@ -111,10 +113,31 @@
                             </div>
                             <div class="card-footer">
                                 <ul class="list-group list-group-horizontal-sm float-right">
-                                    <li class="list-group-item">Reply</li>
+                                    <li class="list-group-item btn btn-primary reply-btn">Reply</li>
                                     <li class="list-group-item">Edit</li>
                                     <li class="list-group-item">Delete</li>
                                 </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Input to submit a new reply to the current comment thread.-->
+                <div class="form-group">
+                    <div class="col-sm offset-sm-2">
+                        <div class="card toggle-reply" style="display: none">
+                            <div class="card-header pb-0">
+                                <div class="row">
+                                    <div class="col-sm float-left">
+                                        <h5>Reply to thread</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="form-group">
+                                    <!--Bind to NewReplies dictionary.-->
+                                    <textarea class="TinyMCE" name="NewReplies[@commentThread.CommentThreadId]"></textarea>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -159,27 +182,6 @@
                         </div>
                     }
                 }
-
-                <!--Input to submit a new reply to the current comment thread.-->
-                <div class="form-group">
-                    <div class="col-sm offset-sm-2">
-                        <div class="card">
-                            <div class="card-header pb-0">
-                                <div class="row">
-                                    <div class="col-sm float-left">
-                                        <h5>Reply to thread</h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="form-group">
-                                    <!--Bind to NewReplies dictionary.-->
-                                    <textarea class="TinyMCE" name="NewReplies[@commentThread.CommentThreadId]"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             }
         }
 
@@ -198,4 +200,16 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function(){
+            $("#CommentThreadButton").click(function(){
+                $("#NewCommentThread").toggle();
+            });
+
+            $(".reply-btn").click(function(){
+                $(".toggle-reply").toggle();
+            });
+        });
+    </script>
 }
