@@ -39,7 +39,7 @@ namespace Trackily.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    Type = table.Column<int>(nullable: false),
+                    Role = table.Column<int>(nullable: false),
                     UserName = table.Column<string>(maxLength: 256, nullable: false)
                 },
                 constraints: table =>

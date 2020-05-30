@@ -130,7 +130,7 @@ namespace Trackily.Services.Business
         /// </summary>
         /// <param name="ticket">Ticket object to create the Details view for.</param>
         /// <returns>DetailsTicketViewModel object</returns>
-        public DetailsTicketViewModel DetailsTicketViewModel(Ticket ticket, IEnumerable<ModelError> allErrors = null)
+        public async Task<DetailsTicketViewModel> DetailsTicketViewModel(Ticket ticket, IEnumerable<ModelError> allErrors = null)
         {
             var viewModel = new DetailsTicketViewModel
             {
@@ -138,7 +138,7 @@ namespace Trackily.Services.Business
                 Title = ticket.Title,
                 CreatedDate = ticket.CreatedDate,
                 UpdatedDate = ticket.UpdatedDate,
-                CreatorUserName = ticket.Creator.UserName,
+                CreatorUserName = await _dbService.GetCreatorUserName(ticket),
                 IsApproved = ticket.IsApproved,
                 IsReviewed = ticket.IsReviewed,
                 Assigned = _userTicketService.UserTicketToNames(ticket.Assigned),

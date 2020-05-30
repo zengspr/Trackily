@@ -65,7 +65,7 @@ namespace Trackily.Services.Business
             // Want to avoid adding empty comments, since all comments are POSted.
             foreach (var (replyTo, content) in input.NewReplies.Where(r => r.Value != null))
             {
-                var commentThread = await GetCommentThread(replyTo); // Might be problematic since we are querying before saving to db.
+                var commentThread = await GetCommentThread(replyTo); 
                 var comment = new Comment
                 {
                     Content = content,

@@ -12,13 +12,13 @@ namespace Trackily.Areas.Identity.Data
     // TODO: Add authorization to Ticket methods and claims to Users.
     public class TrackilyUser : IdentityUser<Guid>
     {
-        public enum UserType
+        public enum UserRole
         {
             Developer,
             Manager
         };
 
-        public UserType Type { get; set; }
+        public UserRole Role { get; set; }
         public override string UserName { get; set; }
 
         // Relationships -----------------

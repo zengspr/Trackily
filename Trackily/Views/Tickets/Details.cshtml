@@ -5,7 +5,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!--Make the new comment thread & reply boxes dynamic and pop in. Also make all replies to comment thread hidden by default.-->
+<!--Click on Edit changes TinyMCE from readonly to editable. Also check that the current user is the creator. 
+    Also, only show the Edit button if the current user is authorized to Edit the post. -->
 
 <div class="row">
     <div class="col-md-6">
@@ -57,7 +58,7 @@
             </dd>
         </dl>
         <div class="row">
-            <textarea class="TinyMCE-Readonly">@Model.Content</textarea>
+            <textarea class="TinyMCE">@Model.Content</textarea>
         </div>
     </div>
     <form asp-action="Details" class="col-md-6">
@@ -78,7 +79,7 @@
                     </div>
                     <div class="card-body p-0">
                         <div>
-                            <textarea class="TinyMCE" name="CommentThreadContent"></textarea>
+                            <textarea class="TinyMCE" id="NewCommentThreadEditor" name="CommentThreadContent"></textarea>
                         </div>
                     </div>
                 </div>
@@ -109,12 +110,14 @@
                                 </div>
                             </div>
                             <div class="card-body p-0">
-                                <textarea class="TinyMCE-Readonly">@commentThread.Content</textarea>
+                                <textarea class="TinyMCE">@commentThread.Content</textarea>
                             </div>
                             <div class="card-footer">
                                 <ul class="list-group list-group-horizontal-sm float-right">
-                                    <li class="list-group-item btn btn-primary reply-btn">Reply</li>
-                                    <li class="list-group-item">Edit</li>
+                                    <li class="list-group-item btn btn-primary reply-btn" value="False">Reply</li>
+                                    <li class="list-group-item btn btn-primary edit-reply">
+                                        Edit
+                                    </li>
                                     <li class="list-group-item">Delete</li>
                                 </ul>
                             </div>
@@ -146,6 +149,7 @@
                 <!--Show the replies to the current comment thread.-->
                 if (commentThread.Comments != null && commentThread.Comments.Count > 0)
                 {
+                    int index = 0;
                     foreach (var comment in commentThread.Comments)
                     {
                         <div class="row">
@@ -168,18 +172,26 @@
                                     </div>
                                     <div class="card-body p-0">
                                         <div class="form-group">
-                                            <textarea readonly class="TinyMCE-Readonly">@comment.Content</textarea>
+                                            <textarea class="TinyMCE" 
+                                                      id="@comment.CommentId.ToString()-@index.ToString()">
+                                                @comment.Content
+                                            </textarea>
                                         </div>
                                     </div>
                                     <div class="card-footer">
                                         <ul class="list-group list-group-horizontal-sm float-right">
-                                            <li class="list-group-item">Edit</li>
+                                            <li class="list-group-item btn btn-primary edit-reply"
+                                                onclick="toggleEditReply(@comment.CommentId.ToString(), @index.ToString())">
+                                                Edit
+                                            </li>
                                             <li class="list-group-item">Delete</li>
                                         </ul>
+                                        <button class="btn btn-primary" onclick="toggleEditReply(@comment.CommentId.ToString(), @index.ToString())"></button>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        index++;
                     }
                 }
             }
@@ -199,17 +211,8 @@
 
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    
-    <script>
-        $(document).ready(function(){
-            $("#CommentThreadButton").click(function(){
-                $("#NewCommentThread").toggle();
-            });
-
-            $(".reply-btn").click(function(){
-                $(".toggle-reply").toggle();
-            });
-        });
-    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_DetailsScriptsPartial");
+    }
 }

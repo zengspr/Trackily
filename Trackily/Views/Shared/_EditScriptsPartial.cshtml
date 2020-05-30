@@ -1,0 +1,30 @@
+﻿<script>
+    $(document).ready(function () {
+        tinymce.init({
+            selector: '.TinyMCE',
+            placeholder: "Content goes here.",
+            height: 250,
+            menubar: false,
+            plugins: [
+                'advlist autolink lists link print preview anchor',
+                'searchreplace visualblocks codesample fullscreen textpattern',
+                'insertdatetime media table paste code help wordcount nonbreaking'
+            ],
+            toolbar: 'undo redo | formatselect | ' +
+                'bold italic backcolor | alignleft aligncenter ' +
+                'alignright alignjustify | bullist numlist outdent indent | ' +
+                'codesample nonbreaking | removeformat | help',
+            nonbreaking_force_tab: true,
+            content_css: '//www.tiny.cloud/css/codepen.min.css'
+        });
+    });
+
+    // Do not place this in the same document.ready as tinymce init, or does not work. 
+    function addRow() {
+        //copy the table row and clear the value of the input, then append the row to the end of the table
+        $("#formTable tbody tr:first").clone().find("input").each(function() {
+            $(this).val('');
+        }).end().appendTo("#formTable");
+    }
+</script>
+

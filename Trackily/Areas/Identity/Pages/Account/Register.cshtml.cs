@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Trackily.Areas.Identity.Data;
 
@@ -53,9 +55,9 @@ namespace Trackily.Areas.Identity.Pages.Account
             public string UserName { get; set; }
 
             [Required(ErrorMessage = "Please select a role.")]
-            [EnumDataType(typeof(TrackilyUser.UserType))]
+            [EnumDataType(typeof(TrackilyUser.UserRole))]
             [Display(Name = "Role")]
-            public TrackilyUser.UserType UserType { get; set; }
+            public TrackilyUser.UserRole UserRole { get; set; }
 
             [Required]
             [EmailAddress]
@@ -82,14 +84,15 @@ namespace Trackily.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             if (ModelState.IsValid)
             {
                 var user = new TrackilyUser
                 {
                     UserName = Input.UserName,
-                    Type = Input.UserType,
+                    Role = Input.UserRole,
                     Email = Input.Email
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
@@ -109,16 +112,25 @@ namespace Trackily.Areas.Identity.Pages.Account
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
+                    var userClaims = new List<Claim>
+                    {
+                        new Claim("UserName", Input.UserName)
+                    };
+                    if (Input.UserRole == TrackilyUser.UserRole.Manager)
+                    {
+                        userClaims.Add(new Claim("IsManager", "True"));
+                    }
+                    await _userManager.AddClaimsAsync(user, userClaims);
+                    
+
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
                     }
-                    else
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
-                    }
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return LocalRedirect(returnUrl);
                 }
+
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);

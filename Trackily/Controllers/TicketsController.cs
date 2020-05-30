@@ -26,14 +26,17 @@ namespace Trackily.Controllers
         private readonly TicketService _ticketService;
         private readonly DbService _dbService;
         private readonly CommentService _commentService;
+        private readonly IAuthorizationService _authService;
 
         public TicketsController(TrackilyContext context, 
-            TicketService ticketService, DbService dbService, CommentService commentService)
+            TicketService ticketService, DbService dbService, CommentService commentService,
+            IAuthorizationService authService)
         {
             _context = context;
             _ticketService = ticketService;
             _dbService = dbService;
             _commentService = commentService;
+            _authService = authService;
         }
 
         // GET: Tickets
@@ -59,7 +62,7 @@ namespace Trackily.Controllers
                 return NotFound();
             }
 
-            var viewModel = _ticketService.DetailsTicketViewModel(ticket);
+            var viewModel = await _ticketService.DetailsTicketViewModel(ticket);
             return View(viewModel);
         }
 
@@ -75,9 +78,13 @@ namespace Trackily.Controllers
             if (!ModelState.IsValid)
             {
                 IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
-                var viewModel = _ticketService.DetailsTicketViewModel(ticket, allErrors);
+                var viewModel = await _ticketService.DetailsTicketViewModel(ticket, allErrors);
                 return View(viewModel);
             }
+
+            // TODO: Any user should still be allowed to create a new comment thread and comment on any Ticket.  
+            var authResult = await _authService.AuthorizeAsync(HttpContext.User, ticket, "HasEditPrivileges");
+            if (!authResult.Succeeded) { return new ForbidResult(); }
 
             if (input.CommentThreadContent != null)
             {
@@ -145,6 +152,9 @@ namespace Trackily.Controllers
 
             var ticket = await _dbService.GetTicket(id.Value); 
             if (ticket == null) { return NotFound(); }
+
+            var authResult = await _authService.AuthorizeAsync(HttpContext.User, ticket, "HasEditPrivileges");
+            if (!authResult.Succeeded) { return new ForbidResult(); }
 
             await _ticketService.EditTicket(ticket, input, HttpContext);
             await _context.SaveChangesAsync();
