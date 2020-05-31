@@ -82,10 +82,6 @@ namespace Trackily.Controllers
                 return View(viewModel);
             }
 
-            // TODO: Any user should still be allowed to create a new comment thread and comment on any Ticket.  
-            var authResult = await _authService.AuthorizeAsync(HttpContext.User, ticket, "HasEditPrivileges");
-            if (!authResult.Succeeded) { return new ForbidResult(); }
-
             if (input.CommentThreadContent != null)
             {
                 await _commentService.AddCommentThread(ticket, input, HttpContext);

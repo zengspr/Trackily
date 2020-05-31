@@ -110,14 +110,12 @@
                                 </div>
                             </div>
                             <div class="card-body p-0">
-                                <textarea class="TinyMCE">@commentThread.Content</textarea>
+                                <tiny-mce cmt-thread="commentThread">@commentThread.Content</tiny-mce>
                             </div>
                             <div class="card-footer">
                                 <ul class="list-group list-group-horizontal-sm float-right">
                                     <li class="list-group-item btn btn-primary reply-btn" value="False">Reply</li>
-                                    <li class="list-group-item btn btn-primary edit-reply">
-                                        Edit
-                                    </li>
+                                    <li class="list-group-item btn btn-primary">Edit</li>
                                     <li class="list-group-item">Delete</li>
                                 </ul>
                             </div>
@@ -149,7 +147,6 @@
                 <!--Show the replies to the current comment thread.-->
                 if (commentThread.Comments != null && commentThread.Comments.Count > 0)
                 {
-                    int index = 0;
                     foreach (var comment in commentThread.Comments)
                     {
                         <div class="row">
@@ -172,26 +169,18 @@
                                     </div>
                                     <div class="card-body p-0">
                                         <div class="form-group">
-                                            <textarea class="TinyMCE" 
-                                                      id="@comment.CommentId.ToString()-@index.ToString()">
-                                                @comment.Content
-                                            </textarea>
+                                            <tiny-mce cmt="comment">@comment.Content</tiny-mce>
                                         </div>
                                     </div>
                                     <div class="card-footer">
                                         <ul class="list-group list-group-horizontal-sm float-right">
-                                            <li class="list-group-item btn btn-primary edit-reply"
-                                                onclick="toggleEditReply(@comment.CommentId.ToString(), @index.ToString())">
-                                                Edit
-                                            </li>
+                                            <li class="list-group-item btn btn-primary">Edit</li>
                                             <li class="list-group-item">Delete</li>
                                         </ul>
-                                        <button class="btn btn-primary" onclick="toggleEditReply(@comment.CommentId.ToString(), @index.ToString())"></button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        index++;
                     }
                 }
             }

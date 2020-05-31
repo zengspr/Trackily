@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Trackily.Areas.Identity.Data;
 using Trackily.Areas.Identity.Policies.Handlers;
 using Trackily.Areas.Identity.Policies.Requirements;
@@ -59,6 +60,8 @@ namespace Trackily
             services.AddScoped<UserTicketService>();
             services.AddScoped<CommentService>();
             services.AddScoped<IAuthorizationHandler, EditPrivilegesHandler>();
+            services.AddScoped<IAuthorizationHandler, EditPrivilegesCommentHandler>();
+            services.AddScoped<IAuthorizationHandler, EditPrivilegesCommentThreadHandler>();
 
             services.AddRazorPages().AddRazorRuntimeCompilation(); // Workaround to enable Browser Link in VS2019.
 
