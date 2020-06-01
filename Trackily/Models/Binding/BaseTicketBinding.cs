@@ -10,8 +10,8 @@ using static Trackily.Models.Domain.Ticket;
 
 namespace Trackily.Models.Binding
 {
-    public class BaseTicketBinding
-    {
+	public class BaseTicketBinding
+	{
 		public Guid TicketId { get; set; } // TODO: Protect against overposting attack?
 
 		[Required]
@@ -20,9 +20,6 @@ namespace Trackily.Models.Binding
 
 		[Required]
 		public string Content { get; set; }
-
-		[DisplayName("Assigned Developers")]
-		public string[] AddAssigned { get; set; }   
 
 		[Required]
 		public TicketType Type { get; set; }

@@ -1,10 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using Trackily.Models.Domain;
 using Trackily.Validation;
 
@@ -12,6 +8,19 @@ namespace Trackily.Models.Binding
 {
     public class EditTicketBinding : BaseTicketBinding
     {
+        [Display(Name = "Created")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:f}")]
+        public DateTime CreatedDate { get; set; }
+
+        [Display(Name = "Last Updated")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:f}")]
+        public DateTime UpdatedDate { get; set; }
+
+        [Display(Name = "Creator")]
+        public string CreatorUserName { get; set; }
+
         [Required]
         [Display(Name = "Mark as Reviewed")]
         public bool IsReviewed { get; set; }
@@ -24,9 +33,9 @@ namespace Trackily.Models.Binding
         public Ticket.TicketStatus Status { get; set; }
 
         [ValidUser]
-        public new string[] AddAssigned { get; set; }
+        public string[] AddAssigned { get; set; }
 
         [Display(Name = "Unassign Users")]
-        public Dictionary<string, bool> RemoveAssigned { get; set; }    // (username, T/F). T = will be removed.
+        public Dictionary<string, bool> RemoveAssigned { get; set; }    // RemoveAssigned[username] = true -> Unassign user.
     }
 }

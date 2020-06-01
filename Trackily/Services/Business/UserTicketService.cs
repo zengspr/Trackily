@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Trackily.Areas.Identity.Data;
 using Trackily.Data;
 using Trackily.Models.Domain;
-using Trackily.Models.Services;
+using Trackily.Services.Business;
 using Trackily.Services.DataAccess;
 
 namespace Trackily.Services.Business
@@ -18,14 +19,20 @@ namespace Trackily.Services.Business
             _context = context;
         }
 
+        public UserTicket CreateUserTicket(TrackilyUser user, Ticket ticket)
+        {
+            return new UserTicket
+            {
+                Id = user.Id,
+                User = user,
+                TicketId = ticket.TicketId,
+                Ticket = ticket
+            };
+        }
+
         public List<string> UserTicketToNames(ICollection<UserTicket> userTickets)
         {
-            var usernames = new List<string>();
-            foreach (var userTicket in userTickets)
-            {
-                usernames.Add(userTicket.User.UserName);
-            }
-            return usernames;
+            return userTickets.Select(userTicket => userTicket.User.UserName).ToList();
         }
 
         public async Task<UserTicket> GetUserTicket(Guid ticketId, Guid userId)

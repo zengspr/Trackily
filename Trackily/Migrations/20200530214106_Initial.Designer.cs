@@ -10,7 +10,7 @@ using Trackily.Data;
 namespace Trackily.Migrations
 {
     [DbContext(typeof(TrackilyContext))]
-    [Migration("20200511161606_Initial")]
+    [Migration("20200530214106_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -197,16 +197,17 @@ namespace Trackily.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
@@ -223,13 +224,76 @@ namespace Trackily.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Trackily.Models.Domain.Comment", b =>
+                {
+                    b.Property<Guid>("CommentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ParentCommentThreadId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("CommentId");
+
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("ParentCommentThreadId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Trackily.Models.Domain.CommentThread", b =>
+                {
+                    b.Property<Guid>("CommentThreadId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ParentTicketId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("CommentThreadId");
+
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("ParentTicketId");
+
+                    b.ToTable("CommentThreads");
+                });
+
             modelBuilder.Entity("Trackily.Models.Domain.Ticket", b =>
                 {
                     b.Property<Guid>("TicketId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("CreatedDate")
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("CreatorId")
@@ -253,7 +317,7 @@ namespace Trackily.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdatedDate")
+                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("TicketId");
@@ -329,10 +393,38 @@ namespace Trackily.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Trackily.Models.Domain.Comment", b =>
+                {
+                    b.HasOne("Trackily.Areas.Identity.Data.TrackilyUser", "Creator")
+                        .WithMany("CreatedComments")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Trackily.Models.Domain.CommentThread", "Parent")
+                        .WithMany("Comments")
+                        .HasForeignKey("ParentCommentThreadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Trackily.Models.Domain.CommentThread", b =>
+                {
+                    b.HasOne("Trackily.Areas.Identity.Data.TrackilyUser", "Creator")
+                        .WithMany("CreatedThreads")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Trackily.Models.Domain.Ticket", "Parent")
+                        .WithMany("CommentThreads")
+                        .HasForeignKey("ParentTicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Trackily.Models.Domain.Ticket", b =>
                 {
                     b.HasOne("Trackily.Areas.Identity.Data.TrackilyUser", "Creator")
-                        .WithMany("CreatedTicket")
+                        .WithMany("CreatedTickets")
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -341,7 +433,7 @@ namespace Trackily.Migrations
             modelBuilder.Entity("Trackily.Models.Domain.UserTicket", b =>
                 {
                     b.HasOne("Trackily.Areas.Identity.Data.TrackilyUser", "User")
-                        .WithMany("Assigned")
+                        .WithMany("AssignedTo")
                         .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

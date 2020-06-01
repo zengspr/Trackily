@@ -6,9 +6,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Trackily.Areas.Identity.Data;
+using Trackily.Areas.Identity.Policies.Handlers;
+using Trackily.Areas.Identity.Policies.Requirements;
 using Trackily.Data;
-using Trackily.Models.Services;
 using Trackily.Services.Business;
 using Trackily.Services.DataAccess;
 
@@ -35,7 +38,7 @@ namespace Trackily
                     Configuration.GetConnectionString("TrackilyContextConnection")));
 
             services.AddDefaultIdentity<TrackilyUser>(options => options.SignIn.RequireConfirmedAccount = false)
-               .AddEntityFrameworkStores<TrackilyContext>();
+                .AddEntityFrameworkStores<TrackilyContext>();
 
             if (_env.IsDevelopment())
             {
@@ -52,14 +55,27 @@ namespace Trackily
                 });
             }
 
-            // Custom services.
             services.AddScoped<DbService>();
             services.AddScoped<TicketService>();
-            services.AddScoped<UserService>();
             services.AddScoped<UserTicketService>();
+            services.AddScoped<CommentService>();
+            services.AddScoped<IAuthorizationHandler, EditPrivilegesHandler>();
+            services.AddScoped<IAuthorizationHandler, EditPrivilegesCommentHandler>();
+            services.AddScoped<IAuthorizationHandler, EditPrivilegesCommentThreadHandler>();
 
-            services.AddControllersWithViews();
-            services.AddRazorPages();
+            services.AddRazorPages().AddRazorRuntimeCompilation(); // Workaround to enable Browser Link in VS2019.
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(
+                    "IsManager",
+                    policyBuilder => policyBuilder.RequireClaim("IsManager"));
+                options.AddPolicy(
+                    "HasEditPrivileges",
+                    policyBuilder => policyBuilder.AddRequirements(
+                        new EditPrivilegesRequirement()
+                    ));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,6 +85,7 @@ namespace Trackily
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+                app.UseBrowserLink();
             }
             else
             {
@@ -76,6 +93,7 @@ namespace Trackily
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -92,5 +110,5 @@ namespace Trackily
                 endpoints.MapRazorPages();
             });
         }
+        }
     }
-}

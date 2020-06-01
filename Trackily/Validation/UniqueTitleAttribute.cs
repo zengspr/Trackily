@@ -13,11 +13,11 @@ namespace Trackily.Validation
         // TODO: Improve the structure of this.
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var context = (TrackilyContext)validationContext.GetService(typeof(TrackilyContext));
+            var context = (TrackilyContext) validationContext.GetService(typeof(TrackilyContext));
 
             if (validationContext.ObjectType.Name == "EditTicketBinding")
             {
-                var input = (EditTicketBinding)validationContext.ObjectInstance;
+                var input = (EditTicketBinding) validationContext.ObjectInstance;
                 if (context.Tickets.Single(t => t.TicketId == input.TicketId).Title == input.Title)
                 {
                     return ValidationResult.Success; // Title of the ticket was not changed. 

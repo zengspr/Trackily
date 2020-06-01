@@ -11,11 +11,13 @@
 <h1>Index</h1>
 
 <!--
-    To improve: Use reflection to get all the property names and values and iterate.
-                However, getting the property name of an enum seems to be more complicated.
-                See https://stackoverflow.com/questions/14285498/getcustomattribute-returns-null.
-                Also, getting the value of properties using property.GetValue(item) will not apply
-                the DisplayFormat attributes (e.g. for DateTime).
+To improve: Use reflection to get all the property names and values and iterate.
+However, getting the property name of an enum seems to be more complicated.
+See https://stackoverflow.com/questions/14285498/getcustomattribute-returns-null.
+Also, getting the value of properties using property.GetValue(item) will not apply
+the DisplayFormat attributes (e.g. for DateTime).
+    
+    Do not show the Edit link on Tickets for which the current user does not have editing privileges.
 -->
 
 <div class="row">

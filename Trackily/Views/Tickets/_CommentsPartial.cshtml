@@ -1,0 +1,131 @@
+﻿<!--Model should have all CommentThreads and Comments for a particular Ticket.-->
+
+<h1>Comments</h1>
+<hr />
+
+<!--We need to display the existing CommentThread & Comments but also bind the CommentThread & Comment dictionary
+    Need to figure out how to bind to Dictionary<Guid, string>
+    -->
+@if (Model.CommentThreads == null || Model.CommentThreads.Count == 0)
+{
+    <h4>Start the first comment thread.</h4>
+    <div class="row">
+        <div class="col-sm">
+            <div class="card">
+                <div class="card-header pb-0">
+                    <div class="row">
+                        <div class="col-sm float-left">
+                            <h5>@Model.CreatorUserName</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="form-group">
+                        <textarea class="TinyMCE" name="CommentThreadContent"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    @foreach (var commentThread in Model.CommentThreads)
+    {
+        <div class="row">
+            <div class="col-sm">
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <div class="row">
+                            <div class="col-sm float-left">
+                                <h5>@commentThread.Creator.UserName</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm float-left">
+                                <p>@commentThread.CreatedDate</p>
+                            </div>
+                            <div class="col-sm float-right">
+                                <p>@commentThread.UpdatedDate</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="form-group">
+                            <textarea class="TinyMCE-Readonly">@commentThread.Content</textarea>
+                            <input type="hidden" name="CommentThreadContent" value="@commentThread.Content"/>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <ul class="list-group list-group-horizontal-sm float-right">
+                            <li class="list-group-item">Reply</li>
+                            <li class="list-group-item">Edit</li>
+                            <li class="list-group-item">Delete</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Toggle new CommentThread box.-->
+        <!--Input to submit a new reply to the current comment thread.-->
+        <div class="row">
+            <div class="col-sm offset-sm-2">
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <div class="row">
+                            <div class="col-sm float-left">
+                                <h6>Reply to thread</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="form-group">
+                            <!--Bind to NewReplies dictionary.-->
+                            <textarea class="TinyMCE" name="NewReplies[@commentThread.CommentThreadId]"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Show the replies to the current comment thread.-->
+        @if (commentThread.Comments != null && commentThread.Comments.Count > 0)
+        {
+            foreach (var comment in commentThread.Comments)
+            {
+                <div class="row">
+                    <div class="col-sm offset-sm-2">
+                        <div class="card">
+                            <div class="card-header pb-0">
+                                <div class="row">
+                                    <div class="col-sm float-left">
+                                        <h6>@comment.Creator.UserName</h6>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm float-left">
+                                        <p><small>@comment.CreatedDate</small></p>
+                                    </div>
+                                    <div class="col-sm float-right">
+                                        <p><small>@comment.UpdatedDate</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="form-group">
+                                    <textarea readonly class="TinyMCE-Readonly">@comment.Content</textarea>
+                                    <input type="hidden" name="CommentContent" value="@comment.Content"/>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <ul class="list-group list-group-horizontal-sm float-right">
+                                    <li class="list-group-item">Edit</li>
+                                    <li class="list-group-item">Delete</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    }
+}

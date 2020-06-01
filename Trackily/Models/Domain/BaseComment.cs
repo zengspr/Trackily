@@ -6,18 +6,17 @@ using Trackily.Areas.Identity.Data;
 
 namespace Trackily.Models.Domain
 {
-    public class BaseEntity
+    public class BaseComment
     {
-        public DateTime? CreatedDate { get; set; }
-        public DateTime? UpdatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
         public TrackilyUser Creator { get; set; }
-        public string Title { get; set; }
         public string Content { get; set; }
 
-        public BaseEntity()
+        public BaseComment()
         {
             UpdatedDate = DateTime.Now;
-            CreatedDate = CreatedDate ?? UpdatedDate; 
+            CreatedDate = DateTime.Now;
         }
     }
 }

@@ -1,37 +1,3 @@
 ﻿<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-<script src="~/lib/tinymce/tinymce.min.js"></script>
-
-<!--Add cascading text boxes for username input.-->
-<script>
-    function addRow() {
-        //copy the table row and clear the value of the input, then append the row to the end of the table
-        $("#formTable tbody tr:first").clone().find("input").each(function () {
-            $(this).val('');
-        }).end().appendTo("#formTable");
-    }
-</script>
-
-<!--Add TinyMCE to textarea with id "Content".-->
-<script>
-    $(document).ready(function () {
-        tinymce.init({
-            selector: '#Content',
-            placeholder: "Content related to ticket goes here.",
-            height: 250,
-            menubar: false,
-            plugins: [
-                'advlist autolink lists link print preview anchor',
-                'searchreplace visualblocks codesample fullscreen textpattern',
-                'insertdatetime media table paste code help wordcount nonbreaking'
-            ],
-            toolbar: 'undo redo | formatselect | ' +
-                'bold italic backcolor | alignleft aligncenter ' +
-                'alignright alignjustify | bullist numlist outdent indent | ' +
-                'codesample nonbreaking | removeformat | help',
-            nonbreaking_force_tab: true,
-            content_css: '//www.tiny.cloud/css/codepen.min.css'
-        });
-    });
-</script>
 

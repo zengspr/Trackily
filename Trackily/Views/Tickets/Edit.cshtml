@@ -6,99 +6,100 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Edit</h1>
 
-<h4>Ticket</h4>
-<hr />
-<div class="row">
-    <div class="col-md-10">
-        <form asp-action="Edit">
+<form asp-action="Edit" class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Edit Ticket</h1>
+            <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="TicketId" />
+            <input type="hidden" asp-for="TicketId"/>
             <div class="form-group">
-                <p><label asp-for="CreatedDate" class="control-label"></label>: @Html.DisplayFor(model => model.CreatedDate)</p>
+                <p><label asp-for="CreatedDate"></label>: @Html.DisplayFor(model => model.CreatedDate)</p>
+                <input type="hidden" asp-for="CreatedDate"/>
             </div>
             <div class="form-group">
-                <p><label asp-for="UpdatedDate" class="control-label"></label>: @Html.DisplayFor(model => model.UpdatedDate)</p>
+                <p><label asp-for="UpdatedDate"></label>: @Html.DisplayFor(model => model.UpdatedDate)</p>
+                <input type="hidden" asp-for="UpdatedDate"/>
             </div>
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
+                <label asp-for="Title"></label>
+                <input asp-for="Title" class="form-control"/>
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <input type="hidden" asp-for="CreatorUserName"/>
                 <p>
-                    <label asp-for="CreatorUserName" class="control-label"></label>:
+                    <label asp-for="CreatorUserName"></label>:
                     @Html.DisplayFor(model => model.CreatorUserName)
                 </p>
             </div>
             <div class="form-group">
-                <label asp-for="Type" class="control-label"></label>
+                <label asp-for="Type"></label>
                 <select asp-for="Type" asp-items="Html.GetEnumSelectList<TicketType>()" class="form-control"></select>
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
+                <label asp-for="Status"></label>
                 <select asp-for="Status" asp-items="Html.GetEnumSelectList<TicketStatus>()" class="form-control"></select>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Priority" class="control-label"></label>
+                <label asp-for="Priority"></label>
                 <select asp-for="Priority" asp-items="Html.GetEnumSelectList<TicketPriority>()" class="form-control"></select>
                 <span asp-validation-for="Priority" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label class="control-label" asp-for="RemoveAssigned"></label>
+                <label asp-for="RemoveAssigned"></label>
                 @foreach (var key in Model.RemoveAssigned.Keys)
                 {
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" asp-for="RemoveAssigned[key]" />
+                        <input class="form-check-input" type="checkbox" asp-for="RemoveAssigned[key]"/>
                         <label class="form-check-label" asp-for="@key">@key</label>
                     </div>
-                    <!--Change this to buttons which can be toggled with JQuery to indicate removing the user.-->
-                    @*<div class="btn-group-toggle" data-toggle="buttons">
-                        <label class="btn btn-secondary active" asp-for="@key">
-                            <input type="checkbox" asp-for="RemoveAssigned[key]" checked autocomplete="off"> @key
-                        </label>
-                    </div>*@
                 }
             </div>
             <div class="form-group">
-                <label class="control-label">Assign users</label>
+                <label>Assign users</label>
                 <table id="formTable">
+                    <!--Fix this: not showing each of the user input assigned user when validation fails.-->
                     <tbody>
-                        <tr>
-                            <td><input asp-for="AddAssigned" class="form-control" placeholder="username" /></td>
-                        </tr>
+                    <tr>
+                        <td><input asp-for="AddAssigned" class="form-control" placeholder="username"/></td>
+                    </tr>
                     </tbody>
                 </table>
                 <a class="btn btn-primary" href="javascript:addRow();" role="button">Add</a>
                 <span asp-validation-for="AddAssigned" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IsReviewed" class="control-label"></label>
-                <input asp-for="IsReviewed" />
+                <label asp-for="IsReviewed"></label>
+                <input asp-for="IsReviewed"/>
             </div>
             <div class="form-group">
-                <label asp-for="IsApproved" class="control-label"></label>
-                <input asp-for="IsApproved" />
+                <label asp-for="IsApproved"></label>
+                <input asp-for="IsApproved"/>
             </div>
             <div class="form-group">
                 <span asp-validation-for="Content" class="text-danger"></span>
-                <textarea asp-for="Content" id="Content"></textarea>
+                <textarea asp-for="Content" class="TinyMCE"></textarea>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-                <button type="button" class="btn btn-danger" align="right" asp-action="Delete" asp-route-id="@Model.TicketId">Delete</button>
+                <input type="submit" value="Save" class="btn btn-primary"/>
+                <a class="btn btn-danger float-right" asp-action="Delete" asp-route-id="@Model.TicketId">Delete</a>
             </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>
 
 <div class="row">
-    <button type="button" class="btn btn-link" asp-action="Index">Back to Index</button>
+    <a class="btn btn-link" asp-action="Index">Back to Tickets</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_EditScriptsPartial");
+    }
+
 }

@@ -19,7 +19,7 @@ namespace Trackily.Models.View
         [DisplayName("Priority")]
         public TicketPriority Priority { get; set; }
 
-        [DisplayName("Type")]
+        [DisplayName("Role")]
         public TicketType Type { get; set; }
 
         [DisplayName("Status")]
