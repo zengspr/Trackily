@@ -6,15 +6,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Trackily.Controllers.Filters;
 using Trackily.Data;
 using Trackily.Models.Binding;
 using Trackily.Models.View;
 using Trackily.Services.Business;
 using Trackily.Services.DataAccess;
 
+
 namespace Trackily.Controllers
 {
-    [Authorize] 
+    [Authorize]
     public class TicketsController : Controller
     {
         private readonly TrackilyContext _context;
@@ -35,7 +37,6 @@ namespace Trackily.Controllers
         }
 
         // GET: Tickets
-
         public async Task<IActionResult> Index()
         {
             var allTickets = await _context.Tickets.Include(a => a.Assigned).ToListAsync();
@@ -44,14 +45,10 @@ namespace Trackily.Controllers
         }
 
         // GET: Tickets/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+        [NullIdActionFilter]
+        public async Task<IActionResult> Details(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var ticket = await _dbService.GetTicket(id.Value);
+            var ticket = await _dbService.GetTicket(id);
             if (ticket == null)
             {
                 return NotFound();
@@ -63,11 +60,10 @@ namespace Trackily.Controllers
 
         // POST: Tickets/Details/5  
         [HttpPost]
-        public async Task<IActionResult> Details(Guid? ticketId, DetailsTicketBinding input)
+        [NullIdActionFilter]
+        public async Task<IActionResult> Details(Guid id, DetailsTicketBinding input)
         {
-            if (ticketId == null) { return NotFound(); }
-
-            var ticket = await _dbService.GetTicket(ticketId.Value);
+            var ticket = await _dbService.GetTicket(id);
             if (ticket == null) { return NotFound(); }
 
             if (!ModelState.IsValid)
@@ -87,7 +83,7 @@ namespace Trackily.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction("Details", new { id = ticketId });
+            return RedirectToAction("Details", new { id });
         }
 
         // GET: Tickets/Create
@@ -115,12 +111,10 @@ namespace Trackily.Controllers
         }
 
         // GET: Tickets/Edit/5
-        // TODO: Make (id == null) check into a validation attribute.
-        public async Task<IActionResult> Edit(Guid? id)
+        [NullIdActionFilter]
+        public async Task<IActionResult> Edit(Guid id)
         {
-            if (id == null) { return NotFound(); }
-
-            var ticket = await _dbService.GetTicket(id.Value);
+            var ticket = await _dbService.GetTicket(id);
             if (ticket == null) { return NotFound(); }
 
             var viewModel = await _ticketService.EditTicketViewModel(ticket: ticket);
@@ -130,10 +124,9 @@ namespace Trackily.Controllers
         // POST: Tickets/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid? id, EditTicketBinding input)
+        [NullIdActionFilter]
+        public async Task<IActionResult> Edit(Guid id, EditTicketBinding input)
         {
-            if (id == null) { return NotFound(); }
-
             if (!ModelState.IsValid)
             {
                 IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(m => m.Errors);
@@ -141,7 +134,7 @@ namespace Trackily.Controllers
                 return View(viewModel);
             }
 
-            var ticket = await _dbService.GetTicket(id.Value); 
+            var ticket = await _dbService.GetTicket(id); 
             if (ticket == null) { return NotFound(); }
 
             var authResult = await _authService.AuthorizeAsync(HttpContext.User, ticket, "HasEditPrivileges");
@@ -149,17 +142,13 @@ namespace Trackily.Controllers
 
             await _ticketService.EditTicket(ticket, input, HttpContext);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Edit", new { id = id.Value });
+            return RedirectToAction("Edit", new { id });
         }
 
         // GET: Tickets/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        [NullIdActionFilter]
+        public async Task<IActionResult> Delete(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var ticket = await _context.Tickets
                 .FirstOrDefaultAsync(m => m.TicketId == id);
             if (ticket == null)
@@ -173,6 +162,7 @@ namespace Trackily.Controllers
         // POST: Tickets/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [NullIdActionFilter]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var ticket = await _context.Tickets.FindAsync(id);

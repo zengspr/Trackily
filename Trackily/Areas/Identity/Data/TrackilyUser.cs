@@ -1,15 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Trackily.Models.Domain;
-#nullable enable
+
 
 namespace Trackily.Areas.Identity.Data
 {
-    // TODO: Add authorization to Ticket methods and claims to Users.
     public class TrackilyUser : IdentityUser<Guid>
     {
         public enum UserRole

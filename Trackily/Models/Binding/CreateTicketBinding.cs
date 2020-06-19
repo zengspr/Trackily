@@ -14,6 +14,6 @@ namespace Trackily.Models.Binding
 	public class CreateTicketBinding : BaseTicketBinding
 	{
 		[UserExists]
-		public new string[] AddAssigned { get; set; }
+		public string[] AddAssigned { get; set; }
 	}
 }

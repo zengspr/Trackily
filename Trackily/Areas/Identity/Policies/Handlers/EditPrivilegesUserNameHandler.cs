@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 using Trackily.Areas.Identity.Data;
 using Trackily.Areas.Identity.Policies.Requirements;
-using Trackily.Models.Domain;
+
 
 namespace Trackily.Areas.Identity.Policies.Handlers
 {

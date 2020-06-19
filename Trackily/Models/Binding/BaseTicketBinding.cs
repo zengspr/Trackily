@@ -12,7 +12,7 @@ namespace Trackily.Models.Binding
 {
 	public class BaseTicketBinding
 	{
-		public Guid TicketId { get; set; } // TODO: Protect against overposting attack?
+		public Guid TicketId { get; set; } 
 
 		[Required]
 		[UniqueTitle]
