@@ -297,12 +297,6 @@ namespace Trackily.Migrations
                     b.Property<Guid>("CreatorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsApproved")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsReviewed")
-                        .HasColumnType("bit");
-
                     b.Property<int>("Priority")
                         .HasColumnType("int");
 

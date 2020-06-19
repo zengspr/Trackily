@@ -163,8 +163,6 @@ namespace Trackily.Migrations
                     CreatorId = table.Column<Guid>(nullable: false),
                     Title = table.Column<string>(nullable: true),
                     Content = table.Column<string>(nullable: true),
-                    IsReviewed = table.Column<bool>(nullable: false),
-                    IsApproved = table.Column<bool>(nullable: false),
                     Type = table.Column<int>(nullable: false),
                     Status = table.Column<int>(nullable: false),
                     Priority = table.Column<int>(nullable: false)

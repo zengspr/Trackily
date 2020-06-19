@@ -13,13 +13,15 @@ namespace Trackily.Models.View
     {
         public Guid TicketId { get; set; }
 
+        public string CreatorUserName { get; set; }
+
         [DisplayName("Title")]
         public string Title { get; set; }
 
         [DisplayName("Priority")]
         public TicketPriority Priority { get; set; }
 
-        [DisplayName("Role")]
+        [DisplayName("Type")]
         public TicketType Type { get; set; }
 
         [DisplayName("Status")]

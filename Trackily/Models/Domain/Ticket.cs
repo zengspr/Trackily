@@ -1,21 +1,15 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Trackily.Areas.Identity.Data;
-#nullable enable
+
 
 namespace Trackily.Models.Domain
 {
+	// TODO: Remove IsReviewed and IsApproved and all references to it. The semantics of these are already capture in the Status.
 	public class Ticket : BaseTicket
 	{
 		public Guid TicketId { get; set; }
 		public ICollection<UserTicket>? Assigned { get; set; }	// List of Developers assigned to the Ticket.
 		// public string RelatedFiles { get; set; }	// Name of files related to the Ticket.
-		public bool IsReviewed { get; set; }	// Has the Ticket been reviewed by a Manager?
-		public bool IsApproved { get; set; }	// Has the Ticket been approved for action by a Manager?
-
 		public enum TicketType { Issue, Feature }
 		public enum TicketStatus { Awaiting, Unapproved, Approved, Resolved, Closed }
 		public enum TicketPriority { Normal, Low, High }
@@ -26,8 +20,6 @@ namespace Trackily.Models.Domain
 
 		public Ticket()
 		{
-			IsReviewed = false;
-			IsApproved = false;
 			Status = TicketStatus.Awaiting;
 		}
 	}

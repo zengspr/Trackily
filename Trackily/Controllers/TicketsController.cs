@@ -1,25 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Trackily.Areas.Identity.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Trackily.Data;
 using Trackily.Models.Binding;
-using Trackily.Models.Domain;
 using Trackily.Models.View;
 using Trackily.Services.Business;
 using Trackily.Services.DataAccess;
 
 namespace Trackily.Controllers
 {
-    [Authorize] // Redirects to login page if user tries to access any page while not being logged in.
+    [Authorize] 
     public class TicketsController : Controller
     {
         private readonly TrackilyContext _context;
@@ -43,8 +38,8 @@ namespace Trackily.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<IndexViewModel> indexViewModel = _ticketService.CreateIndexViewModel(
-                await _context.Tickets.Include(a => a.Assigned).ToListAsync());
+            var allTickets = await _context.Tickets.Include(a => a.Assigned).ToListAsync();
+            List<IndexViewModel> indexViewModel = await _ticketService.CreateIndexViewModel(allTickets);
             return View(indexViewModel); 
         }
 

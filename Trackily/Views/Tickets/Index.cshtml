@@ -21,7 +21,7 @@ the DisplayFormat attributes (e.g. for DateTime).
 -->
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col">
         <table data-toggle="table"
                class="table table-hover"
                data-search="true"
@@ -35,26 +35,24 @@ the DisplayFormat attributes (e.g. for DateTime).
                     <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.Status)</th>
                     <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.NumAssignedUsers)</th>
                     <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.CreatedDate)</th>
-                    <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.UpdatedDate)</th>
                     <th data-halign="center" data-align="center"></th> <!--Column to select options (Edit/Details).-->
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>@Html.DisplayFor(modelItem => item.Title)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Priority)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Type)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Status)</td>
-                        <td>@Html.DisplayFor(modelItem => item.NumAssignedUsers)</td>
-                        <td>@Html.DisplayFor(modelItem => item.CreatedDate)</td>
-                        <td>@Html.DisplayFor(modelItem => item.UpdatedDate)</td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.TicketId">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.TicketId">Details</a>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Priority)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Type)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                    <td>@Html.DisplayFor(modelItem => item.NumAssignedUsers)</td>
+                    <td>@Html.DisplayFor(modelItem => item.CreatedDate)</td>
+                    <td>
+                        <a creator="item.CreatorUserName" asp-action="Edit" asp-route-id="@item.TicketId">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.TicketId">Details</a>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>

@@ -10,7 +10,7 @@ using Trackily.Data;
 namespace Trackily.Migrations
 {
     [DbContext(typeof(TrackilyContext))]
-    [Migration("20200530214106_Initial")]
+    [Migration("20200619183536_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -298,12 +298,6 @@ namespace Trackily.Migrations
 
                     b.Property<Guid>("CreatorId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsApproved")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsReviewed")
-                        .HasColumnType("bit");
 
                     b.Property<int>("Priority")
                         .HasColumnType("int");

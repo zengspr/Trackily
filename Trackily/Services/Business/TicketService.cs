@@ -45,11 +45,15 @@ namespace Trackily.Services.Business
         /// </summary>
         /// <param name="allTickets">Collection containing all Ticket objects currently in the database. </param>
         /// <returns>A list of view models for each Ticket in the database.</returns>
-        public List<IndexViewModel> CreateIndexViewModel(IEnumerable<Ticket> allTickets)
+        public async Task<List<IndexViewModel>> CreateIndexViewModel(IEnumerable<Ticket> allTickets)
         {
-            return allTickets.Select(ticket => new IndexViewModel
+            var viewModels = new List<IndexViewModel>();
+            foreach (var ticket in allTickets)
+            {
+                viewModels.Add(new IndexViewModel
                 {
                     TicketId = ticket.TicketId,
+                    CreatorUserName = await _dbService.GetCreatorUserName(ticket),
                     Title = ticket.Title,
                     Priority = ticket.Priority,
                     Type = ticket.Type,
@@ -57,10 +61,10 @@ namespace Trackily.Services.Business
                     NumAssignedUsers = ticket.Assigned.Count,
                     CreatedDate = ticket.CreatedDate,
                     UpdatedDate = ticket.UpdatedDate,
-                    IsReviewed = ticket.IsReviewed,
-                    IsApproved = ticket.IsApproved
-                })
-                .ToList();
+                });
+            }
+
+            return viewModels;
         }
 
         /// <summary>
@@ -139,8 +143,6 @@ namespace Trackily.Services.Business
                 CreatedDate = ticket.CreatedDate,
                 UpdatedDate = ticket.UpdatedDate,
                 CreatorUserName = await _dbService.GetCreatorUserName(ticket),
-                IsApproved = ticket.IsApproved,
-                IsReviewed = ticket.IsReviewed,
                 Assigned = _userTicketService.UserTicketToNames(ticket.Assigned),
                 Type = ticket.Type,
                 Status = ticket.Status,
@@ -187,8 +189,6 @@ namespace Trackily.Services.Business
                 CreatedDate = ticket.CreatedDate,
                 UpdatedDate = ticket.UpdatedDate,
                 CreatorUserName = await _dbService.GetCreatorUserName(ticket),
-                IsApproved = ticket.IsApproved,
-                IsReviewed = ticket.IsReviewed,
                 Type = ticket.Type,
                 Status = ticket.Status,
                 Priority = ticket.Priority,
@@ -255,8 +255,6 @@ namespace Trackily.Services.Business
             var currentUser = await _userManager.GetUserAsync(request.User);
 
             ticket.UpdatedDate = DateTime.Now;
-            ticket.IsApproved = input.IsApproved;
-            ticket.IsReviewed = input.IsReviewed;
             ticket.Type = input.Type;
             ticket.Status = input.Status;
             ticket.Priority = input.Priority;
