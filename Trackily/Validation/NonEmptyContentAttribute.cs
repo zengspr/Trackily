@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading.Tasks;
 using Trackily.Models.Binding;
+
 
 namespace Trackily.Validation
 {
@@ -14,14 +12,12 @@ namespace Trackily.Validation
             var input = (DetailsTicketBinding) validationContext.ObjectInstance;
 
             if (input.CommentThreadContent == null && 
-                input.NewReplies.All(r => r.Value == null))
+                (input.NewReplies == null || input.NewReplies.All(r => r.Value == null)))
             {
-                return new ValidationResult("The content of the thread or reply being made cannot be empty.");
+                return new ValidationResult("Nothing is being submitted.");
             }
-            else
-            {
-                return ValidationResult.Success;
-            }
+
+            return ValidationResult.Success;
         }
     }
 }

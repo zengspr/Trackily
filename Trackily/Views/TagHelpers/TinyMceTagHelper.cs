@@ -7,6 +7,10 @@ using Trackily.Models.Domain;
 
 namespace Trackily.Views.TagHelpers
 {
+    /*
+     * This tag helper generates a TinyMce textarea that is editable if the principal has editing
+     * privileges (either user type: Manager or is Creator of the content) and is readonly otherwise.
+     */
     public class TinyMceTagHelper : TagHelper
     {
         private readonly IAuthorizationService _authService;
@@ -14,6 +18,7 @@ namespace Trackily.Views.TagHelpers
 
         [HtmlAttributeName("cmt-thread")]
         public CommentThread? CommentThread { get; set; }
+
         [HtmlAttributeName("cmt")]
         public Comment? Comment { get; set; }
 

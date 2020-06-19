@@ -1,7 +1,4 @@
 ﻿@model IEnumerable<Trackily.Models.View.IndexViewModel>
-@using Trackily.Models.View
-@using System.ComponentModel.DataAnnotations
-@using System.Reflection
 
 @{
     ViewData["Title"] = "Index";
@@ -49,7 +46,7 @@ the DisplayFormat attributes (e.g. for DateTime).
                     <td>@Html.DisplayFor(modelItem => item.NumAssignedUsers)</td>
                     <td>@Html.DisplayFor(modelItem => item.CreatedDate)</td>
                     <td>
-                        <a creator="item.CreatorUserName" asp-action="Edit" asp-route-id="@item.TicketId">Edit</a>
+                        <a creator="@item.CreatorUserName" asp-action="Edit" asp-route-id="@item.TicketId">Edit |</a>
                         <a asp-action="Details" asp-route-id="@item.TicketId">Details</a>
                     </td>
                 </tr>

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace Trackily.Models.Domain
 {
-	// TODO: Remove IsReviewed and IsApproved and all references to it. The semantics of these are already capture in the Status.
 	public class Ticket : BaseTicket
 	{
 		public Guid TicketId { get; set; }

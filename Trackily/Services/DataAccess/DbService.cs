@@ -33,6 +33,7 @@ namespace Trackily.Services.DataAccess
             return user;
         }
 
+        // TODO: Include Creator username of CommentThread & Comments.
         public async Task<Ticket> GetTicket(Guid ticketId)
         {
             var ticket = await _context.Tickets
@@ -40,6 +41,9 @@ namespace Trackily.Services.DataAccess
                                 .ThenInclude(a => a.User)   
                             .Include(t => t.CommentThreads)
                                 .ThenInclude(ct => ct.Comments)
+                                    .ThenInclude(c => c.Creator)
+                            .Include(t => t.CommentThreads)
+                                .ThenInclude(ct => ct.Creator)
                             .SingleOrDefaultAsync(t => t.TicketId == ticketId);
             return ticket;
         }

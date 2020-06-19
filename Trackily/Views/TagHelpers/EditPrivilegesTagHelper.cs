@@ -8,18 +8,17 @@ using Trackily.Models.Domain;
 namespace Trackily.Views.TagHelpers
 {
     [HtmlTargetElement(Attributes = "creator")]
-    public class IndexEditTagHelper : TagHelper
+    public class EditPrivilegesTagHelper : TagHelper
     {
         private readonly IAuthorizationService _authService;
         private readonly ClaimsPrincipal _principal;
+        public string Creator { get; set; }
 
-        public IndexEditTagHelper(IAuthorizationService authService, IHttpContextAccessor httpContextAccessor)
+        public EditPrivilegesTagHelper(IAuthorizationService authService, IHttpContextAccessor httpContextAccessor)
         {
             _authService = authService;
             _principal = httpContextAccessor.HttpContext.User;
         }
-
-        public string Creator { get; set; }
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {

@@ -8,34 +8,42 @@ namespace Trackily.Validation
 {
     public class UniqueTitleAttribute : ValidationAttribute
     {
-        // TODO: Improve the structure of this.
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             var context = (TrackilyContext) validationContext.GetService(typeof(TrackilyContext));
+            if (context == null)
+            {
+                throw new Exception("Missing TrackilyContext for UniqueTitleAttribute.");
+            }
 
-            if (validationContext.ObjectType.Name == "EditTicketBinding")
+            switch (validationContext.ObjectType.Name)
             {
-                var input = (EditTicketBinding) validationContext.ObjectInstance;
-                if (context.Tickets.Single(t => t.TicketId == input.TicketId).Title == input.Title)
+                case "EditTicketBinding":
                 {
-                    return ValidationResult.Success; // Title of the ticket was not changed. 
+                    var input = (EditTicketBinding) validationContext.ObjectInstance;
+                    if (context.Tickets.Single(t => t.TicketId == input.TicketId).Title == input.Title)
+                    {
+                        return ValidationResult.Success; // Title of the ticket was not changed. 
+                    }
+                    if (context.Tickets.Any(t => t.Title == input.Title))
+                    {
+                        return new ValidationResult("Title cannot be identical to another ticket.");
+                    }
+
+                    break;
                 }
-                if (context.Tickets.Any(t => t.Title == input.Title))
+                case "CreateTicketBinding":
                 {
-                    return new ValidationResult("Title cannot be identical to another ticket.");
+                    var input = (CreateTicketBinding)validationContext.ObjectInstance;
+                    if (context.Tickets.Any(t => t.Title == input.Title))
+                    {
+                        return new ValidationResult("Title cannot be identical to another ticket.");
+                    }
+
+                    break;
                 }
-            }
-            else if (validationContext.ObjectType.Name == "CreateTicketBinding")
-            {
-                var input = (CreateTicketBinding)validationContext.ObjectInstance;
-                if (context.Tickets.Any(t => t.Title == input.Title))
-                {
-                    return new ValidationResult("Title cannot be identical to another ticket.");
-                }
-            }
-            else
-            {
-                throw new Exception("Object type being validated is not known.");
+                default:
+                    throw new Exception("Object type being validated is not known.");
             }
             return ValidationResult.Success;
         }
