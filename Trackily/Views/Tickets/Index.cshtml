@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Trackily.Models.Domain.Ticket>
+﻿@model IEnumerable<Trackily.Models.View.IndexViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -7,78 +7,52 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.RelatedFiles)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsReviewed)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsApproved)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Priority)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.RelatedFiles)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsReviewed)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsApproved)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Priority)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.TicketId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.TicketId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.TicketId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<!--
+To improve: Use reflection to get all the property names and values and iterate.
+However, getting the property name of an enum seems to be more complicated.
+See https://stackoverflow.com/questions/14285498/getcustomattribute-returns-null.
+Also, getting the value of properties using property.GetValue(item) will not apply
+the DisplayFormat attributes (e.g. for DateTime).
+    
+    Do not show the Edit link on Tickets for which the current user does not have editing privileges.
+-->
+
+<div class="row">
+    <div class="col">
+        <table data-toggle="table"
+               class="table table-hover"
+               data-search="true"
+               data-sort-name="Priority"
+               data-sort-order="desc">
+            <thead>
+                <tr>
+                    <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.Title)</th>
+                    <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.Priority)</th>
+                    <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.Type)</th>
+                    <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.Status)</th>
+                    <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.NumAssignedUsers)</th>
+                    <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.CreatedDate)</th>
+                    <th data-halign="center" data-align="center"></th> <!--Column to select options (Edit/Details).-->
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Priority)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Type)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                    <td>@Html.DisplayFor(modelItem => item.NumAssignedUsers)</td>
+                    <td>@Html.DisplayFor(modelItem => item.CreatedDate)</td>
+                    <td>
+                        <a creator="@item.CreatorUserName" asp-action="Edit" asp-route-id="@item.TicketId">Edit |</a>
+                        <a asp-action="Details" asp-route-id="@item.TicketId">Details</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+        <a class="btn btn-primary" role="button" asp-action="Create">Create Ticket</a>
+    </div>
+</div>

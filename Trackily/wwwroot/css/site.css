@@ -69,3 +69,18 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+/* Identifiers for JQuery to toggle new reply boxes.
+-------------------------------------------------- */
+.toggle-reply {
+
+}
+
+.reply-btn {
+
+}
+
+/* Identifier for TinyMCE */
+.TinyMCE {
+
+}

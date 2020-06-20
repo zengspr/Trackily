@@ -18,9 +18,9 @@
                 <span asp-validation-for="Input.UserName" class="text-danger"></span>
             </div>           
             <div class="form-group">
-                <label asp-for="Input.UserType"></label>
-                <select asp-for="Input.UserType" asp-items="Html.GetEnumSelectList<TrackilyUser.UserType>()"></select>
-                <span asp-validation-for="Input.UserType" class="text-danger"></span>
+                <label asp-for="Input.UserRole"></label>
+                <select asp-for="Input.UserRole" asp-items="Html.GetEnumSelectList<TrackilyUser.UserRole>()"></select>
+                <span asp-validation-for="Input.UserRole" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Input.Email"></label>

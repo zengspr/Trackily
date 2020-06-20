@@ -8,16 +8,70 @@
   <ItemGroup>
     <Compile Remove="Data\Migrations\20200427190942_ChangeKeyOfTrackilyUser.cs" />
     <Compile Remove="Data\Migrations\20200427190942_ChangeKeyOfTrackilyUser.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200429155046_AddTicketTitleCreatorGuid.cs" />
+    <Compile Remove="Data\Migrations\20200429155046_AddTicketTitleCreatorGuid.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200429161330_AddTicketTitleCreatorId.cs" />
+    <Compile Remove="Data\Migrations\20200429161330_AddTicketTitleCreatorId.Designer.cs" />
+    <Compile Remove="Migrations\20200430155756_Initial.cs" />
+    <Compile Remove="Migrations\20200430155756_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200430160042_Initial.cs" />
+    <Compile Remove="Migrations\20200430160042_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200430160926_Initial.cs" />
+    <Compile Remove="Migrations\20200430160926_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200430161224_Initial.cs" />
+    <Compile Remove="Migrations\20200430161224_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200430161330_Initial.cs" />
+    <Compile Remove="Migrations\20200430161330_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200430161608_Initial.cs" />
+    <Compile Remove="Migrations\20200430161608_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200430162113_Initial.cs" />
+    <Compile Remove="Migrations\20200430162113_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200504160028_Initial.cs" />
+    <Compile Remove="Migrations\20200504160028_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200504161058_UpdateTrackilyUserKey.cs" />
+    <Compile Remove="Migrations\20200504161058_UpdateTrackilyUserKey.Designer.cs" />
+    <Compile Remove="Migrations\20200505132911_Initial.cs" />
+    <Compile Remove="Migrations\20200505132911_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200511015740_Initial.cs" />
+    <Compile Remove="Migrations\20200511015740_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200511155005_Initial.cs" />
+    <Compile Remove="Migrations\20200511155005_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200511160401_Initial.cs" />
+    <Compile Remove="Migrations\20200511160401_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200511161129_Initial.cs" />
+    <Compile Remove="Migrations\20200511161129_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200513173200_AddComments.cs" />
+    <Compile Remove="Migrations\20200513173200_AddComments.Designer.cs" />
+    <Compile Remove="Migrations\20200513173605_AddComments.cs" />
+    <Compile Remove="Migrations\20200513173605_AddComments.Designer.cs" />
+    <Compile Remove="Migrations\20200513174348_AddComments.cs" />
+    <Compile Remove="Migrations\20200513174348_AddComments.Designer.cs" />
+    <Compile Remove="Migrations\20200513181113_AddComments.cs" />
+    <Compile Remove="Migrations\20200513181113_AddComments.Designer.cs" />
+    <Compile Remove="Migrations\20200513181444_AddComments.cs" />
+    <Compile Remove="Migrations\20200513181444_AddComments.Designer.cs" />
+    <Compile Remove="Migrations\20200527000533_Update.cs" />
+    <Compile Remove="Migrations\20200527000533_Update.Designer.cs" />
+    <Compile Remove="Migrations\20200527000906_RemoveNullableDates.cs" />
+    <Compile Remove="Migrations\20200527000906_RemoveNullableDates.Designer.cs" />
+    <Compile Remove="Migrations\20200527051543_FixCommentThreadCreator.cs" />
+    <Compile Remove="Migrations\20200527051543_FixCommentThreadCreator.Designer.cs" />
+    <Compile Remove="Migrations\20200530194305_UpdateTicketStatuses.cs" />
+    <Compile Remove="Migrations\20200530194305_UpdateTicketStatuses.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0" />
+    <PackageReference Include="TinyMCE" Version="5.2.2" />
   </ItemGroup>
 
 </Project>
