@@ -10,7 +10,7 @@ namespace Trackily.Models.Domain
 		public ICollection<UserTicket>? Assigned { get; set; }	// List of Developers assigned to the Ticket.
 		// public string RelatedFiles { get; set; }	// Name of files related to the Ticket.
 		public enum TicketType { Issue, Feature }
-		public enum TicketStatus { Awaiting, Unapproved, Approved, Resolved, Closed }
+		public enum TicketStatus { Awaiting, Unapproved, Approved, Resolved, Underway, Closed }
 		public enum TicketPriority { Normal, Low, High }
 		public TicketType Type { get; set; }
 		public TicketStatus Status { get; set; }

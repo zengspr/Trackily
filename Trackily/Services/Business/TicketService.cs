@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Identity;
 using Trackily.Areas.Identity.Data;
 using Trackily.Data;
 using Trackily.Models.Binding;
@@ -222,8 +220,6 @@ namespace Trackily.Services.Business
                 CreatedDate = invalidInput.CreatedDate,
                 UpdatedDate = invalidInput.UpdatedDate,
                 CreatorUserName = invalidInput.CreatorUserName,
-                IsApproved = invalidInput.IsApproved,
-                IsReviewed = invalidInput.IsReviewed,
                 Type = invalidInput.Type,
                 Status = invalidInput.Status,
                 Priority = invalidInput.Priority,
@@ -232,13 +228,20 @@ namespace Trackily.Services.Business
                 Errors = new List<string>()
             };
 
-            foreach (var (username, flag) in invalidInput.RemoveAssigned)
+            if (invalidInput.RemoveAssigned != null)
             {
-                viewModel.RemoveAssigned[username] = flag;
+                foreach (var (username, flag) in invalidInput.RemoveAssigned)
+                {
+                    viewModel.RemoveAssigned[username] = flag;
+                }
             }
-            foreach (var error in errors)
+
+            if (errors != null)
             {
-                viewModel.Errors.Add(error.ErrorMessage);
+                foreach (var error in errors)
+                {
+                    viewModel.Errors.Add(error.ErrorMessage);
+                }
             }
             return viewModel;
         }
