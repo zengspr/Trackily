@@ -12,18 +12,6 @@
         <hr />
         <dl class="row">
             <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.IsReviewed)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.IsReviewed)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.IsApproved)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.IsApproved)
-            </dd>
-            <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.Type)
             </dt>
             <dd class="col-sm-10">
@@ -111,10 +99,14 @@
                                 <tiny-mce cmt-thread="commentThread">@commentThread.Content</tiny-mce>
                             </div>
                             <div class="card-footer">
-                                <ul class="list-group list-group-horizontal-sm float-right">
-                                    <li class="list-group-item btn btn-primary reply-btn" value="False">Reply</li>
-                                    <li creator="@commentThread.Creator.UserName" class="list-group-item">Delete</li>
-                                </ul>
+                                <button class="btn btn-danger float-right"
+                                        creator="@commentThread.Creator.UserName"
+                                        asp-action="DeleteCommentThread"
+                                        asp-route-id="@commentThread.CommentThreadId"
+                                        asp-route-ticketId="@Model.TicketId">
+                                    Delete
+                                </button>
+                                <button type="button" class="btn btn-primary reply-btn float-right">Reply</button>
                             </div>
                         </div>
                     </div>
@@ -136,6 +128,9 @@
                                     <!--Bind to NewReplies dictionary.-->
                                     <textarea class="TinyMCE" name="NewReplies[@commentThread.CommentThreadId]"></textarea>
                                 </div>
+                            </div>
+                            <div class="card-footer p-0">
+                                <input type="submit" value="Submit" class="btn btn-primary float-right" />
                             </div>
                         </div>
                     </div>
@@ -170,9 +165,12 @@
                                         </div>
                                     </div>
                                     <div class="card-footer">
-                                        <ul class="list-group list-group-horizontal-sm float-right">
-                                            <li creator="@comment.Creator.UserName" class="list-group-item">Delete</li>
-                                        </ul>
+                                        <button class="btn btn-danger float-right"
+                                                creator="@comment.Creator.UserName"
+                                                asp-action="DeleteComment"
+                                                asp-route-id="@comment.CommentId"
+                                                asp-route-ticketId="@Model.TicketId">Delete
+                                        </button>
                                     </div>
                                 </div>
                             </div>

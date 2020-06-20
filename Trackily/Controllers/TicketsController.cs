@@ -145,6 +145,7 @@ namespace Trackily.Controllers
             return RedirectToAction("Edit", new { id });
         }
 
+        // TODO: Put Delete within Edit page instead of Index.
         // GET: Tickets/Delete/5
         [NullIdActionFilter]
         public async Task<IActionResult> Delete(Guid id)
@@ -166,9 +167,42 @@ namespace Trackily.Controllers
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var ticket = await _context.Tickets.FindAsync(id);
+            if (ticket == null)
+            {
+                return NotFound();
+            }
             _context.Tickets.Remove(ticket);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [NullIdActionFilter]
+        public async Task<IActionResult> DeleteCommentThread(Guid id, Guid ticketId)
+        {
+            var commentThread = await _context.CommentThreads
+                .FirstOrDefaultAsync(ct => ct.CommentThreadId == id);
+            if (commentThread == null)
+            {
+                return NotFound();
+            }
+
+            _context.CommentThreads.Remove(commentThread);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", new { id = ticketId });
+        }
+
+        public async Task<IActionResult> DeleteComment(Guid id, Guid ticketId)
+        {
+            var comment = await _context.Comments
+                .FirstOrDefaultAsync(c => c.CommentId == id);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            _context.Comments.Remove(comment);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", new { id = ticketId });
         }
     }
 }
