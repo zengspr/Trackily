@@ -145,26 +145,8 @@ namespace Trackily.Controllers
             return RedirectToAction("Edit", new { id });
         }
 
-        // TODO: Put Delete within Edit page instead of Index.
-        // GET: Tickets/Delete/5
         [NullIdActionFilter]
-        public async Task<IActionResult> Delete(Guid id)
-        {
-            var ticket = await _context.Tickets
-                .FirstOrDefaultAsync(m => m.TicketId == id);
-            if (ticket == null)
-            {
-                return NotFound();
-            }
-
-            return View(ticket);
-        }
-
-        // POST: Tickets/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [NullIdActionFilter]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        public async Task<IActionResult> DeleteTicket(Guid id)
         {
             var ticket = await _context.Tickets.FindAsync(id);
             if (ticket == null)

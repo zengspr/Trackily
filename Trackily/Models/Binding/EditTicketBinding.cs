@@ -22,14 +22,6 @@ namespace Trackily.Models.Binding
         public string CreatorUserName { get; set; }
 
         [Required]
-        [Display(Name = "Mark as Reviewed")]
-        public bool IsReviewed { get; set; }
-
-        [Required]
-        [Display(Name = "Mark as Approved")]
-        public bool IsApproved { get; set; }
-
-        [Required]
         public Ticket.TicketStatus Status { get; set; }
 
         [ValidUser]

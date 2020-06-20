@@ -62,7 +62,6 @@
             <div class="form-group">
                 <label>Assign users</label>
                 <table id="formTable">
-                    <!--Fix this: not showing each of the user input assigned user when validation fails.-->
                     <tbody>
                     <tr>
                         <td><input asp-for="AddAssigned" class="form-control" placeholder="username"/></td>
@@ -73,20 +72,12 @@
                 <span asp-validation-for="AddAssigned" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IsReviewed"></label>
-                <input asp-for="IsReviewed"/>
-            </div>
-            <div class="form-group">
-                <label asp-for="IsApproved"></label>
-                <input asp-for="IsApproved"/>
-            </div>
-            <div class="form-group">
                 <span asp-validation-for="Content" class="text-danger"></span>
                 <textarea asp-for="Content" class="TinyMCE"></textarea>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary"/>
-                <a class="btn btn-danger float-right" asp-action="Delete" asp-route-id="@Model.TicketId">Delete</a>
+                <input type="submit" value="Submit" class="btn btn-primary"/>
+                <a class="btn btn-danger float-right" asp-action="DeleteTicket" asp-route-id="@Model.TicketId">Delete</a>
             </div>
         </div>
     </div>
