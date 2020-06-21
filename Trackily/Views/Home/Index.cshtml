@@ -1,8 +1,43 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@using Trackily.Areas.Identity.Data
+@inject SignInManager<TrackilyUser> SignInManager
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Your assigned Tickets</h6>
+                </div>
+                <div class="card-body">
+                    Assigned tickets here.
+                </div>
+            </div>
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">New Tickets</h6>
+                </div>
+                <div class="card-body">
+                    New Tickets here.
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="jumbotron text-center">
+        <h1 class="display-4">Welcome!</h1>
+        <p class="lead">Trackily helps support application development through Tickets which track issues and feature requests.</p>
+        <hr class="my-4">
+        <p>To begin, you can either <a asp-area="Identity" asp-page="/Account/Login">Login</a> or <a asp-area="Identity" asp-page="/Account/Register">Register</a>.</p>
+        <p>Alternatively, browse Trackily using a <a asp-area="Identity" asp-page="/Account/Login">default guest account</a>.</p>
+    </div>
+}
+

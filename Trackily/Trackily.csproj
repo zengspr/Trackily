@@ -75,6 +75,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\vendor\datatables\dataTables.bootstrap4.js" />
+    <None Include="wwwroot\vendor\datatables\dataTables.bootstrap4.min.js" />
+    <None Include="wwwroot\vendor\datatables\jquery.dataTables.js" />
+    <None Include="wwwroot\vendor\datatables\jquery.dataTables.min.js" />
     <None Include="wwwroot\vendor\fontawesome-free\js\all.js" />
     <None Include="wwwroot\vendor\fontawesome-free\js\all.min.js" />
     <None Include="wwwroot\vendor\fontawesome-free\js\brands.js" />
