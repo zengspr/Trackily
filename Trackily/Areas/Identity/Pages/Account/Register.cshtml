@@ -1,56 +1,59 @@
 ﻿@page
 @model RegisterModel
 
-<div class="card o-hidden border-0 shadow-lg my-5">
-    <div class="card-body p-0">
-        <!-- Nested Row within Card Body -->
-        <div class="row">
-            <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
-            <div class="col-lg-7">
-                <div class="p-5">
-                    <div class="text-center">
-                        <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
-                    </div>
-                    <form class="user" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                        <div class="form-group row">
-                            <div class="col-sm-6 mb-3 mb-sm-0">
-                                <input asp-for="Input.FirstName" class="form-control form-control-user" placeholder="First Name">
-                                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
-                            </div>
-                            <div class="col-sm-6">
-                                <input asp-for="Input.LastName" class="form-control form-control-user" placeholder="Last Name">
-                                <span asp-validation-for="Input.LastName" class="text-danger"></span>
-                            </div>
+
+<div class="container">
+    <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+                <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+                <div class="col-lg-7">
+                    <div class="p-5">
+                        <div class="text-center">
+                            <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                         </div>
-                        <div class="form-group row">
-                            <div class="col-sm-6 mb-3 mb-sm-0">
-                                <input asp-for="Input.UserName" class="form-control form-control-user" placeholder="Username" />
-                                <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                        <form class="user" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input asp-for="Input.FirstName" class="form-control form-control-user" placeholder="First Name">
+                                    <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input asp-for="Input.LastName" class="form-control form-control-user" placeholder="Last Name">
+                                    <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                                </div>
                             </div>
-                            <div class="col-sm-6">
-                                <select class="form-control" asp-for="Input.UserRole" asp-items="Html.GetEnumSelectList<TrackilyUser.UserRole>()"></select>
-                                <span asp-validation-for="Input.UserRole" class="text-danger"></span>
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input asp-for="Input.UserName" class="form-control form-control-user" placeholder="Username" />
+                                    <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                                </div>
+                                <div class="col-sm-6">
+                                    <select class="form-control" asp-for="Input.UserRole" asp-items="Html.GetEnumSelectList<TrackilyUser.UserRole>()"></select>
+                                    <span asp-validation-for="Input.UserRole" class="text-danger"></span>
+                                </div>
                             </div>
+                            <div class="form-group">
+                                <input asp-for="Input.Email" class="form-control form-control-user" placeholder="Email Address">
+                                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input asp-for="Input.Password" class="form-control form-control-user" placeholder="Password">
+                                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input asp-for="Input.ConfirmPassword" class="form-control form-control-user" placeholder="Repeat Password">
+                                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <input type="submit" value="Register Account" class="btn btn-primary btn-user btn-block" />
+                        </form>
+                        <hr>
+                        <div class="text-center">
+                            <a class="small" asp-page="Login">Already have an account? Login!</a>
                         </div>
-                        <div class="form-group">
-                            <input asp-for="Input.Email" class="form-control form-control-user" placeholder="Email Address">
-                            <span asp-validation-for="Input.Email" class="text-danger"></span>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-sm-6 mb-3 mb-sm-0">
-                                <input asp-for="Input.Password" class="form-control form-control-user" placeholder="Password">
-                                <span asp-validation-for="Input.Password" class="text-danger"></span>
-                            </div>
-                            <div class="col-sm-6">
-                                <input asp-for="Input.ConfirmPassword" class="form-control form-control-user" placeholder="Repeat Password">
-                                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <input type="submit" value="Register Account" class="btn btn-primary btn-user btn-block" />
-                    </form>
-                    <hr>
-                    <div class="text-center">
-                        <a class="small" asp-page="Login">Already have an account? Login!</a>
                     </div>
                 </div>
             </div>
