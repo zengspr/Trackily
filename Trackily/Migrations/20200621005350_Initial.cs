@@ -40,7 +40,9 @@ namespace Trackily.Migrations
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     Role = table.Column<int>(nullable: false),
-                    UserName = table.Column<string>(maxLength: 256, nullable: false)
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

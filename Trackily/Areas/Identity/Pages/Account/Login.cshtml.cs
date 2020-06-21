@@ -46,13 +46,9 @@ namespace Trackily.Areas.Identity.Pages.Account
             // Login with username. Originally Identity uses the registration email as the username, and attempts
             // to login with the email. 
             [Required(ErrorMessage = "Please enter your username.")]
-            [StringLength(15, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+            [StringLength(15, ErrorMessage = "{0}s are at least {2} and at most {1} characters long.", MinimumLength = 3)]
             [Display(Name = "Username")]
             public string UserName { get; set; }
-
-            //[Required]
-            //[EmailAddress]
-            //public string Email { get; set; }
 
             [Required]
             [DataType(DataType.Password)]
@@ -104,7 +100,7 @@ namespace Trackily.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Login failed. Check your username and password.");
                     return Page();
                 }
             }

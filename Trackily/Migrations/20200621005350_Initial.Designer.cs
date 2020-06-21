@@ -10,7 +10,7 @@ using Trackily.Data;
 namespace Trackily.Migrations
 {
     [DbContext(typeof(TrackilyContext))]
-    [Migration("20200619183536_Initial")]
+    [Migration("20200621005350_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -174,6 +174,12 @@ namespace Trackily.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -207,7 +213,6 @@ namespace Trackily.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 

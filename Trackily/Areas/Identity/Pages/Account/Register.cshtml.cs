@@ -1,4 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,16 +13,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Trackily.Areas.Identity.Data;
 
 namespace Trackily.Areas.Identity.Pages.Account
@@ -49,8 +46,16 @@ namespace Trackily.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            [Required(ErrorMessage = "Please enter your first name.")]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Required(ErrorMessage = "Please enter your last name.")]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
             [Required(ErrorMessage = "Please choose a username.")]
-            [StringLength(15, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+            [StringLength(15, ErrorMessage = "{0} must be at least {2} and at most {1} characters long.", MinimumLength = 3)]
             [Display(Name = "Username")]
             public string UserName { get; set; }
 
@@ -91,6 +96,8 @@ namespace Trackily.Areas.Identity.Pages.Account
             {
                 var user = new TrackilyUser
                 {
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
                     UserName = Input.UserName,
                     Role = Input.UserRole,
                     Email = Input.Email
@@ -109,9 +116,6 @@ namespace Trackily.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code = code },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
                     var userClaims = new List<Claim>
                     {
                         new Claim("UserName", Input.UserName)
@@ -122,11 +126,6 @@ namespace Trackily.Areas.Identity.Pages.Account
                     }
                     await _userManager.AddClaimsAsync(user, userClaims);
                     
-
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
-                    }
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);
                 }
