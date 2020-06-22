@@ -5,38 +5,38 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container-fluid">
+<div class="container-fluid overflow-hidden">
     <h1 class="h3 mb-2 text-gray-800">Active Tickets</h1>
     <p class="mb-4">You may want to say something about how to interact with the table here.</p>
 
-    <div class="card shadow mb-4">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table id="ticketsTable" class="table table-hover table-bordered">
+    <div class="card shadow mb-4 overflow-hidden">
+        <div class="card-body overflow-hidden">
+            <div class="table-responsive overflow-hidden">
+                <table id="ticketsTable" class="table table-hover table-bordered text-nowrap" width="100%">
                     <thead>
-                    <tr class="d-flex">
-                        <th class="col-5" data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.Title)</th>
-                        <th class="col-1" data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.Priority)</th>
-                        <th class="col-1" data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.Type)</th>
-                        <th class="col-1" data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.Status)</th>
-                        <th class="col-1" data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.NumAssignedUsers)</th>
-                        <th class="col-2" data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.CreatedDate)</th>
-                        <th class="col-1" data-halign="center" data-align="center"></th> <!--Column to select options (Edit/Details).-->
-                    </tr>
+                        <tr>
+                            <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.Title)</th>
+                            <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.Priority)</th>
+                            <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.Type)</th>
+                            <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.Status)</th>
+                            <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.NumAssignedUsers)</th>
+                            <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.UpdatedDate)</th>
+                            <th data-halign="center" data-align="center"></th> <!--Column to select options (Edit/Details).-->
+                        </tr>
                     </thead>
                     <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr class="d-flex">
-                            <td class="col-5">@Html.DisplayFor(modelItem => item.Title)</td>
-                            <td class="col-1">@Html.DisplayFor(modelItem => item.Priority)</td>
-                            <td class="col-1">@Html.DisplayFor(modelItem => item.Type)</td>
-                            <td class="col-1">@Html.DisplayFor(modelItem => item.Status)</td>
-                            <td class="col-1">@Html.DisplayFor(modelItem => item.NumAssignedUsers)</td>
-                            <td class="col-2">@Html.DisplayFor(modelItem => item.CreatedDate)</td>
-                            <td class="col-1">
-                                <a class="fa fa-lg fa-edit float-left" creator="@item.CreatorUserName" asp-action="Edit" asp-route-id="@item.TicketId"></a>
-                                <a class="fa fa-lg fa-info-circle float-right" asp-action="Details" asp-route-id="@item.TicketId"></a>
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Priority)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Type)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                            <td>@Html.DisplayFor(modelItem => item.NumAssignedUsers)</td>
+                            <td>@Html.DisplayFor(modelItem => item.UpdatedDate)</td>
+                            <td>
+                                <a class="fa fa-fw fa-lg fa-edit float-left mt-2 mb-2" creator="@item.CreatorUserName" asp-action="Edit" asp-route-id="@item.TicketId"></a>
+                                <a class="fa fa-fw fa-lg fa-info-circle float-right mt-2 mb-2" asp-action="Details" asp-route-id="@item.TicketId"></a>
                             </td>
                         </tr>
                     }
@@ -49,6 +49,10 @@
 
 <script>
     $(document).ready(function() {
-        $('#ticketsTable').DataTable();
+        $('#ticketsTable').dataTable({
+            "scrollY": '70vh',
+            "scrollX": true,
+            "scrollCollapse": true
+        } );
     });
 </script>

@@ -6,10 +6,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container">
+<div class="container float-left">
     <div class="col-md-10">
         <h1>New Ticket</h1>
-        <hr class="my-4">
+        <hr>
         <form asp-action="Create">
             <div class="form-row">
                 <div class="form-group col-md-10">
@@ -41,7 +41,9 @@
                             </tr>
                         </tbody>
                     </table>
-                    <a class="btn btn-primary" href="javascript:addRow();" role="button">Add</a>
+                    <a class="btn btn-primary btn-circle mt-0" href="javascript:addRow();" role="button">
+                        <i class="fas fa-plus"></i>
+                    </a>
                 </div>
             </div>
             <div class="form-row">
@@ -60,13 +62,13 @@
                     <button type="submit" class="btn btn-success btn-circle btn-lg float-left">
                         <i class="fas fa-check"></i>
                     </button>
-                    <button type="button" asp-action="Create" class="btn btn-danger btn-circle btn-lg float-right">
+                    <a asp-action="Create" class="btn btn-danger btn-circle btn-lg float-right">
                         <i class="fas fa-trash"></i>
-                    </button>
+                    </a>
                 </div>
             </div>
             <div class="form-row">
-                <a asp-action="Index">Back to List</a>
+                <a asp-action="Index">Back to Tickets</a>
             </div>
         </form>
     </div>

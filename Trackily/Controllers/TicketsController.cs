@@ -134,15 +134,21 @@ namespace Trackily.Controllers
                 return View(viewModel);
             }
 
-            var ticket = await _dbService.GetTicket(id); 
-            if (ticket == null) { return NotFound(); }
+            var ticket = await _dbService.GetTicket(id);
+            if (ticket == null)
+            {
+                return NotFound();
+            }
 
             var authResult = await _authService.AuthorizeAsync(HttpContext.User, ticket, "HasEditPrivileges");
-            if (!authResult.Succeeded) { return new ForbidResult(); }
+            if (!authResult.Succeeded)
+            {
+                return new ForbidResult();
+            }
 
             await _ticketService.EditTicket(ticket, input, HttpContext);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Edit", new { id });
+            return RedirectToAction(nameof(Index));
         }
 
         [NullIdActionFilter]

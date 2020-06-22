@@ -15,20 +15,16 @@ namespace Trackily.Models.View
 
         [Display(Name = "Created")]
         [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:f}")]
         public DateTime CreatedDate { get; set; }
 
         [Display(Name = "Last Updated")]
         [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:f}")]
         public DateTime UpdatedDate { get; set; }
 
         [Display(Name = "Creator")]
-        public string CreatorUserName { get; set; }  
-
-        [Display(Name = "Reviewed?")]
-        public bool IsReviewed { get; set; }
-
-        [Display(Name = "Approved?")]
-        public bool IsApproved { get; set; }
+        public string CreatorUserName { get; set; }
 
         [Display(Name = "Assigned Developers")]
         public List<string> Assigned { get; set; }
