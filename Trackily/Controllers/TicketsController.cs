@@ -149,7 +149,7 @@ namespace Trackily.Controllers
             var ticket = await _dbService.GetTicket(id);
             if (ticket == null) { return NotFound(); }
 
-            var viewModel = await _ticketService.EditTicketViewModel(ticket: ticket);
+            var viewModel = await _ticketService.EditTicketViewModel(ticket);
             return View(viewModel);
         }
 

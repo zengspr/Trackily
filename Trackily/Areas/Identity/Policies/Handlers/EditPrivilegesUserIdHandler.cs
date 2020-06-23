@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using Trackily.Areas.Identity.Data;
@@ -7,11 +8,11 @@ using Trackily.Areas.Identity.Policies.Requirements;
 
 namespace Trackily.Areas.Identity.Policies.Handlers
 {
-    public class EditPrivilegesUserNameHandler : AuthorizationHandler<EditPrivilegesRequirement, string>
+    public class EditPrivilegesUserIdHandler : AuthorizationHandler<EditPrivilegesRequirement, Guid>
     {
         private readonly UserManager<TrackilyUser> _userManager;
 
-        public EditPrivilegesUserNameHandler(UserManager<TrackilyUser> userManager)
+        public EditPrivilegesUserIdHandler(UserManager<TrackilyUser> userManager)
         {
             _userManager = userManager;
         }
@@ -19,7 +20,7 @@ namespace Trackily.Areas.Identity.Policies.Handlers
         protected override async Task HandleRequirementAsync(
             AuthorizationHandlerContext context,
             EditPrivilegesRequirement requirement,
-            string resource)
+            Guid creatorId)
         {
             var user = await _userManager.GetUserAsync(context.User);
             if (user == null)
@@ -27,7 +28,7 @@ namespace Trackily.Areas.Identity.Policies.Handlers
                 return;
             }
 
-            if (user.Role == TrackilyUser.UserRole.Manager || user.UserName == resource)
+            if (user.Role == TrackilyUser.UserRole.Manager || user.Id == creatorId)
             {
                 context.Succeed(requirement);
             }

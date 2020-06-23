@@ -11,10 +11,11 @@ namespace Trackily.Models.View
     [MetadataType(typeof(IndexViewModel))]
     public class IndexViewModel 
     {
+        public Guid CreatorId { get; set; }
         public Guid TicketId { get; set; }
 
         [DisplayName("Creator")]
-        public string CreatorUserName { get; set; }
+        public string CreatorName { get; set; }
 
         [DisplayName("Title")]
         public string Title { get; set; }

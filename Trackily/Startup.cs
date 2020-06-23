@@ -62,7 +62,7 @@ namespace Trackily
             services.AddScoped<IAuthorizationHandler, EditPrivilegesHandler>();
             services.AddScoped<IAuthorizationHandler, EditPrivilegesCommentHandler>();
             services.AddScoped<IAuthorizationHandler, EditPrivilegesCommentThreadHandler>();
-            services.AddScoped<IAuthorizationHandler, EditPrivilegesUserNameHandler>();
+            services.AddScoped<IAuthorizationHandler, EditPrivilegesUserIdHandler>();
 
             services.AddRazorPages().AddRazorRuntimeCompilation(); // Workaround to enable Browser Link in VS2019.
 

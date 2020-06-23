@@ -36,6 +36,10 @@ namespace Trackily.Services.DataAccess
         public async Task<Ticket> GetTicket(Guid ticketId)
         {
             var ticket = await _context.Tickets
+                            .Include(t => t.Creator)
+                                .ThenInclude(c => c.FirstName)
+                            .Include(t => t.Creator)
+                                .ThenInclude(c => c.LastName)
                             .Include(t => t.Assigned)   
                                 .ThenInclude(a => a.User)   
                             .Include(t => t.CommentThreads)
@@ -47,13 +51,11 @@ namespace Trackily.Services.DataAccess
             return ticket;
         }
 
-        // Creator object is still null after Include()
-        // Select user id where u.id == creatorId 
-        public async Task<string> GetCreatorUserName(Ticket ticket)
+        public async Task<string> GetCreatorName(Ticket ticket)
         {
             var reloadTicket = await _context.Tickets.Include(t => t.Creator).SingleAsync(t => t.TicketId == ticket.TicketId);
-            var creator = reloadTicket.Creator;
-            return creator.UserName;
+            return $"{reloadTicket.Creator.FirstName} {reloadTicket.Creator.LastName}";
+
         }
 
         public async Task<string> GetUserName(Guid? userId)

@@ -24,7 +24,7 @@ namespace Trackily.Models.View
         public DateTime UpdatedDate { get; set; }
 
         [Display(Name = "Creator")]
-        public string CreatorUserName { get; set; }
+        public string CreatorName { get; set; }
 
         [Display(Name = "Assigned Developers")]
         public List<string> Assigned { get; set; }

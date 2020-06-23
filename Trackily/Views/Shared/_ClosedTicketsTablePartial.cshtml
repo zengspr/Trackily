@@ -12,7 +12,7 @@
                         <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.NumAssignedUsers)</th>
                         <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.CreatedDate)</th>
                         <th data-halign="center" data-align="center" data-sortable="true">Closed</th>
-                        <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.CreatorUserName)</th>
+                        <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.CreatorName)</th>
                         <th data-halign="center" data-align="center"></th> <!--Column to select options (Edit/Details).-->
                     </tr>
                 </thead>
@@ -25,10 +25,10 @@
                         <td>@Html.DisplayFor(modelItem => item.NumAssignedUsers)</td>
                         <td>@Html.DisplayFor(modelItem => item.CreatedDate)</td>
                         <td>@Html.DisplayFor(modelItem => item.UpdatedDate)</td>
-                        <td>@Html.DisplayFor(modelItem => item.CreatorUserName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.CreatorName)</td>
                         <td>
                             <a class="fa fa-fw fa-lg fa-edit float-left mt-2 mb-2" 
-                               creator="@item.CreatorUserName" 
+                               creator="@item.CreatorId" 
                                asp-action="Edit" 
                                asp-route-id="@item.TicketId"></a>
                             <a class="fa fa-fw fa-lg fa-info-circle float-right mt-2 mb-2" 
@@ -51,7 +51,8 @@
             "scrollCollapse": true,
             "language": {
                 "emptyTable": "No Tickets have been closed yet."
-            }
+            },
+            "order": [[4, "desc"]]
         } );
     });
 </script>

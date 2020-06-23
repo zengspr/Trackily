@@ -15,8 +15,8 @@
             <hr />
             <div class="form-row">
                 <div class="form-group col-md-5">
-                    <label style="font-weight: bold" asp-for="CreatorUserName"></label>
-                    <input type="text" class="form-control-plaintext" readonly asp-for="CreatorUserName" />
+                    <label style="font-weight: bold" asp-for="CreatorName"></label>
+                    <input type="text" class="form-control-plaintext" readonly asp-for="CreatorName" />
                 </div>
             </div>
             <div class="form-row">
@@ -117,7 +117,7 @@
                                     <div class="card-header pb-1">
                                         <div class="row">
                                             <div class="col-sm float-left">
-                                                <h6>@commentThread.Creator.UserName</h6>
+                                                <h6>@commentThread.Creator.FirstName @commentThread.Creator.LastName</h6>
                                             </div>
                                         </div>
                                         <div class="row">
