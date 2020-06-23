@@ -39,7 +39,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion sticky-top" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" asp-controller="Home" asp-action="Index">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -48,29 +48,51 @@
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
-
-            <!-- Nav Item - Dashboard -->
+            
+            <!-- Nav item - Create Ticket -->
             <li class="nav-item active">
-                <a class="nav-link" asp-controller="Tickets" asp-action="Index">
-                    <i class="fas fa-fw fa-tasks"></i>
-                    <span>View Tickets</span>
+                <a class="nav-link btn btn-sm btn-success btn-icon-split pt-sm-2 pb-sm-2" asp-controller="Tickets" asp-action="Create">
+                    <i class="fas fa-plus-circle fa-lg"></i>
+                    <span class="text">New Ticket</span>
                 </a>
             </li>
 
             <!-- Heading -->
-            <div class="sidebar-heading">
+            <div class="sidebar-heading mt-3">
                 Tickets
             </div>
 
-            <!-- Nav item - Create Ticket -->
-            <li class="nav-item active">
-                <a class="nav-link" asp-controller="Tickets" asp-action="Create">
-                    <i class="fas fa-fw fa-plus"></i>
-                    <span>New Ticket</span>
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Tickets" asp-action="Index" asp-route-scope="all">
+                    <i class="fas fa-fw fa-tasks"></i>
+                    <span>Active Tickets</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Tickets" asp-action="Index" asp-route-scope="created">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span>My Tickets</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Tickets" asp-action="Index" asp-route-scope="assigned">
+                    <i class="fas fa-fw fa-clipboard-list"></i>
+                    <span>Assigned Tickets</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Tickets" asp-action="Index" asp-route-scope="closed">
+                    <i class="fas fa-fw fa-archive"></i>
+                    <span>Archived Tickets</span>
                 </a>
             </li>
         </ul>
         <!-- End of Sidebar -->
+
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
 

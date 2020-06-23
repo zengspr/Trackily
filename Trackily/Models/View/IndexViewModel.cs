@@ -13,6 +13,7 @@ namespace Trackily.Models.View
     {
         public Guid TicketId { get; set; }
 
+        [DisplayName("Creator")]
         public string CreatorUserName { get; set; }
 
         [DisplayName("Title")]
@@ -37,11 +38,5 @@ namespace Trackily.Models.View
         [DisplayName("Last Updated")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:f}")]
         public DateTime UpdatedDate { get; set; }
-
-        [DisplayName("Reviewed")]
-        public bool IsReviewed { get; set; }
-
-        [DisplayName("Approved")]
-        public bool IsApproved { get; set; }
     }
 }
