@@ -13,7 +13,6 @@
                         <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.Status)</th>
                         <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.NumAssignedUsers)</th>
                         <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.UpdatedDate)</th>
-                        <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.CreatorName)</th>
                         <th data-halign="center" data-align="center"></th> <!--Column to select options (Edit/Details).-->
                     </tr>
                 </thead>
@@ -27,7 +26,6 @@
                             <td>@Html.DisplayFor(modelItem => item.Status)</td>
                             <td>@Html.DisplayFor(modelItem => item.NumAssignedUsers)</td>
                             <td>@Html.DisplayFor(modelItem => item.UpdatedDate)</td>
-                            <td>@Html.DisplayFor(modelItem => item.CreatorName)</td>
                             <td>
                                 <a class="fa fa-fw fa-lg fa-edit float-left mt-2 mb-2" 
                                    creator="@item.CreatorId" 

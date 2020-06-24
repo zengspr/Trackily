@@ -59,12 +59,7 @@ namespace Trackily
             services.AddScoped<TicketService>();
             services.AddScoped<UserTicketService>();
             services.AddScoped<CommentService>();
-            services.AddScoped<IAuthorizationHandler, EditPrivilegesHandler>();
-            services.AddScoped<IAuthorizationHandler, EditPrivilegesCommentHandler>();
-            services.AddScoped<IAuthorizationHandler, EditPrivilegesCommentThreadHandler>();
             services.AddScoped<IAuthorizationHandler, EditPrivilegesUserIdHandler>();
-
-            services.AddRazorPages().AddRazorRuntimeCompilation(); // Workaround to enable Browser Link in VS2019.
 
             services.AddAuthorization(options =>
             {
@@ -86,7 +81,6 @@ namespace Trackily
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
-                app.UseBrowserLink();
             }
             else
             {

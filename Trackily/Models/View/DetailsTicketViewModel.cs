@@ -10,6 +10,7 @@ namespace Trackily.Models.View
     public class DetailsTicketViewModel : DetailsTicketBinding
     {
         // Ticket ~~~~~~~~~~~~~~~~~~~~
+        public Guid CreatorId { get; set; }
         public Guid TicketId { get; set; }
         public string Title { get; set; }
 

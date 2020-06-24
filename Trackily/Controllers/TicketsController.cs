@@ -57,21 +57,25 @@ namespace Trackily.Controllers
                     break;
                 case "assigned":
                     tickets = await _context.Tickets.Include(t => t.Assigned)
+                                                    .Include(t => t.Creator)
                                                     .Where(t => t.Assigned.Select(ut => ut.User).Contains(currentUser))
                                                     .ToListAsync();
                     break;
                 case "closed":
                     tickets = await _context.Tickets.Include(t => t.Assigned)
-                                            .Where(t => t.Status == Ticket.TicketStatus.Closed)
-                                            .ToListAsync();
+                                                    .Include(t => t.Creator)
+                                                    .Where(t => t.Status == Ticket.TicketStatus.Closed)
+                                                    .ToListAsync();
                     break;
                 default: // Get all tickets.
                     tickets = await _context.Tickets.Include(t => t.Assigned)
+                                                    .Include(t => t.Creator)
+                                                    .Where(t => t.Status != Ticket.TicketStatus.Closed)
                                                     .ToListAsync();
                     break;
             }
 
-            indexViewModel = await _ticketService.CreateIndexViewModel(tickets);
+            indexViewModel = _ticketService.CreateIndexViewModel(tickets);
             ViewData["indexScope"] = scope;
             return View(indexViewModel); 
         }
@@ -86,7 +90,7 @@ namespace Trackily.Controllers
                 return NotFound();
             }
 
-            var viewModel = await _ticketService.DetailsTicketViewModel(ticket);
+            var viewModel = _ticketService.DetailsTicketViewModel(ticket);
             return View(viewModel);
         }
 
@@ -101,7 +105,7 @@ namespace Trackily.Controllers
             if (!ModelState.IsValid)
             {
                 IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
-                var viewModel = await _ticketService.DetailsTicketViewModel(ticket, allErrors);
+                var viewModel = _ticketService.DetailsTicketViewModel(ticket, allErrors);
                 return View(viewModel);
             }
 
@@ -114,6 +118,7 @@ namespace Trackily.Controllers
                 await _commentService.AddComments(ticket, input, HttpContext);
             }
 
+            ticket.UpdatedDate = DateTime.Now;
             await _context.SaveChangesAsync();
             return RedirectToAction("Details", new { id });
         }

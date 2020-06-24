@@ -1,9 +1,9 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Trackily.Models.Domain;
+using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Trackily.Views.TagHelpers
 {
@@ -12,7 +12,7 @@ namespace Trackily.Views.TagHelpers
     {
         private readonly IAuthorizationService _authService;
         private readonly ClaimsPrincipal _principal;
-        public string Creator { get; set; }
+        public Guid Creator { get; set; }
 
         public EditPrivilegesTagHelper(IAuthorizationService authService, IHttpContextAccessor httpContextAccessor)
         {

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using static Trackily.Models.Domain.Ticket;
 
 namespace Trackily.Models.View
@@ -33,11 +30,11 @@ namespace Trackily.Models.View
         public int NumAssignedUsers { get; set; }
         
         [DisplayName("Created")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:f}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:g}")]
         public DateTime CreatedDate { get; set; }
 
         [DisplayName("Last Updated")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:f}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:g}")]
         public DateTime UpdatedDate { get; set; }
     }
 }

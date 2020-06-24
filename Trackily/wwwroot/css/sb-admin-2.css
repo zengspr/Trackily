@@ -10584,15 +10584,15 @@ a:focus {
 }
 
 .bg-login-image {
-  background: url("https://source.unsplash.com/K4mSJ7kc0As/600x800");
-  background-position: center;
-  background-size: cover;
+    background: url("https://source.unsplash.com/67L18R4tW_w/600x800");
+    background-position: center;
+    background-size: cover;
 }
 
 .bg-register-image {
-  background: url("https://source.unsplash.com/Mv9hjnEUHR4/600x800");
-  background-position: center;
-  background-size: cover;
+    background: url("https://source.unsplash.com/OqtafYT5kTw/600x800");
+    background-position: center;
+    background-size: cover;
 }
 
 .bg-password-image {

@@ -8,13 +8,19 @@
 
     <title>@ViewData["Title"] - Trackily</title>
 
-    <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.css">
+    <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/sb-admin-2.min.css">
-
     <link rel="stylesheet" href="~/vendor/datatables/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/vendor/fontawesome-free/css/all.min.css" type="text/css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    
+    <environment include="Development">
+        <link rel="stylesheet" href="~/css/sb-admin-2.css" />
+    </environment>
+    
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/css/sb-admin-2.min.css" />
+    </environment>
 
     <script src="https://cdn.tiny.cloud/1/7armcrgh0x3xyxu8l2jziuggai5fkym97fal9av16uygh22o/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -46,9 +52,6 @@
                 <div class="sidebar-brand-text mx-3">Trackily</div>
             </a>
 
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-            
             <!-- Nav item - Create Ticket -->
             <li class="nav-item active">
                 <a class="nav-link btn btn-sm btn-success btn-icon-split pt-sm-2 pb-sm-2" asp-controller="Tickets" asp-action="Create">
@@ -111,7 +114,7 @@
             </div>
             <!-- End of Main Content -->
             <!-- Footer -->
-            <footer class="sticky-footer bg-white" id="footer">
+            <footer class="sticky-footer bg-white mt-1" id="footer">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
                         <span>&copy Trackily 2020 - Spencer Zeng</span>

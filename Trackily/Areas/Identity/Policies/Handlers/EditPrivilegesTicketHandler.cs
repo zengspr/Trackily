@@ -8,11 +8,11 @@ using Trackily.Models.Domain;
 
 namespace Trackily.Areas.Identity.Policies.Handlers
 {
-    public class EditPrivilegesCommentHandler : AuthorizationHandler<EditPrivilegesRequirement, Comment>
+    public class EditPrivilegesTicketHandler : AuthorizationHandler<EditPrivilegesRequirement, Ticket>
     {
         private readonly UserManager<TrackilyUser> _userManager;
 
-        public EditPrivilegesCommentHandler(UserManager<TrackilyUser> userManager)
+        public EditPrivilegesTicketHandler(UserManager<TrackilyUser> userManager)
         {
             _userManager = userManager;
         }
@@ -20,7 +20,7 @@ namespace Trackily.Areas.Identity.Policies.Handlers
         protected override async Task HandleRequirementAsync(
             AuthorizationHandlerContext context,
             EditPrivilegesRequirement requirement,
-            Comment resource)
+            Ticket resource)
         {
             var user = await _userManager.GetUserAsync(context.User);
             if (user == null)

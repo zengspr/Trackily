@@ -35,19 +35,15 @@ namespace Trackily.Services.DataAccess
 
         public async Task<Ticket> GetTicket(Guid ticketId)
         {
-            var ticket = await _context.Tickets
-                            .Include(t => t.Creator)
-                                .ThenInclude(c => c.FirstName)
-                            .Include(t => t.Creator)
-                                .ThenInclude(c => c.LastName)
-                            .Include(t => t.Assigned)   
-                                .ThenInclude(a => a.User)   
-                            .Include(t => t.CommentThreads)
-                                .ThenInclude(ct => ct.Comments)
-                                    .ThenInclude(c => c.Creator)
-                            .Include(t => t.CommentThreads)
-                                .ThenInclude(ct => ct.Creator)
-                            .SingleOrDefaultAsync(t => t.TicketId == ticketId);
+            var ticket = await _context.Tickets.Include(t => t.Creator)
+                                                .Include(t => t.Assigned)   
+                                                    .ThenInclude(a => a.User)   
+                                                .Include(t => t.CommentThreads)
+                                                    .ThenInclude(ct => ct.Comments)
+                                                        .ThenInclude(c => c.Creator)
+                                                .Include(t => t.CommentThreads)
+                                                    .ThenInclude(ct => ct.Creator)
+                                                .SingleOrDefaultAsync(t => t.TicketId == ticketId);
             return ticket;
         }
 

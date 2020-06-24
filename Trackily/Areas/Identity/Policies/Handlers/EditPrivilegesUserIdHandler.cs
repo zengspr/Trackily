@@ -22,13 +22,13 @@ namespace Trackily.Areas.Identity.Policies.Handlers
             EditPrivilegesRequirement requirement,
             Guid creatorId)
         {
-            var user = await _userManager.GetUserAsync(context.User);
-            if (user == null)
+            var currentUser = await _userManager.GetUserAsync(context.User);
+            if (currentUser == null)
             {
                 return;
             }
 
-            if (user.Role == TrackilyUser.UserRole.Manager || user.Id == creatorId)
+            if (currentUser.Role == TrackilyUser.UserRole.Manager || currentUser.Id == creatorId)
             {
                 context.Succeed(requirement);
             }

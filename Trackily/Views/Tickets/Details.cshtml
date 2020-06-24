@@ -7,11 +7,13 @@
 
 <div class="container-fluid float-left" id="page-top">
     <div class="row">
-    <div class="col-md-12">
-            <h2 class="float-left">@Model.Title</h2>
-            <h2 class="float-right">Comments</h2>
+    <div class="col-md-6">
+            <h3 class="float-left">@Model.Title</h3>
         </div>
         <div class="col-md-6">
+            <h3 class="float-right">Comments</h3>
+        </div>
+    <div class="col-md-6">
             <hr />
             <div class="form-row">
                 <div class="form-group col-md-5">
@@ -70,7 +72,10 @@
             <div class="form-row">
                 <div class="form-group col-md-10">
                     <a class="float-left" asp-action="Index">Back to Tickets</a>
-                    <a asp-action="Edit" asp-route-id="@Model.TicketId" class="btn btn-primary btn-circle btn-lg float-right">
+                    <a class="btn btn-primary btn-circle btn-lg float-right active"
+                        creator="@Model.CreatorId"
+                        asp-action="Edit" 
+                        asp-route-id="@Model.TicketId">
                         <i class="fas fa-edit"></i>
                     </a>
                 </div>
@@ -78,19 +83,28 @@
         </div>
 
         <div class="col-md-6">
-            <hr />
+            <hr class="mb-0" />
             <form asp-action="Details">
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <input type="hidden" asp-for="TicketId" />
+                
+                <div class="form-group">
+                    <a class="btn btn-primary btn-icon-split toggle-comment-thread active">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                        <span class="text">Start a comment thread</span>
+                    </a>
+                </div>
 
                 <!-- Create a new comment thread -->
                 <div class="form-group">
                     <div class="col-sm">
-                        <div class="card" id="NewCommentThread" style="display: none">
-                            <div class="card-header pb-0">
+                        <div class="card shadow" id="NewCommentThread" style="display: none">
+                            <div class="card-header">
                                 <div class="row">
                                     <div class="col-sm float-left">
-                                        <h5>New comment thread</h5>
+                                        <h6>New comment thread</h6>
                                     </div>
                                 </div>
                             </div>
@@ -111,10 +125,10 @@
                     <!--Show existing comment threads.-->
                     foreach (var commentThread in Model.CommentThreads)
                     {
-                        <div class="form-group">
+                        <div class="form-group mt-4 mb-0">
                             <div class="col-sm">
-                                <div class="card">
-                                    <div class="card-header pb-1">
+                                <div class="card shadow">
+                                    <div class="card-header">
                                         <div class="row">
                                             <div class="col-sm float-left">
                                                 <h6>@commentThread.Creator.FirstName @commentThread.Creator.LastName</h6>
@@ -122,7 +136,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-sm float-left">
-                                                <span>Last updated: @Html.DisplayFor(date => commentThread.UpdatedDate)</span>
+                                                <small class="text-muted">Last updated: @Html.DisplayFor(date => commentThread.UpdatedDate)</small>
                                             </div>
                                         </div>
                                     </div>
@@ -130,18 +144,18 @@
                                         <tiny-mce cmt-thread="commentThread">@commentThread.Content</tiny-mce>
                                     </div>
                                     <div class="card-footer">
-                                        <a class="btn btn-primary btn-circle float-left" id="CommentThreadButton" role="button">
-                                            <i class="fas fa-plus" style="color: white"></i>
+                                        <a class="btn btn-primary btn-circle float-left toggle-comment-thread active" role="button">
+                                            <i class="fas fa-plus"></i>
                                         </a>
                                         <a class="btn btn-danger btn-circle btn float-right ml-2"
-                                           creator="@commentThread.Creator.UserName"
+                                           creator="@commentThread.Creator.Id"
                                            asp-action="DeleteCommentThread"
                                            asp-route-id="@commentThread.CommentThreadId"
                                            asp-route-ticketId="@Model.TicketId">
                                             <i class="fas fa-trash"></i>
                                         </a>
-                                        <a class="btn btn-primary btn-circle btn float-right reply-btn">
-                                            <i class="fas fa-reply" style="color: white"></i>
+                                        <a class="btn btn-primary btn-circle btn float-right reply-btn active">
+                                            <i class="fas fa-reply"></i>
                                         </a>
                                     </div>
                                 </div>
@@ -151,8 +165,8 @@
                         <!--Input to submit a new reply to the current comment thread.-->
                         <div class="form-group toggle-reply" style="display: none">
                             <div class="col-sm offset-sm-1">
-                                <div class="card">
-                                    <div class="card-header pb-0">
+                                <div class="card shadow">
+                                    <div class="card-header">
                                         <div class="row">
                                             <div class="col-sm float-left">
                                                 <h5>Reply to thread</h5>
@@ -179,8 +193,8 @@
                             {
                                 <div class="row">
                                     <div class="col-sm offset-sm-2">
-                                        <div class="card">
-                                            <div class="card-header pb-0">
+                                        <div class="card shadow">
+                                            <div class="card-header">
                                                 <div class="row">
                                                     <div class="col-sm float-left">
                                                         <h6>@comment.Creator.UserName</h6>
@@ -188,14 +202,7 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-sm float-left">
-                                                        <p>
-                                                            <small>@comment.CreatedDate</small>
-                                                        </p>
-                                                    </div>
-                                                    <div class="col-sm float-right">
-                                                        <p>
-                                                            <small>@comment.UpdatedDate</small>
-                                                        </p>
+                                                        <small class="text-muted">Last updated: @Html.DisplayFor(date => comment.UpdatedDate)</small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -204,9 +211,8 @@
                                                     <tiny-mce cmt="comment">@comment.Content</tiny-mce>
                                                 </div>
                                             </div>
-                                            <div class="card-footer">
+                                            <div creator="@comment.Creator.Id" class="card-footer">
                                                 <a class="btn btn-danger btn-circle btn float-right ml-2"
-                                                   creator="@comment.Creator.UserName"
                                                    asp-action="DeleteComment"
                                                    asp-route-id="@comment.CommentId"
                                                    asp-route-ticketId="@Model.TicketId">
