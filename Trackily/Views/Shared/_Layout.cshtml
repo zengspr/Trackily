@@ -47,7 +47,7 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" asp-controller="Home" asp-action="Index">
                 <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                    <i class="fas fa-bug"></i>
                 </div>
                 <div class="sidebar-brand-text mx-3">Trackily</div>
             </a>
@@ -93,7 +93,20 @@
                     <span>Archived Tickets</span>
                 </a>
             </li>
+            
+            <hr class="sidebar-divider mb-0">
+            
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Home" asp-action="About">
+                    <i class="fas fa-fw fa-question-circle"></i>
+                    <span>About</span>
+                </a>
+            </li>
+            
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
         </ul>
+        
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -117,7 +130,7 @@
             <footer class="sticky-footer bg-white mt-1" id="footer">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>&copy Trackily 2020 - Spencer Zeng</span>
+                        <span><i class="far fa-copyright"></i> Trackily 2020 - <a href="https://sprzeng.github.io/">Spencer Zeng</a> - <a href="https://github.com/sprzeng/Trackily"><i class="fab fa-lg fa-github"></i></a></span>
                     </div>
                 </div>
             </footer>
