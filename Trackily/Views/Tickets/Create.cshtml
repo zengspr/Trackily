@@ -6,53 +6,72 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
-
-<h4>Ticket</h4>
-<hr />
-<div class="row">
+<div class="container float-left">
     <div class="col-md-10">
+        <h1>New Ticket</h1>
+        <hr>
         <form asp-action="Create">
-            <div class="form-group">
-                <label asp-for="Title"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+            <div class="form-row">
+                <div class="form-group col-md-10">
+                    <label asp-for="Title"></label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Type"></label>
-                <select asp-for="Type" asp-items="Html.GetEnumSelectList<TicketType>()"></select>
-                <span asp-validation-for="Type" class="text-danger"></span>
+            <div class="form-row">
+                <div class="form-group col-md-5">
+                    <label asp-for="Type"></label>
+                    <select class="form-control" asp-for="Type" asp-items="Html.GetEnumSelectList<TicketType>()"></select>
+                    <span asp-validation-for="Type" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-5">
+                    <label asp-for="Priority"></label>
+                    <select class="form-control" asp-for="Priority" asp-items="Html.GetEnumSelectList<TicketPriority>()"></select>
+                    <span asp-validation-for="Priority" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Priority"></label>
-                <select asp-for="Priority" asp-items="Html.GetEnumSelectList<TicketPriority>()"></select>
-                <span asp-validation-for="Priority" class="text-danger"></span>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Assign users to Ticket</label>
+                    <span asp-validation-for="AddAssigned" class="text-danger"></span>
+                    <table class="table table-borderless p-0" id="formTable">
+                        <tbody>
+                            <tr>
+                                <td class="p-0"><input asp-for="AddAssigned" class="form-control" placeholder="username" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <a class="btn btn-primary btn-circle mt-0" href="javascript:addRow();" role="button">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                </div>
             </div>
-            <div class="form-group">
-                <label>Assign users</label>
-                <table id="formTable">
-                    <tbody>
-                        <tr>
-                            <td><input asp-for="AddAssigned" class="form-control" placeholder="username" /></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <span asp-validation-for="AddAssigned" class="text-danger"></span>
-                <a class="btn btn-primary" href="javascript:addRow();" role="button">Add</a>
+            <div class="form-row">
+                <div class="form-group col-md-10 mb-0 pb-0">
+                    <label>Ticket content</label>
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                    <div class="card shadow mb-4">
+                        <div class="card-body">
+                            <textarea class="form-control TinyMCE" asp-for="Content"></textarea>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <span asp-validation-for="Content" class="text-danger"></span>
-                <textarea class="TinyMCE" asp-for="Content"></textarea>
+            <div class="form-row">
+                <div class="form-group col-md-10">
+                    <button type="submit" class="btn btn-success btn-circle btn-lg float-left">
+                        <i class="fas fa-check"></i>
+                    </button>
+                    <a asp-action="Create" class="btn btn-danger btn-circle btn-lg float-right">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="form-row">
+                <a asp-action="Index">Back to Tickets</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

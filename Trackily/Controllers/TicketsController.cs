@@ -6,9 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Trackily.Areas.Identity.Data;
 using Trackily.Controllers.Filters;
 using Trackily.Data;
 using Trackily.Models.Binding;
+using Trackily.Models.Domain;
 using Trackily.Models.View;
 using Trackily.Services.Business;
 using Trackily.Services.DataAccess;
@@ -24,23 +27,56 @@ namespace Trackily.Controllers
         private readonly DbService _dbService;
         private readonly CommentService _commentService;
         private readonly IAuthorizationService _authService;
+        private readonly UserManager<TrackilyUser> _userManager;
 
         public TicketsController(TrackilyContext context, 
             TicketService ticketService, DbService dbService, CommentService commentService,
-            IAuthorizationService authService)
+            IAuthorizationService authService, UserManager<TrackilyUser> userManager)
         {
             _context = context;
             _ticketService = ticketService;
             _dbService = dbService;
             _commentService = commentService;
             _authService = authService;
+            _userManager = userManager;
         }
 
         // GET: Tickets
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string scope)
         {
-            var allTickets = await _context.Tickets.Include(a => a.Assigned).ToListAsync();
-            List<IndexViewModel> indexViewModel = await _ticketService.CreateIndexViewModel(allTickets);
+            List<Ticket> tickets;
+            List<IndexViewModel> indexViewModel;
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+
+            switch (scope)
+            {
+                case "created":
+                    tickets = await _context.Tickets.Include(t => t.Assigned)
+                                                    .Where(t => t.Creator == currentUser)
+                                                    .ToListAsync();
+                    break;
+                case "assigned":
+                    tickets = await _context.Tickets.Include(t => t.Assigned)
+                                                    .Include(t => t.Creator)
+                                                    .Where(t => t.Assigned.Select(ut => ut.User).Contains(currentUser))
+                                                    .ToListAsync();
+                    break;
+                case "closed":
+                    tickets = await _context.Tickets.Include(t => t.Assigned)
+                                                    .Include(t => t.Creator)
+                                                    .Where(t => t.Status == Ticket.TicketStatus.Closed)
+                                                    .ToListAsync();
+                    break;
+                default: // Get all tickets.
+                    tickets = await _context.Tickets.Include(t => t.Assigned)
+                                                    .Include(t => t.Creator)
+                                                    .Where(t => t.Status != Ticket.TicketStatus.Closed)
+                                                    .ToListAsync();
+                    break;
+            }
+
+            indexViewModel = _ticketService.CreateIndexViewModel(tickets);
+            ViewData["indexScope"] = scope;
             return View(indexViewModel); 
         }
 
@@ -54,7 +90,7 @@ namespace Trackily.Controllers
                 return NotFound();
             }
 
-            var viewModel = await _ticketService.DetailsTicketViewModel(ticket);
+            var viewModel = _ticketService.DetailsTicketViewModel(ticket);
             return View(viewModel);
         }
 
@@ -69,7 +105,7 @@ namespace Trackily.Controllers
             if (!ModelState.IsValid)
             {
                 IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
-                var viewModel = await _ticketService.DetailsTicketViewModel(ticket, allErrors);
+                var viewModel = _ticketService.DetailsTicketViewModel(ticket, allErrors);
                 return View(viewModel);
             }
 
@@ -82,6 +118,7 @@ namespace Trackily.Controllers
                 await _commentService.AddComments(ticket, input, HttpContext);
             }
 
+            ticket.UpdatedDate = DateTime.Now;
             await _context.SaveChangesAsync();
             return RedirectToAction("Details", new { id });
         }
@@ -107,7 +144,7 @@ namespace Trackily.Controllers
             }
 
             await _ticketService.CreateTicket(input, HttpContext);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", new {scope = "created"});
         }
 
         // GET: Tickets/Edit/5
@@ -117,7 +154,7 @@ namespace Trackily.Controllers
             var ticket = await _dbService.GetTicket(id);
             if (ticket == null) { return NotFound(); }
 
-            var viewModel = await _ticketService.EditTicketViewModel(ticket: ticket);
+            var viewModel = await _ticketService.EditTicketViewModel(ticket);
             return View(viewModel);
         }
 
@@ -134,15 +171,22 @@ namespace Trackily.Controllers
                 return View(viewModel);
             }
 
-            var ticket = await _dbService.GetTicket(id); 
-            if (ticket == null) { return NotFound(); }
+            var ticket = await _dbService.GetTicket(id);
+            if (ticket == null)
+            {
+                return NotFound();
+            }
 
             var authResult = await _authService.AuthorizeAsync(HttpContext.User, ticket, "HasEditPrivileges");
-            if (!authResult.Succeeded) { return new ForbidResult(); }
+            if (!authResult.Succeeded)
+            {
+                return new ForbidResult();
+            }
 
             await _ticketService.EditTicket(ticket, input, HttpContext);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Edit", new { id });
+
+            return ticket.Status == Ticket.TicketStatus.Closed ? RedirectToAction("Index", new {scope = "closed"}) : RedirectToAction("Index");
         }
 
         [NullIdActionFilter]
@@ -155,7 +199,7 @@ namespace Trackily.Controllers
             }
             _context.Tickets.Remove(ticket);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
 
         [NullIdActionFilter]

@@ -16,6 +16,7 @@ namespace Trackily.Models.Binding
 
 		[Required]
 		[UniqueTitle]
+		[StringLength(60, ErrorMessage = "{0}s must be at least {2} and at most {1} characters long.", MinimumLength = 10)]
 		public string Title { get; set; }
 
 		[Required]

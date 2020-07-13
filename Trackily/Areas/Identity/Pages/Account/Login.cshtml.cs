@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 using Trackily.Areas.Identity.Data;
 
 namespace Trackily.Areas.Identity.Pages.Account
@@ -46,13 +43,9 @@ namespace Trackily.Areas.Identity.Pages.Account
             // Login with username. Originally Identity uses the registration email as the username, and attempts
             // to login with the email. 
             [Required(ErrorMessage = "Please enter your username.")]
-            [StringLength(15, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+            [StringLength(15, ErrorMessage = "{0}s are at least {2} and at most {1} characters long.", MinimumLength = 3)]
             [Display(Name = "Username")]
             public string UserName { get; set; }
-
-            //[Required]
-            //[EmailAddress]
-            //public string Email { get; set; }
 
             [Required]
             [DataType(DataType.Password)]
@@ -87,7 +80,7 @@ namespace Trackily.Areas.Identity.Pages.Account
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
@@ -104,7 +97,7 @@ namespace Trackily.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Login failed. Check your username and password.");
                     return Page();
                 }
             }

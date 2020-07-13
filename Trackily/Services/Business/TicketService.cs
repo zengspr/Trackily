@@ -23,19 +23,16 @@ namespace Trackily.Services.Business
         private readonly UserTicketService _userTicketService;
         private readonly DbService _dbService;
         private readonly TrackilyContext _context;
-        private readonly CommentService _commentService;
 
         public TicketService(UserManager<TrackilyUser> userManager, 
                              DbService dbService, 
                              TrackilyContext context, 
-                             UserTicketService userTicketService,
-                             CommentService commentService)
+                             UserTicketService userTicketService)
         {
             _userManager = userManager;
             _userTicketService = userTicketService;
             _dbService = dbService;
             _context = context;
-            _commentService = commentService;
         }
 
         /// <summary>
@@ -43,15 +40,16 @@ namespace Trackily.Services.Business
         /// </summary>
         /// <param name="allTickets">Collection containing all Ticket objects currently in the database. </param>
         /// <returns>A list of view models for each Ticket in the database.</returns>
-        public async Task<List<IndexViewModel>> CreateIndexViewModel(IEnumerable<Ticket> allTickets)
+        public List<IndexViewModel> CreateIndexViewModel(IEnumerable<Ticket> selectedTickets)
         {
             var viewModels = new List<IndexViewModel>();
-            foreach (var ticket in allTickets)
+            foreach (var ticket in selectedTickets)
             {
                 viewModels.Add(new IndexViewModel
                 {
+                    CreatorId = ticket.Creator.Id,
                     TicketId = ticket.TicketId,
-                    CreatorUserName = await _dbService.GetCreatorUserName(ticket),
+                    CreatorName = $"{ticket.Creator.FirstName} {ticket.Creator.LastName}",
                     Title = ticket.Title,
                     Priority = ticket.Priority,
                     Type = ticket.Type,
@@ -132,15 +130,16 @@ namespace Trackily.Services.Business
         /// </summary>
         /// <param name="ticket">Ticket object to create the Details view for.</param>
         /// <returns>DetailsTicketViewModel object</returns>
-        public async Task<DetailsTicketViewModel> DetailsTicketViewModel(Ticket ticket, IEnumerable<ModelError> allErrors = null)
+        public DetailsTicketViewModel DetailsTicketViewModel(Ticket ticket, IEnumerable<ModelError> allErrors = null)
         {
             var viewModel = new DetailsTicketViewModel
             {
+                CreatorId = ticket.Creator.Id,
                 TicketId = ticket.TicketId,
                 Title = ticket.Title,
                 CreatedDate = ticket.CreatedDate,
                 UpdatedDate = ticket.UpdatedDate,
-                CreatorUserName = await _dbService.GetCreatorUserName(ticket),
+                CreatorName = $"{ticket.Creator.FirstName} {ticket.Creator.LastName}",
                 Assigned = _userTicketService.UserTicketToNames(ticket.Assigned),
                 Type = ticket.Type,
                 Status = ticket.Status,
@@ -186,7 +185,7 @@ namespace Trackily.Services.Business
                 Title = ticket.Title,
                 CreatedDate = ticket.CreatedDate,
                 UpdatedDate = ticket.UpdatedDate,
-                CreatorUserName = await _dbService.GetCreatorUserName(ticket),
+                CreatorName = $"{ticket.Creator.FirstName} {ticket.Creator.LastName}",
                 Type = ticket.Type,
                 Status = ticket.Status,
                 Priority = ticket.Priority,
@@ -219,7 +218,7 @@ namespace Trackily.Services.Business
                 Title = invalidInput.Title,
                 CreatedDate = invalidInput.CreatedDate,
                 UpdatedDate = invalidInput.UpdatedDate,
-                CreatorUserName = invalidInput.CreatorUserName,
+                CreatorName = invalidInput.CreatorName,
                 Type = invalidInput.Type,
                 Status = invalidInput.Status,
                 Priority = invalidInput.Priority,

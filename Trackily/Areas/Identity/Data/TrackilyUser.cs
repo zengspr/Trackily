@@ -8,13 +8,10 @@ namespace Trackily.Areas.Identity.Data
 {
     public class TrackilyUser : IdentityUser<Guid>
     {
-        public enum UserRole
-        {
-            Developer,
-            Manager
-        };
-
+        public enum UserRole { Developer, Manager };
         public UserRole Role { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public override string UserName { get; set; }
 
         // Relationships -----------------

@@ -5,191 +5,230 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row">
+<div class="container-fluid float-left" id="page-top">
+    <div class="row">
     <div class="col-md-6">
-        <h1>Details</h1>
-        <h4>@Html.DisplayNameFor(model => model.Title) : @Html.DisplayFor(model => model.Title)</h4>
-        <hr />
-        <dl class="row">
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Type)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Type)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Status)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Status)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Priority)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Priority)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.CreatedDate)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.CreatedDate)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.UpdatedDate)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.UpdatedDate)
-            </dd>
-        </dl>
-        <div class="row">
-            <textarea class="TinyMCE">@Model.Content</textarea>
+            <h3 class="float-left">@Model.Title</h3>
         </div>
-    </div>
-
-    <form asp-action="Details" class="col-md-6">
-        <h1>Comments</h1>
-        <button type="button" class="btn btn-primary" id="CommentThreadButton">Start a new comment thread</button>
-        <hr />
-        <div asp-validation-summary="All" class="text-danger"></div>
-
-        <div class="form-group">
-            <div class="col-sm">
-                <div class="card" id="NewCommentThread" style="display: none">
-                    <div class="card-header pb-0">
-                        <div class="row">
-                            <div class="col-sm float-left">
-                                <h5>Start a new comment thread.</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body p-0">
-                        <div>
-                            <textarea class="TinyMCE" id="NewCommentThreadEditor" name="CommentThreadContent"></textarea>
-                        </div>
-                    </div>
+        <div class="col-md-6">
+            <h3 class="float-right">Comments</h3>
+        </div>
+    <div class="col-md-6">
+            <hr />
+            <div class="form-row">
+                <div class="form-group col-md-5">
+                    <label style="font-weight: bold" asp-for="CreatorName"></label>
+                    <input type="text" class="form-control-plaintext" readonly asp-for="CreatorName" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-5">
+                    <label style="font-weight: bold" asp-for="CreatedDate"></label>
+                    <div class="form-control-plaintext" disabled>@Html.DisplayFor(model => model.CreatedDate)</div>
+                </div>
+                <div class="form-group col-md-5">
+                    <label style="font-weight: bold" asp-for="UpdatedDate"></label>
+                    <div class="form-control-plaintext" disabled>@Html.DisplayFor(model => model.UpdatedDate)</div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label style="font-weight: bold" asp-for="Status"></label>
+                    <div class="form-control-plaintext" disabled>@Html.DisplayFor(model => model.Status)</div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label style="font-weight: bold" asp-for="Type"></label>
+                    <div class="form-control-plaintext" disabled>@Html.DisplayFor(model => model.Type)</div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label style="font-weight: bold" asp-for="Priority"></label>
+                    <div class="form-control-plaintext" disabled>@Html.DisplayFor(model => model.Priority)</div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label style="font-weight: bold" asp-for="Assigned"></label>
+                    @if (Model.Assigned.Count == 0)
+                    {
+                        <div class="form-control-plaintext">None</div>
+                    }
+                    else
+                    {
+                        <ul class="pb-0 mb-0">
+                            @foreach (string username in Model.Assigned)
+                            {
+                                <li>@username</li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+            <div class="form-row mt-0 pt-0">
+                <div class="form-group col-md-10">
+                    <label style="font-weight: bold">Ticket content</label>
+                    <textarea class="form-control TinyMCE">@Model.Content</textarea>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-10">
+                    <a class="float-left" asp-action="Index">Back to Tickets</a>
+                    <a class="btn btn-primary btn-circle btn-lg float-right active"
+                        creator="@Model.CreatorId"
+                        asp-action="Edit" 
+                        asp-route-id="@Model.TicketId">
+                        <i class="fas fa-edit"></i>
+                    </a>
                 </div>
             </div>
         </div>
 
-        @if (Model.CommentThreads != null && Model.CommentThreads.Count > 0)
-        {
-            <!--Show existing comment threads.-->
-            foreach (var commentThread in Model.CommentThreads)
-            {
+        <div class="col-md-6">
+            <hr class="mb-0" />
+            <form asp-action="Details">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <input type="hidden" asp-for="TicketId" />
+                
+                <div class="form-group">
+                    <a class="btn btn-primary btn-icon-split toggle-comment-thread active">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                        <span class="text">Start a comment thread</span>
+                    </a>
+                </div>
+
+                <!-- Create a new comment thread -->
                 <div class="form-group">
                     <div class="col-sm">
-                        <div class="card">
-                            <div class="card-header pb-0">
+                        <div class="card shadow" id="NewCommentThread" style="display: none">
+                            <div class="card-header">
                                 <div class="row">
                                     <div class="col-sm float-left">
-                                        <h5>@commentThread.Creator.UserName</h5>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm float-left">
-                                        <p>@commentThread.CreatedDate</p>
-                                    </div>
-                                    <div class="col-sm float-right">
-                                        <p>@commentThread.UpdatedDate</p>
+                                        <h6>New comment thread</h6>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-body p-0">
-                                <tiny-mce cmt-thread="commentThread">@commentThread.Content</tiny-mce>
+                                <div>
+                                    <textarea class="TinyMCE" id="NewCommentThreadEditor" name="CommentThreadContent"></textarea>
+                                </div>
                             </div>
                             <div class="card-footer">
-                                <button class="btn btn-danger float-right"
-                                        creator="@commentThread.Creator.UserName"
-                                        asp-action="DeleteCommentThread"
-                                        asp-route-id="@commentThread.CommentThreadId"
-                                        asp-route-ticketId="@Model.TicketId">
-                                    Delete
-                                </button>
-                                <button type="button" class="btn btn-primary reply-btn float-right">Reply</button>
+                                <input type="submit" value="Submit" class="btn btn-success float-left" />
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!--Input to submit a new reply to the current comment thread.-->
-                <div class="form-group">
-                    <div class="col-sm offset-sm-2">
-                        <div class="card toggle-reply" style="display: none">
-                            <div class="card-header pb-0">
-                                <div class="row">
-                                    <div class="col-sm float-left">
-                                        <h5>Reply to thread</h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="form-group">
-                                    <!--Bind to NewReplies dictionary.-->
-                                    <textarea class="TinyMCE" name="NewReplies[@commentThread.CommentThreadId]"></textarea>
-                                </div>
-                            </div>
-                            <div class="card-footer p-0">
-                                <input type="submit" value="Submit" class="btn btn-primary float-right" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!--Show the replies to the current comment thread.-->
-                if (commentThread.Comments != null && commentThread.Comments.Count > 0)
+                @if (Model.CommentThreads != null && Model.CommentThreads.Count > 0)
                 {
-                    foreach (var comment in commentThread.Comments)
+                    <!--Show existing comment threads.-->
+                    foreach (var commentThread in Model.CommentThreads)
                     {
-                        <div class="row">
-                            <div class="col-sm offset-sm-2">
-                                <div class="card">
-                                    <div class="card-header pb-0">
+                        <div class="form-group mt-4 mb-0">
+                            <div class="col-sm">
+                                <div class="card shadow">
+                                    <div class="card-header">
                                         <div class="row">
                                             <div class="col-sm float-left">
-                                                <h6>@comment.Creator.UserName</h6>
+                                                <h6>@commentThread.Creator.FirstName @commentThread.Creator.LastName</h6>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm float-left">
-                                                <p><small>@comment.CreatedDate</small></p>
+                                                <small class="text-muted">Last updated: @Html.DisplayFor(date => commentThread.UpdatedDate)</small>
                                             </div>
-                                            <div class="col-sm float-right">
-                                                <p><small>@comment.UpdatedDate</small></p>
+                                        </div>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <tiny-mce cmt-thread="commentThread">@commentThread.Content</tiny-mce>
+                                    </div>
+                                    <div class="card-footer">
+                                        <a class="btn btn-primary btn-circle float-left toggle-comment-thread active" role="button">
+                                            <i class="fas fa-plus"></i>
+                                        </a>
+                                        <a class="btn btn-danger btn-circle btn float-right ml-2"
+                                           creator="@commentThread.Creator.Id"
+                                           asp-action="DeleteCommentThread"
+                                           asp-route-id="@commentThread.CommentThreadId"
+                                           asp-route-ticketId="@Model.TicketId">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                        <a class="btn btn-primary btn-circle btn float-right reply-btn active">
+                                            <i class="fas fa-reply"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Input to submit a new reply to the current comment thread.-->
+                        <div class="form-group toggle-reply" style="display: none">
+                            <div class="col-sm offset-sm-1">
+                                <div class="card shadow">
+                                    <div class="card-header">
+                                        <div class="row">
+                                            <div class="col-sm float-left">
+                                                <h5>Reply to thread</h5>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="card-body p-0">
                                         <div class="form-group">
-                                            <tiny-mce cmt="comment">@comment.Content</tiny-mce>
+                                            <!--Bind to NewReplies dictionary.-->
+                                            <textarea class="TinyMCE" name="NewReplies[@commentThread.CommentThreadId]"></textarea>
                                         </div>
                                     </div>
                                     <div class="card-footer">
-                                        <button class="btn btn-danger float-right"
-                                                creator="@comment.Creator.UserName"
-                                                asp-action="DeleteComment"
-                                                asp-route-id="@comment.CommentId"
-                                                asp-route-ticketId="@Model.TicketId">Delete
-                                        </button>
+                                        <input type="submit" value="Submit" class="btn btn-success float-left" />
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!--Show the replies to the current comment thread.-->
+                        if (commentThread.Comments != null && commentThread.Comments.Count > 0)
+                        {
+                            foreach (var comment in commentThread.Comments)
+                            {
+                                <div class="row">
+                                    <div class="col-sm offset-sm-2">
+                                        <div class="card shadow">
+                                            <div class="card-header">
+                                                <div class="row">
+                                                    <div class="col-sm float-left">
+                                                        <h6>@comment.Creator.UserName</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm float-left">
+                                                        <small class="text-muted">Last updated: @Html.DisplayFor(date => comment.UpdatedDate)</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body p-0">
+                                                <div class="form-group">
+                                                    <tiny-mce cmt="comment">@comment.Content</tiny-mce>
+                                                </div>
+                                            </div>
+                                            <div creator="@comment.Creator.Id" class="card-footer">
+                                                <a class="btn btn-danger btn-circle btn float-right ml-2"
+                                                   asp-action="DeleteComment"
+                                                   asp-route-id="@comment.CommentId"
+                                                   asp-route-ticketId="@Model.TicketId">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
                     }
                 }
-            }
-        }
-
-        <div class="form-group">
-            <input type="hidden" asp-for="TicketId" />
-            <input type="submit" value="Submit" class="btn btn-primary" />
+            </form>
         </div>
-    </form>
-</div>
-
-<div class="row">
-    <a class="btn btn-link" asp-action="Edit" asp-route-id="@Model.TicketId">Edit Ticket</a> 
-    <a class="btn btn-link" asp-action="Index">Back to Index</a>
+    </div>
 </div>
 
 

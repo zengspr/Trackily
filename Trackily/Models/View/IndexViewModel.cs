@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using static Trackily.Models.Domain.Ticket;
 
 namespace Trackily.Models.View
@@ -11,9 +8,11 @@ namespace Trackily.Models.View
     [MetadataType(typeof(IndexViewModel))]
     public class IndexViewModel 
     {
+        public Guid CreatorId { get; set; }
         public Guid TicketId { get; set; }
 
-        public string CreatorUserName { get; set; }
+        [DisplayName("Creator")]
+        public string CreatorName { get; set; }
 
         [DisplayName("Title")]
         public string Title { get; set; }
@@ -31,17 +30,11 @@ namespace Trackily.Models.View
         public int NumAssignedUsers { get; set; }
         
         [DisplayName("Created")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:f}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:g}")]
         public DateTime CreatedDate { get; set; }
 
         [DisplayName("Last Updated")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:f}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:g}")]
         public DateTime UpdatedDate { get; set; }
-
-        [DisplayName("Reviewed")]
-        public bool IsReviewed { get; set; }
-
-        [DisplayName("Approved")]
-        public bool IsApproved { get; set; }
     }
 }

@@ -1,52 +1,151 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
     <title>@ViewData["Title"] - Trackily</title>
-    <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.css">
+
+    <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/vendor/datatables/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/vendor/fontawesome-free/css/all.min.css" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    
+    <environment include="Development">
+        <link rel="stylesheet" href="~/css/sb-admin-2.css" />
+    </environment>
+    
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/css/sb-admin-2.min.css" />
+    </environment>
+
+    <script src="https://cdn.tiny.cloud/1/7armcrgh0x3xyxu8l2jziuggai5fkym97fal9av16uygh22o/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
-    <script src="~/lib/tinymce/tinymce.min.js"></script>
+    <script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/site.js"></script>
+    <script src="~/js/sb-admin-2.min.js"></script>
+    <script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
+
     @RenderSection("Scripts", required: false)
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Trackily</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <partial name="_LoginPartial" />
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Tickets" asp-action="Index">Tickets</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2020 - Trackily - Spencer Zeng
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion sticky-top" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" asp-controller="Home" asp-action="Index">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-bug"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">Trackily</div>
+            </a>
+
+            <!-- Nav item - Create Ticket -->
+            <li class="nav-item active">
+                <a class="nav-link btn btn-sm btn-success btn-icon-split pt-sm-2 pb-sm-2" asp-controller="Tickets" asp-action="Create">
+                    <i class="fas fa-plus-circle fa-lg"></i>
+                    <span class="text">New Ticket</span>
+                </a>
+            </li>
+
+            <!-- Heading -->
+            <div class="sidebar-heading mt-3">
+                Tickets
+            </div>
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Tickets" asp-action="Index" asp-route-scope="all">
+                    <i class="fas fa-fw fa-tasks"></i>
+                    <span>Active Tickets</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Tickets" asp-action="Index" asp-route-scope="created">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span>My Tickets</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Tickets" asp-action="Index" asp-route-scope="assigned">
+                    <i class="fas fa-fw fa-clipboard-list"></i>
+                    <span>Assigned Tickets</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Tickets" asp-action="Index" asp-route-scope="closed">
+                    <i class="fas fa-fw fa-archive"></i>
+                    <span>Archived Tickets</span>
+                </a>
+            </li>
+            
+            <hr class="sidebar-divider mb-0">
+            
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Home" asp-action="About">
+                    <i class="fas fa-fw fa-question-circle"></i>
+                    <span>About</span>
+                </a>
+            </li>
+            
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+        </ul>
+        
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 sticky-top shadow" id="topbar">
+                    @await Html.PartialAsync("/Views/Shared/_LoginPartial.cshtml")
+                </nav>
+                <!-- End of Topbar -->
+                <!-- Begin Page Content (Container in rendered page) -->
+                @RenderBody()
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white mt-1" id="footer">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span><i class="far fa-copyright"></i> Trackily 2020 - <a href="https://sprzeng.github.io/">Spencer Zeng</a> - <a href="https://github.com/sprzeng/Trackily"><i class="fab fa-lg fa-github"></i></a></span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
         </div>
-    </footer>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
 </body>
+
 </html>

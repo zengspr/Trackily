@@ -4,7 +4,7 @@
         tinymce.init({
             selector: '.TinyMCE',
             placeholder: "Content goes here.",
-            height: 250,
+            height: 200,
             menubar: false,
             plugins: [
                 'advlist autolink lists link print preview anchor',
@@ -27,7 +27,7 @@
             selector: '.TinyMCE-Readonly',
             readonly: 1,
             placeholder: "Content goes here.",
-            height: 250,
+            height: 200,
             menubar: false,
             plugins: [
                 'advlist autolink lists link print preview anchor',
@@ -46,7 +46,7 @@
 
 <script>
     $(document).ready(function () {
-        $("#CommentThreadButton").click(function () {
+        $(".toggle-comment-thread").click(function () {
             $("#NewCommentThread").toggle();
         });
 

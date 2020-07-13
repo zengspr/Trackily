@@ -19,7 +19,7 @@ namespace Trackily.Models.Binding
         public DateTime UpdatedDate { get; set; }
 
         [Display(Name = "Creator")]
-        public string CreatorUserName { get; set; }
+        public string CreatorName { get; set; }
 
         [Required]
         public Ticket.TicketStatus Status { get; set; }
