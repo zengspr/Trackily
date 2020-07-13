@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Trackily.Data;
+using Trackily.Areas.Identity.Data;
 using Trackily.Models.Binding;
 
 

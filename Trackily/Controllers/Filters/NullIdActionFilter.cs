@@ -2,7 +2,6 @@
 using System;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using Trackily.Data;
 
 
 namespace Trackily.Controllers.Filters

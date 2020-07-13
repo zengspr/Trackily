@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Trackily.Areas.Identity.Data;
-using Trackily.Data;
 
 [assembly: HostingStartup(typeof(Trackily.Areas.Identity.IdentityHostingStartup))]
 namespace Trackily.Areas.Identity

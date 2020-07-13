@@ -15,6 +15,8 @@ namespace Trackily.Models.Domain
 		public TicketType Type { get; set; }
 		public TicketStatus Status { get; set; }
 		public TicketPriority Priority { get; set; }
+
+		public Project Project { get; set; }
 		public ICollection<CommentThread>? CommentThreads { get; set; }
 
 		public Ticket()

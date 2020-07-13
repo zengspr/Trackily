@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Trackily.Data;
+using Trackily.Areas.Identity.Data;
 
 namespace Trackily.Migrations
 {
     [DbContext(typeof(TrackilyContext))]
-    [Migration("20200621005350_Initial")]
+    [Migration("20200713182206_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -289,6 +289,26 @@ namespace Trackily.Migrations
                     b.ToTable("CommentThreads");
                 });
 
+            modelBuilder.Entity("Trackily.Models.Domain.Project", b =>
+                {
+                    b.Property<Guid>("ProjectId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ProjectId");
+
+                    b.ToTable("Projects");
+                });
+
             modelBuilder.Entity("Trackily.Models.Domain.Ticket", b =>
                 {
                     b.Property<Guid>("TicketId")
@@ -307,6 +327,9 @@ namespace Trackily.Migrations
                     b.Property<int>("Priority")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -323,7 +346,24 @@ namespace Trackily.Migrations
 
                     b.HasIndex("CreatorId");
 
+                    b.HasIndex("ProjectId");
+
                     b.ToTable("Tickets");
+                });
+
+            modelBuilder.Entity("Trackily.Models.Domain.UserProject", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id", "ProjectId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("UserProjects");
                 });
 
             modelBuilder.Entity("Trackily.Models.Domain.UserTicket", b =>
@@ -426,6 +466,27 @@ namespace Trackily.Migrations
                         .WithMany("CreatedTickets")
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Trackily.Models.Domain.Project", "Project")
+                        .WithMany("Tickets")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Trackily.Models.Domain.UserProject", b =>
+                {
+                    b.HasOne("Trackily.Areas.Identity.Data.TrackilyUser", "User")
+                        .WithMany("AssignedProjects")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Trackily.Models.Domain.Project", "Project")
+                        .WithMany("Users")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

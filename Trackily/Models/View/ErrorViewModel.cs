@@ -1,6 +1,4 @@
-using System;
-
-namespace Trackily.Models
+namespace Trackily.Models.View
 {
     public class ErrorViewModel
     {

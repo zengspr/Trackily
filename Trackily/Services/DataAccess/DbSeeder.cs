@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Trackily.Areas.Identity.Data;
-using Trackily.Data;
 
 namespace Trackily.Services.DataAccess
 {

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Trackily.Areas.Identity.Data;
-using Trackily.Data;
 using Trackily.Models.Binding;
 using Trackily.Models.Domain;
 
@@ -60,7 +59,7 @@ namespace Trackily.Services.Business
             ticket.CommentThreads.Add(commentThread);
         }
 
-        public async Task AddComments(Ticket ticket, DetailsTicketBinding input, HttpContext request)
+        public async Task AddComments(DetailsTicketBinding input, HttpContext request)
         {
             // Want to avoid adding empty comments, since all comments are POSted.
             foreach (var (replyTo, content) in input.NewReplies.Where(r => r.Value != null))

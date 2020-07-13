@@ -1,27 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Trackily.Areas.Identity.Data;
-using Trackily.Models;
+using Trackily.Models.View;
 using Trackily.Services.DataAccess;
 
 namespace Trackily.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly UserManager<TrackilyUser> _userManager;
         private readonly SignInManager<TrackilyUser> _signInManager;
 
-        public HomeController(ILogger<HomeController> logger, 
-            UserManager<TrackilyUser> userManager, SignInManager<TrackilyUser> signInManager)
+        public HomeController(UserManager<TrackilyUser> userManager, SignInManager<TrackilyUser> signInManager)
         {
-            _logger = logger;
             _userManager = userManager;
             _signInManager = signInManager;
         }

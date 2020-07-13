@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Trackily.Areas.Identity.Data;
 using Trackily.Controllers.Filters;
-using Trackily.Data;
 using Trackily.Models.Binding;
 using Trackily.Models.Domain;
 using Trackily.Models.View;
@@ -115,7 +114,7 @@ namespace Trackily.Controllers
             }
             if (input.NewReplies != null)
             {
-                await _commentService.AddComments(ticket, input, HttpContext);
+                await _commentService.AddComments(input, HttpContext);
             }
 
             ticket.UpdatedDate = DateTime.Now;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using Trackily.Data;
+using Trackily.Areas.Identity.Data;
 using Trackily.Models.Binding;
 
 namespace Trackily.Validation

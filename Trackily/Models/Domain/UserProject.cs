@@ -6,13 +6,13 @@ using Trackily.Areas.Identity.Data;
 
 namespace Trackily.Models.Domain
 {
-    public class UserTicket // linking table to model many-to-many relationship b/w User : Ticket.
+    // Represents many-to-many relationship between Users and Projects.
+    public class UserProject
     {
         public Guid Id { get; set; }
         public TrackilyUser User { get; set; }
 
-
-        public Guid TicketId { get; set; }
-        public Ticket Ticket { get; set; }
+        public Guid ProjectId { get; set; }
+        public Project Project { get; set; }
     }
 }

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Trackily.Areas.Identity.Data;
-using Trackily.Data;
 using Trackily.Models.Domain;
 
 namespace Trackily.Services.DataAccess

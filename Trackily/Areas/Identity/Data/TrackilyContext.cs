@@ -1,31 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
-using Trackily.Areas.Identity.Data;
 using Trackily.Models.Domain;
 
-namespace Trackily.Data
+namespace Trackily.Areas.Identity.Data
 {
     public class TrackilyContext : IdentityDbContext<TrackilyUser, IdentityRole<Guid>, Guid>
     {
         public TrackilyContext(DbContextOptions<TrackilyContext> options)
-            : base(options)
-        {
-        }
+            : base(options) { }
+
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<UserProject> UserProjects { get; set; }
 
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<UserTicket> UserTickets { get; set; }
+
         public DbSet<Comment> Comments { get; set; }
         public DbSet<CommentThread> CommentThreads { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Project>()
+                .HasMany(p => p.Tickets)
+                .WithOne(t => t.Project)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Project>()
+                .HasMany(p => p.Users)
+                .WithOne(u => u.Project);
 
             // Note: To delete a user, they must have all their created tickets deleted first. 
             //       Also, have to manually delete their created threads and comments afterwards. 
@@ -55,12 +62,8 @@ namespace Trackily.Data
                 .WithOne(c => c.Parent)
                 .IsRequired(); // Delete comments associated with the thread. 
 
-            // Manually define many-to-many relationship due to issue with conventions: TrackilyUser PK is called
-            // Id instead of UserId due to derivation from IdentityUser. Changing TrackilyUser PK causes issues
-            // with UserManager generate token method.
-            // Deletion behaviour:
-            //      - If a Ticket is deleted, all UserTickets with that TicketId should be deleted.
-            //      - If a User is deleted, all UserTickets with that UserId should be deleted.
+            // Many-to-many relationship definitions 
+
             builder.Entity<UserTicket>()
                 .HasKey(createKey => new { createKey.Id, createKey.TicketId });
 
@@ -74,8 +77,22 @@ namespace Trackily.Data
                 .HasOne(pt => pt.Ticket)
                 .WithMany(t => t.Assigned)
                 .HasForeignKey(pt => pt.TicketId)
-                .OnDelete(DeleteBehavior.Cascade); 
-        }
+                .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Entity<UserProject>()
+                .HasKey(createKey => new {createKey.Id, createKey.ProjectId});
+
+            builder.Entity<UserProject>()
+                .HasOne(up => up.User)
+                .WithMany(u => u.AssignedProjects)
+                .HasForeignKey(up => up.Id)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<UserProject>()
+                .HasOne(up => up.Project)
+                .WithMany(p => p.Users)
+                .HasForeignKey(up => up.ProjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }
