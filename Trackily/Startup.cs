@@ -66,6 +66,7 @@ namespace Trackily
             services.AddScoped<TicketService>();
             services.AddScoped<UserTicketService>();
             services.AddScoped<CommentService>();
+            services.AddScoped<ProjectService>();
             services.AddScoped<IAuthorizationHandler, EditPrivilegesUserIdHandler>();
 
             services.AddAuthorization(options =>

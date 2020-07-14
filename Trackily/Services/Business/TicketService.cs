@@ -39,12 +39,12 @@ namespace Trackily.Services.Business
         /// </summary>
         /// <param name="allTickets">Collection containing all Ticket objects currently in the database. </param>
         /// <returns>A list of view models for each Ticket in the database.</returns>
-        public List<IndexViewModel> CreateIndexViewModel(IEnumerable<Ticket> selectedTickets)
+        public List<IndexTicketViewModel> CreateIndexViewModel(IEnumerable<Ticket> selectedTickets)
         {
-            var viewModels = new List<IndexViewModel>();
+            var viewModels = new List<IndexTicketViewModel>();
             foreach (var ticket in selectedTickets)
             {
-                viewModels.Add(new IndexViewModel
+                viewModels.Add(new IndexTicketViewModel
                 {
                     CreatorId = ticket.Creator.Id,
                     TicketId = ticket.TicketId,
@@ -81,7 +81,7 @@ namespace Trackily.Services.Business
 
             foreach (string username in input.AddAssigned.Where(entry => entry != null))
             {
-                var user = await _dbService.GetUser(username);
+                var user = await _dbService.GetUserAsync(username);
                 var userTicket = _userTicketService.CreateUserTicket(user, ticket);
                 ticket.Assigned.Add(userTicket);
             }
@@ -279,7 +279,7 @@ namespace Trackily.Services.Business
             // Assign the users to the ticket by creating new UserTickets.
             foreach (string username in input.AddAssigned.Where(entry => entry != null))
             {
-                var user = await _dbService.GetUser(username);
+                var user = await _dbService.GetUserAsync(username);
                 var userTicket = _userTicketService.CreateUserTicket(user, ticket);
                 ticket.Assigned.Add(userTicket);
             }

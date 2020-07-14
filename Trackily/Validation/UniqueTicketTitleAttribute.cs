@@ -6,14 +6,14 @@ using Trackily.Models.Binding;
 
 namespace Trackily.Validation
 {
-    public class UniqueTitleAttribute : ValidationAttribute
+    public class UniqueTicketTitleAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             var context = (TrackilyContext) validationContext.GetService(typeof(TrackilyContext));
             if (context == null)
             {
-                throw new Exception("Missing TrackilyContext for UniqueTitleAttribute.");
+                throw new Exception("Missing TrackilyContext for UniqueTicketTitleAttribute.");
             }
 
             switch (validationContext.ObjectType.Name)

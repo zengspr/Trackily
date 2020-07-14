@@ -5,8 +5,8 @@ using static Trackily.Models.Domain.Ticket;
 
 namespace Trackily.Models.View
 {
-    [MetadataType(typeof(IndexViewModel))]
-    public class IndexViewModel 
+    [MetadataType(typeof(IndexTicketViewModel))]
+    public class IndexTicketViewModel 
     {
         public Guid CreatorId { get; set; }
         public Guid TicketId { get; set; }

@@ -62,7 +62,7 @@
                     <button type="submit" class="btn btn-success btn-circle btn-lg float-left">
                         <i class="fas fa-check"></i>
                     </button>
-                    <a asp-action="Create" class="btn btn-danger btn-circle btn-lg float-right">
+                    <a asp-action="DeleteTicket" class="btn btn-danger btn-circle btn-lg float-right">
                         <i class="fas fa-trash"></i>
                     </a>
                 </div>
@@ -77,6 +77,6 @@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        await Html.RenderPartialAsync("_EditScriptsPartial");
+        await Html.RenderPartialAsync("~/Views/Shared/ScriptsPartial/_EditScriptsPartial.cshtml");
     }
 }

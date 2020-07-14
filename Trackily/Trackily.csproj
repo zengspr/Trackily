@@ -58,6 +58,8 @@
     <Compile Remove="Migrations\20200527051543_FixCommentThreadCreator.Designer.cs" />
     <Compile Remove="Migrations\20200530194305_UpdateTicketStatuses.cs" />
     <Compile Remove="Migrations\20200530194305_UpdateTicketStatuses.Designer.cs" />
+    <Compile Remove="Migrations\20200713223512_TicketReferencesProject.cs" />
+    <Compile Remove="Migrations\20200713223512_TicketReferencesProject.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

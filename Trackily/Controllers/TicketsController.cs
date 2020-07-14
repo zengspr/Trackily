@@ -44,7 +44,7 @@ namespace Trackily.Controllers
         public async Task<IActionResult> Index(string scope)
         {
             List<Ticket> tickets;
-            List<IndexViewModel> indexViewModel;
+            List<IndexTicketViewModel> indexViewModel;
             var currentUser = await _userManager.GetUserAsync(HttpContext.User);
 
             switch (scope)

@@ -20,13 +20,18 @@ namespace Trackily.Services.DataAccess
             _context = context;
         }
 
-        public async Task<TrackilyUser> GetUser(string username)
+        public async Task<TrackilyUser> GetUserAsync(string username)
         {
             var user = await _context.Users.SingleAsync(u => u.UserName == username);
             return user;
         }
 
-        public async Task<TrackilyUser> GetUser(Guid? userId)
+        public TrackilyUser GetUser(string username)
+        {
+            return _context.Users.Single(u => u.UserName == username);
+        }
+
+        public async Task<TrackilyUser> GetUserAsync(Guid? userId)
         {
             var user = await _context.Users.SingleAsync(u => u.Id == userId);
             return user;
@@ -55,7 +60,7 @@ namespace Trackily.Services.DataAccess
 
         public async Task<string> GetUserName(Guid? userId)
         {
-            var user = await GetUser(userId);
+            var user = await GetUserAsync(userId);
             return user.UserName;
         }
 
@@ -66,7 +71,7 @@ namespace Trackily.Services.DataAccess
 
         public async Task<Guid> GetKey(string username)
         {
-            var user = await GetUser(username);
+            var user = await GetUserAsync(username);
             return user.Id;
         }
     }

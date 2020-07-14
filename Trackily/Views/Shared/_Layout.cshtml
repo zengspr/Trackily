@@ -72,37 +72,51 @@
                     <span>Active Tickets</span>
                 </a>
             </li>
-            
+
             <li class="nav-item">
                 <a class="nav-link" asp-controller="Tickets" asp-action="Index" asp-route-scope="created">
                     <i class="fas fa-fw fa-user"></i>
                     <span>My Tickets</span>
                 </a>
             </li>
-            
+
             <li class="nav-item">
                 <a class="nav-link" asp-controller="Tickets" asp-action="Index" asp-route-scope="assigned">
                     <i class="fas fa-fw fa-clipboard-list"></i>
                     <span>Assigned Tickets</span>
                 </a>
             </li>
-            
+
             <li class="nav-item">
                 <a class="nav-link" asp-controller="Tickets" asp-action="Index" asp-route-scope="closed">
                     <i class="fas fa-fw fa-archive"></i>
                     <span>Archived Tickets</span>
                 </a>
             </li>
-            
+
             <hr class="sidebar-divider mb-0">
-            
+
+            <div class="sidebar-heading mt-3">
+                Projects
+            </div>
+
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Projects" asp-action="Create">
+                    <i class="fas fa-fw fa-tasks"></i>
+                    <span>New Project</span>
+                </a>
+            </li>
+
+            <hr class="sidebar-divider mb-0">
+
             <li class="nav-item">
                 <a class="nav-link" asp-controller="Home" asp-action="About">
                     <i class="fas fa-fw fa-question-circle"></i>
                     <span>About</span>
                 </a>
             </li>
-            
+
+
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
         </ul>

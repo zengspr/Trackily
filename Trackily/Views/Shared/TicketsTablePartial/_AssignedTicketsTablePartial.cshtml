@@ -1,6 +1,6 @@
-﻿@model IEnumerable<Trackily.Models.View.IndexViewModel>
+﻿@model IEnumerable<Trackily.Models.View.IndexTicketViewModel>
 
-<h1 class="h3 mb-2 text-gray-800">Your Tickets</h1>
+<h1 class="h3 mb-2 text-gray-800">Assigned Tickets</h1>
 <div class="card shadow mb-4 overflow-hidden">
     <div class="card-body overflow-hidden">
         <div class="table-responsive overflow-hidden">
@@ -13,6 +13,7 @@
                         <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.Status)</th>
                         <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.NumAssignedUsers)</th>
                         <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.UpdatedDate)</th>
+                        <th data-halign="center" data-align="center" data-sortable="true">@Html.DisplayNameFor(model => model.CreatorName)</th>
                         <th data-halign="center" data-align="center"></th> <!--Column to select options (Edit/Details).-->
                     </tr>
                 </thead>
@@ -26,12 +27,13 @@
                             <td>@Html.DisplayFor(modelItem => item.Status)</td>
                             <td>@Html.DisplayFor(modelItem => item.NumAssignedUsers)</td>
                             <td>@Html.DisplayFor(modelItem => item.UpdatedDate)</td>
+                            <td>@Html.DisplayFor(modelItem => item.CreatorName)</td>
                             <td>
                                 <a class="fa fa-fw fa-lg fa-edit float-left mt-2 mb-2" 
                                    creator="@item.CreatorId" 
                                    asp-action="Edit" 
                                    asp-route-id="@item.TicketId"></a>
-                                <a class="fa fa-fw fa-lg fa-info-circle float-right mt-2 mb-2" 
+                                <a class="fa fa-fw fa-lg fa-info-circle float-right mt-2 mb-2"
                                    asp-action="Details" 
                                    asp-route-id="@item.TicketId"></a>
                             </td>
@@ -50,7 +52,7 @@
             "scrollX": true,
             "scrollCollapse": true,
             "language": {
-                "emptyTable": "There are currently no active Tickets you have created."
+                "emptyTable": "There are currently no active Tickets which you have been assigned to."
             },
             "order": [[5, "desc"]]
         } );
