@@ -12,15 +12,15 @@ namespace Trackily.Models.Binding
         public Guid ProjectId { get; set; }
 
         [Required]
-        // TODO: [UniqueProjectTitleAttribute]
+        [UniqueProjectTitle]
         [StringLength(60, ErrorMessage = "Title must be at least {2} and at most {1} characters long.", MinimumLength = 5)]
         public string Title { get; set; }
 
         [Required]
-        [StringLength(250, ErrorMessage = "Project descriptions must be less than {1} characters long.")]
+        [StringLength(125, ErrorMessage = "Project descriptions must be less than {1} characters long.")]
         public string Description { get; set; }
 
-        [UserExists]
+        [UsersExist]
         public string[] AddMembers { get; set; }
     }
 }

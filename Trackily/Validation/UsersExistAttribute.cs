@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using Trackily.Areas.Identity.Data;
 using Trackily.Models.Binding;
@@ -6,15 +7,15 @@ using Trackily.Models.Binding;
 
 namespace Trackily.Validation
 {
-    public class UserExistsAttribute : ValidationAttribute
+    public class UsersExistAttribute : ValidationAttribute
     {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult IsValid(object addUsers, ValidationContext validationContext)
         {
-            var input = (CreateTicketBinding)validationContext.ObjectInstance;
             var context = (TrackilyContext)validationContext.GetService(typeof(TrackilyContext));
+            Debug.Assert(context != null);
 
             // Check whether username exists in the database.
-            foreach (string username in input.AddAssigned)
+            foreach (string username in (string[]) addUsers)
             {
                 if (username != null && !context.Users.Any(u => u.UserName == username))
                 {

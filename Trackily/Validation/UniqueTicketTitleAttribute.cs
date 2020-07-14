@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using Trackily.Areas.Identity.Data;
 using Trackily.Models.Binding;
@@ -11,10 +12,7 @@ namespace Trackily.Validation
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             var context = (TrackilyContext) validationContext.GetService(typeof(TrackilyContext));
-            if (context == null)
-            {
-                throw new Exception("Missing TrackilyContext for UniqueTicketTitleAttribute.");
-            }
+            Debug.Assert(context != null);
 
             switch (validationContext.ObjectType.Name)
             {

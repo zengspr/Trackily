@@ -52,6 +52,7 @@ namespace Trackily.Controllers
             }
 
             _projectService.CreateProject(form);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: ProjectsController/Edit/5
