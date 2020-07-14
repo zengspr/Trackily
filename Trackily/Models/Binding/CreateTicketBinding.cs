@@ -13,7 +13,7 @@ namespace Trackily.Models.Binding
 {
 	public class CreateTicketBinding : BaseTicketBinding
 	{
-		[UsersExist]
+		[ValidUsernames]
 		public string[] AddAssigned { get; set; }
 	}
 }

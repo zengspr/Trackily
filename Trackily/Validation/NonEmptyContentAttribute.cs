@@ -5,7 +5,7 @@ using Trackily.Models.Binding;
 
 namespace Trackily.Validation
 {
-    public class NonEmptyContentAttribute : ValidUserAttribute
+    public class NonEmptyContentAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {

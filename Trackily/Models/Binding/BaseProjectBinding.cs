@@ -20,7 +20,7 @@ namespace Trackily.Models.Binding
         [StringLength(125, ErrorMessage = "Project descriptions must be less than {1} characters long.")]
         public string Description { get; set; }
 
-        [UsersExist]
+        [ValidUsernames]
         public string[] AddMembers { get; set; }
     }
 }
