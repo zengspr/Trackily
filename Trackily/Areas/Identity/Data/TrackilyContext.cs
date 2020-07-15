@@ -31,7 +31,7 @@ namespace Trackily.Areas.Identity.Data
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<Project>()
-                .HasMany(p => p.Users)
+                .HasMany(p => p.Members)
                 .WithOne(u => u.Project);
 
             // Note: To delete a user, they must have all their created tickets deleted first. 
@@ -90,7 +90,7 @@ namespace Trackily.Areas.Identity.Data
 
             builder.Entity<UserProject>()
                 .HasOne(up => up.Project)
-                .WithMany(p => p.Users)
+                .WithMany(p => p.Members)
                 .HasForeignKey(up => up.ProjectId)
                 .OnDelete(DeleteBehavior.Cascade);
         }

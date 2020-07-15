@@ -10,7 +10,7 @@ using Trackily.Areas.Identity.Data;
 namespace Trackily.Migrations
 {
     [DbContext(typeof(TrackilyContext))]
-    [Migration("20200713182206_Initial")]
+    [Migration("20200715002444_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -298,6 +298,9 @@ namespace Trackily.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -305,6 +308,8 @@ namespace Trackily.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ProjectId");
+
+                    b.HasIndex("CreatorId");
 
                     b.ToTable("Projects");
                 });
@@ -460,6 +465,13 @@ namespace Trackily.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Trackily.Models.Domain.Project", b =>
+                {
+                    b.HasOne("Trackily.Areas.Identity.Data.TrackilyUser", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId");
+                });
+
             modelBuilder.Entity("Trackily.Models.Domain.Ticket", b =>
                 {
                     b.HasOne("Trackily.Areas.Identity.Data.TrackilyUser", "Creator")
@@ -484,7 +496,7 @@ namespace Trackily.Migrations
                         .IsRequired();
 
                     b.HasOne("Trackily.Models.Domain.Project", "Project")
-                        .WithMany("Users")
+                        .WithMany("Members")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

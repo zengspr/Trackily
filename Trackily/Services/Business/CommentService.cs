@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Trackily.Areas.Identity.Data;
 using Trackily.Models.Binding;
+using Trackily.Models.Binding.Ticket;
 using Trackily.Models.Domain;
 
 namespace Trackily.Services.Business

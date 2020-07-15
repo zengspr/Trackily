@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Trackily.Models.Binding;
+﻿using System.Collections.Generic;
+using Trackily.Models.Binding.Project;
 
-namespace Trackily.Models.View
+namespace Trackily.Models.Views.Project
 {
     public class CreateProjectViewModel : BaseProjectBinding
     {

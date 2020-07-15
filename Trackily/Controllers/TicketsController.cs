@@ -10,8 +10,9 @@ using Microsoft.AspNetCore.Identity;
 using Trackily.Areas.Identity.Data;
 using Trackily.Controllers.Filters;
 using Trackily.Models.Binding;
+using Trackily.Models.Binding.Ticket;
 using Trackily.Models.Domain;
-using Trackily.Models.View;
+using Trackily.Models.Views.Ticket;
 using Trackily.Services.Business;
 using Trackily.Services.DataAccess;
 

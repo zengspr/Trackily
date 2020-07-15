@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Trackily.Models.Binding;
+using Trackily.Models.Binding.Ticket;
 
 
 namespace Trackily.Validation

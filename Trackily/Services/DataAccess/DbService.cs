@@ -26,15 +26,15 @@ namespace Trackily.Services.DataAccess
             return user;
         }
 
-        public TrackilyUser GetUser(string username)
-        {
-            return _context.Users.Single(u => u.UserName == username);
-        }
-
         public async Task<TrackilyUser> GetUserAsync(Guid? userId)
         {
             var user = await _context.Users.SingleAsync(u => u.Id == userId);
             return user;
+        }
+
+        public TrackilyUser GetUser(string username)
+        {
+            return _context.Users.Single(u => u.UserName == username);
         }
 
         public async Task<Ticket> GetTicket(Guid ticketId)
@@ -53,9 +53,19 @@ namespace Trackily.Services.DataAccess
 
         public async Task<string> GetCreatorName(Ticket ticket)
         {
-            var reloadTicket = await _context.Tickets.Include(t => t.Creator).SingleAsync(t => t.TicketId == ticket.TicketId);
+            var reloadTicket = await _context.Tickets.Include(t => t.Creator)
+                .SingleAsync(t => t.TicketId == ticket.TicketId);
+
             return $"{reloadTicket.Creator.FirstName} {reloadTicket.Creator.LastName}";
 
+        }
+
+        public string GetCreatorName(Project project)
+        {
+            var reloadProject = _context.Projects.Include(p => p.Creator)
+                .Single(p => p.ProjectId == project.ProjectId);
+
+            return $"{reloadProject.Creator.FirstName} {reloadProject.Creator.LastName}";
         }
 
         public async Task<string> GetUserName(Guid? userId)

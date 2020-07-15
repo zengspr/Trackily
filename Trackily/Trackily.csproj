@@ -60,6 +60,8 @@
     <Compile Remove="Migrations\20200530194305_UpdateTicketStatuses.Designer.cs" />
     <Compile Remove="Migrations\20200713223512_TicketReferencesProject.cs" />
     <Compile Remove="Migrations\20200713223512_TicketReferencesProject.Designer.cs" />
+    <Compile Remove="Migrations\20200715002355_ChangeUsersToMembers.cs" />
+    <Compile Remove="Migrations\20200715002355_ChangeUsersToMembers.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

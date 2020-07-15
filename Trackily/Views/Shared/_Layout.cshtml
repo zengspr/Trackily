@@ -52,7 +52,6 @@
                 <div class="sidebar-brand-text mx-3">Trackily</div>
             </a>
 
-            <!-- Nav item - Create Ticket -->
             <li class="nav-item active">
                 <a class="nav-link btn btn-sm btn-success btn-icon-split pt-sm-2 pb-sm-2" asp-controller="Tickets" asp-action="Create">
                     <i class="fas fa-plus-circle fa-lg"></i>
@@ -60,33 +59,29 @@
                 </a>
             </li>
 
-            <!-- Heading -->
+            <!-- Tickets -->
             <div class="sidebar-heading mt-3">
                 Tickets
             </div>
 
-            <!-- Nav Item - Dashboard -->
             <li class="nav-item">
                 <a class="nav-link" asp-controller="Tickets" asp-action="Index" asp-route-scope="all">
                     <i class="fas fa-fw fa-tasks"></i>
                     <span>Active Tickets</span>
                 </a>
             </li>
-
             <li class="nav-item">
                 <a class="nav-link" asp-controller="Tickets" asp-action="Index" asp-route-scope="created">
                     <i class="fas fa-fw fa-user"></i>
                     <span>My Tickets</span>
                 </a>
             </li>
-
             <li class="nav-item">
                 <a class="nav-link" asp-controller="Tickets" asp-action="Index" asp-route-scope="assigned">
                     <i class="fas fa-fw fa-clipboard-list"></i>
                     <span>Assigned Tickets</span>
                 </a>
             </li>
-
             <li class="nav-item">
                 <a class="nav-link" asp-controller="Tickets" asp-action="Index" asp-route-scope="closed">
                     <i class="fas fa-fw fa-archive"></i>
@@ -95,7 +90,8 @@
             </li>
 
             <hr class="sidebar-divider mb-0">
-
+            
+            <!-- Projects -->
             <div class="sidebar-heading mt-3">
                 Projects
             </div>
@@ -104,6 +100,12 @@
                 <a class="nav-link" asp-controller="Projects" asp-action="Create">
                     <i class="fas fa-fw fa-tasks"></i>
                     <span>New Project</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Projects" asp-action="Index">
+                    <i class="fas fa-fw fa-tasks"></i>
+                    <span>View Projects</span>
                 </a>
             </li>
 

@@ -17,7 +17,7 @@ namespace Trackily.Validation
             Debug.Assert(context != null);
 
             var usernames = (string[]) value;
-            if (usernames.All(u => u == null)) // Not assigning any users to the ticket.
+            if (usernames.All(u => u == null)) // Not adding any users. 
             {
                 return ValidationResult.Success;
             }

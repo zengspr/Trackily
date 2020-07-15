@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using static Trackily.Models.Domain.Ticket;
 
-namespace Trackily.Models.View
+namespace Trackily.Models.Views.Ticket
 {
     [MetadataType(typeof(IndexTicketViewModel))]
     public class IndexTicketViewModel 

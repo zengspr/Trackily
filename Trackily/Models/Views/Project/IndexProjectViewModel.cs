@@ -1,24 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using Trackily.Models.Binding.Project;
 
-namespace Trackily.Models.View
+namespace Trackily.Models.Views.Project
 {
-    public class IndexProjectViewModel
+    public class IndexProjectViewModel : BaseProjectBinding
     {
-        public Guid ProjectId { get; set; }
-
-        [DisplayName("Title")]
-        public string Title { get; set; }
-
         [DisplayName("Creator")]
         public string CreatorName { get; set; }
 
         [DisplayName("Created")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:g}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
         public DateTime CreatedDate { get; set; }
 
         [DisplayName("Tickets")]

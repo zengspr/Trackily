@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Trackily.Models.Binding;
+using Trackily.Models.Binding.Ticket;
 using Trackily.Models.Domain;
 using static Trackily.Models.Domain.Ticket;
 
-namespace Trackily.Models.View
+namespace Trackily.Models.Views.Ticket
 {
     public class DetailsTicketViewModel : DetailsTicketBinding
     {

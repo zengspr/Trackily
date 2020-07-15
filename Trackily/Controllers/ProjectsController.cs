@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Trackily.Areas.Identity.Data;
 using Trackily.Models.Binding;
+using Trackily.Models.Binding.Project;
+using Trackily.Models.Views.Project;
 using Trackily.Services.Business;
 
 namespace Trackily.Controllers
@@ -20,29 +22,30 @@ namespace Trackily.Controllers
             _projectService = projectService;
         }
 
-        // GET: ProjectsController
+        // GET: Projects
         public ActionResult Index()
         {
-            return View();
+            List<IndexProjectViewModel> projects = _projectService.CreateIndexProjectViewModels();
+            return View(projects);
         }
 
-        // GET: ProjectsController/Details/5
+        // GET: Projects/Details/5
         public ActionResult Details(int projectId)
         {
             return View();
         }
 
-        // GET: ProjectsController/Create
+        // GET: Projects/Create
         public ActionResult Create()
         {
             var viewModel = _projectService.CreateProjectViewModel();
             return View(viewModel);
         }
 
-        // POST: ProjectsController/Create
+        // POST: Projects/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(BaseProjectBinding form)
+        public async Task<ActionResult> Create(BaseProjectBinding form)
         {
             if (!ModelState.IsValid)
             {
@@ -51,17 +54,17 @@ namespace Trackily.Controllers
                 return View(viewModel);
             }
 
-            _projectService.CreateProject(form);
+            await _projectService.CreateProject(form, HttpContext);
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: ProjectsController/Edit/5
+        // GET: Projects/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: ProjectsController/Edit/5
+        // POST: Projects/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int projectId, IFormCollection collection)
@@ -76,13 +79,13 @@ namespace Trackily.Controllers
             }
         }
 
-        // GET: ProjectsController/Delete/5
+        // GET: Projects/Delete/5
         public ActionResult Delete(int projectId)
         {
             return View();
         }
 
-        // POST: ProjectsController/Delete/5 
+        // POST: Projects/Delete/5 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int projectId, IFormCollection collection)

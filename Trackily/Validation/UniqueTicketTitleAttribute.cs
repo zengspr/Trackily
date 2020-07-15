@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Trackily.Areas.Identity.Data;
 using Trackily.Models.Binding;
+using Trackily.Models.Binding.Ticket;
 
 namespace Trackily.Validation
 {

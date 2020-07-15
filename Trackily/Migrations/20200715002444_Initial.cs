@@ -50,20 +50,6 @@ namespace Trackily.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Projects",
-                columns: table => new
-                {
-                    ProjectId = table.Column<Guid>(nullable: false),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    Title = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Projects", x => x.ProjectId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -167,6 +153,27 @@ namespace Trackily.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Projects",
+                columns: table => new
+                {
+                    ProjectId = table.Column<Guid>(nullable: false),
+                    CreatorId = table.Column<Guid>(nullable: true),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    Title = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Projects", x => x.ProjectId);
+                    table.ForeignKey(
+                        name: "FK_Projects_AspNetUsers_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -361,6 +368,11 @@ namespace Trackily.Migrations
                 column: "ParentTicketId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Projects_CreatorId",
+                table: "Projects",
+                column: "CreatorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Tickets_CreatorId",
                 table: "Tickets",
                 column: "CreatorId");
@@ -417,10 +429,10 @@ namespace Trackily.Migrations
                 name: "Tickets");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Projects");
 
             migrationBuilder.DropTable(
-                name: "Projects");
+                name: "AspNetUsers");
         }
     }
 }

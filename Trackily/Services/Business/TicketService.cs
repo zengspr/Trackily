@@ -7,8 +7,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Trackily.Areas.Identity.Data;
 using Trackily.Models.Binding;
+using Trackily.Models.Binding.Ticket;
 using Trackily.Models.Domain;
-using Trackily.Models.View;
+using Trackily.Models.Views.Ticket;
 using Trackily.Services.DataAccess;
 
 namespace Trackily.Services.Business

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Trackily.Areas.Identity.Data;
-using Trackily.Models.View;
+using Trackily.Models.Views;
 using Trackily.Services.DataAccess;
 
 namespace Trackily.Controllers

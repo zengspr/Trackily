@@ -1,14 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using Trackily.Validation;
 using static Trackily.Models.Domain.Ticket;
 
-namespace Trackily.Models.Binding
+namespace Trackily.Models.Binding.Ticket
 {
 	public class BaseTicketBinding
 	{

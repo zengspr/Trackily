@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Trackily.Models.Domain;
 using Trackily.Validation;
 
-namespace Trackily.Models.Binding
+namespace Trackily.Models.Binding.Ticket
 {
     [NonEmptyContent]
     public class DetailsTicketBinding

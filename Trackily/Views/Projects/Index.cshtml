@@ -1,5 +1,23 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model List<Trackily.Models.Views.Project.IndexProjectViewModel>
+
+<div class="container">
+    <div class="card-deck">
+        @foreach (var project in Model)
+        {
+            <div class="card shadow">
+                <div class="card-header pb-0">
+                    <h5 class="card-title">@project.Title</h5>		
+                    <p class="float-left">Creator: @project.CreatorName</p>
+                    <p class="float-right">Created: @Html.DisplayFor(p => project.CreatedDate)</p>
+                </div>
+                <div class="card-body pt-2 pb-0">
+                    <p>@project.Description</p>
+                </div>
+                <div class="card-footer pb-0">
+                    <p class="float-left">Tickets: @project.NumTickets</p>
+                    <p class="float-right">Members: @project.NumMembers</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>

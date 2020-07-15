@@ -1,4 +1,4 @@
-namespace Trackily.Models.View
+namespace Trackily.Models.Views
 {
     public class ErrorViewModel
     {
