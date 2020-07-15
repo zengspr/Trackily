@@ -8,30 +8,30 @@
 
     <title>@ViewData["Title"] - Trackily</title>
 
-    <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css">
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/vendor/datatables/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="~/vendor/fontawesome-free/css/all.min.css" type="text/css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.17.1/bootstrap-table.min.css" integrity="sha512-zfridm8+ad8KSyxzl1REhqDP5975y8Q0AYaF22bcVGOnaVxlekxODmCGu0TP+Kbk3JbiNK5ENTHs7pT+yf+rBA==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+
     <environment include="Development">
         <link rel="stylesheet" href="~/css/sb-admin-2.css" />
     </environment>
-    
+
     <environment exclude="Development">
         <link rel="stylesheet" href="~/css/sb-admin-2.min.css" />
     </environment>
 
-    <script src="https://cdn.tiny.cloud/1/7armcrgh0x3xyxu8l2jziuggai5fkym97fal9av16uygh22o/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
-    <script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-    <script src="~/js/site.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js" integrity="sha384-1CmrxMRARb6aLqgBO7yyAxTOQE2AKb9GfXnEo760AUcUmFx3ibVJJAzGytlQcNXd" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/401db1d0e4.js" crossorigin="anonymous"></script>
     <script src="~/js/sb-admin-2.min.js"></script>
-    <script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <script src="https://cdn.tiny.cloud/1/7armcrgh0x3xyxu8l2jziuggai5fkym97fal9av16uygh22o/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js" integrity="sha512-0QbL0ph8Tc8g5bLhfVzSqxe9GERORsKhIn1IrpxDAgUsbBGz/V7iSav2zzW325XGd1OMLdL4UiqRJj702IeqnQ==" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.17.1/bootstrap-table.min.js" integrity="sha512-KtafFo5oE7fpMVyO/gXFnwsAXeGwl8Kxyikp1SCtMc+mXrvzO7WP1Zs70gSNmkcrBd9PS3byB/HFKvAVKtTWdg==" crossorigin="anonymous"></script>
 
     @RenderSection("Scripts", required: false)
 </head>
@@ -113,7 +113,7 @@
 
             <li class="nav-item">
                 <a class="nav-link" asp-controller="Home" asp-action="About">
-                    <i class="fas fa-fw fa-question-circle"></i>
+                    <i class="fas fa-question-circle fa-fw"></i>
                     <span>About</span>
                 </a>
             </li>
