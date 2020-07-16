@@ -102,5 +102,34 @@ namespace Trackily.Services.Business
             _context.Projects.Add(project);
             _context.SaveChanges();
         }
+
+        public DetailsProjectViewModel CreateDetailsProjectViewModel(Guid projectId)
+        {
+            var project = _context.Projects
+                .Include(p => p.Tickets)
+                .Include(p => p.Members)
+                    .ThenInclude(ut => ut.User)
+                .Single(p => p.ProjectId == projectId);
+
+            var viewModel = new DetailsProjectViewModel()
+            {
+                Title = project.Title,
+                Description = project.Description,
+                CreatedDate = project.CreatedDate,
+                Tickets = new List<Ticket>(),
+                Members = new List<Tuple<string, string>>()
+            };
+
+            viewModel.Tickets.AddRange(project.Tickets);
+
+            foreach (var member in project.Members)
+            {
+                string name = $"{member.User.FirstName} {member.User.LastName}";
+                var memberTuple = Tuple.Create(name, member.User.UserName);
+                viewModel.Members.Add(memberTuple);
+            }
+
+            return viewModel;
+        }
     }
 }

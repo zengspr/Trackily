@@ -30,9 +30,10 @@ namespace Trackily.Controllers
         }
 
         // GET: Projects/Details/5
-        public ActionResult Details(int projectId)
+        public ActionResult Details(Guid projectId)
         {
-            return View();
+            var viewModel = _projectService.CreateDetailsProjectViewModel(projectId);
+            return View(viewModel);
         }
 
         // GET: Projects/Create
@@ -59,7 +60,7 @@ namespace Trackily.Controllers
         }
 
         // GET: Projects/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(Guid id)
         {
             return View();
         }
@@ -67,7 +68,7 @@ namespace Trackily.Controllers
         // POST: Projects/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int projectId, IFormCollection collection)
+        public ActionResult Edit(Guid projectId, IFormCollection collection)
         {
             try
             {
@@ -80,7 +81,7 @@ namespace Trackily.Controllers
         }
 
         // GET: Projects/Delete/5
-        public ActionResult Delete(int projectId)
+        public ActionResult Delete(Guid projectId)
         {
             return View();
         }
@@ -88,7 +89,7 @@ namespace Trackily.Controllers
         // POST: Projects/Delete/5 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int projectId, IFormCollection collection)
+        public ActionResult Delete(Guid projectId, IFormCollection collection)
         {
             try
             {

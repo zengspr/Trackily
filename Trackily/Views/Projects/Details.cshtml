@@ -1,5 +1,64 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model Trackily.Models.Views.Project.DetailsProjectViewModel
+
+<div class="container">
+
+    <h1>@Model.Title</h1>
+    <hr>
+    <p>@Model.Description</p>
+    <small>
+        <label asp-for="CreatedDate"></label>
+        <span>@Html.DisplayFor(m => m.CreatedDate)</span>
+    </small>
+
+    <h4 class="h4 mb-2 text-gray-800">
+        <label asp-for="Tickets"></label>
+    </h4>
+    <div class="card shadow mb-4 overflow-hidden">
+        <div class="card-body overflow-hidden">
+            <div class="table-responsive overflow-hidden">
+                <table id="ticketsTable" class="table table-hover table-bordered text-nowrap" width="100%">
+                    <thead>
+                        <tr>
+                            <th data-halign="center" data-align="center" data-sortable="true">Title</th>
+                            <th data-halign="center" data-align="center" data-sortable="true">Priority</th>
+                            <th data-halign="center" data-align="center" data-sortable="true">Type</th>
+                            <th data-halign="center" data-align="center" data-sortable="true">Status</th>
+                            <th data-halign="center" data-align="center" data-sortable="true"># Assigned</th>
+                            <th data-halign="center" data-align="center" data-sortable="true">Last updated</th>
+                            <th data-halign="center" data-align="center" data-sortable="true">Creator</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ticket in Model.Tickets)
+                        {
+                            <tr>
+                                <td>@ticket.Title</td>
+                                <td>@ticket.Priority</td>
+                                <td>@ticket.Type</td>
+                                <td>@ticket.Status</td>                            
+                                <td>@ticket.Assigned.Count</td>
+                                <td>@ticket.UpdatedDate.ToString("{0:g}")</td>
+                                <td>@ticket.Creator.FirstName @ticket.Creator.LastName</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="h4 mb-2 text-gray-800">
+        <label asp-for="Members"></label>
+    </h4>
+    <ul class="list-group">
+        @foreach (var member in Model.Members)
+        {
+            <li class="list-group-item w-25 d-flex justify-content-between align-items-center">
+                @member.Item1
+                <span class="badge badge-secondary ml-3">@member.Item2</span>
+            </li>
+        }
+    </ul>
+
+    <button class="btn btn-primary" asp-action="Index">Back to Tickets</button>
+</div>

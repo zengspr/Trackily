@@ -130,8 +130,8 @@ namespace Trackily.Controllers
             return View(viewModel);
         }
 
+        // TODO: Include project. Need to update view, binding model, and service.
         // POST: Tickets/Create
-        // Note: Must be logged in for Create to work!
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateTicketBinding input)
