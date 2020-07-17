@@ -1,5 +1,70 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model Trackily.Models.Views.Project.EditProjectViewModel
+
+<div class="container">
+    <div class="col-md-10">
+        <h1>Edit Project</h1>
+        <hr />
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="ProjectId" />
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Title"></label>
+                    <input class="form-control" asp-for="Title"/>
+                    <span asp-validation-for="Title"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-10">
+                    <label asp-for="Description"></label>
+                    <input class="form-control" asp-for="Description"/>
+                    <span asp-validation-for="Description"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-5">
+                    <label asp-for="Members"></label>
+                    <ul class="list-group mb-3">
+                        @foreach (var member in Model.Members)
+                        {
+                            <li class="list-group-item form-group d-inline-flex justify-content-between align-items-center text-nowrap p-2">
+                                @member.Item1
+                                <span class="badge badge-secondary ml-3">@member.Item2</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div class="form-group col-md-5">
+                    <label>Add members</label>
+                    <span asp-validation-for="AddMembers" class="text-danger text-nowrap"></span>
+                    <table class="table table-borderless p-0" id="formTable">
+                        <tbody>
+                            <tr>
+                                <td class="p-0"><input asp-for="AddMembers" class="form-control" placeholder="username" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <a class="btn btn-primary btn-circle mt-0" href="javascript:addRow()" role="button">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="form-row mt-4">
+                <div class="form-group col-md-6">
+                    <a asp-action="Index">Back to Tickets</a>
+                    <a class="btn btn-danger btn-circle float-right active"
+                       asp-action="Delete"
+                       asp-route-id="@Model.ProjectId">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("~/Views/Shared/ScriptsPartial/_ProjectsScriptsPartial.cshtml");
+    }
 }

@@ -60,24 +60,19 @@ namespace Trackily.Controllers
         }
 
         // GET: Projects/Edit/5
-        public ActionResult Edit(Guid id)
+        public ActionResult Edit(Guid projectId)
         {
-            return View();
+            var viewModel = _projectService.CreateEditProjectViewModel(projectId);
+            return View(viewModel);
         }
 
         // POST: Projects/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Guid projectId, IFormCollection collection)
+        public ActionResult Edit(EditProjectBinding form)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            _projectService.EditProject(form);
+            return RedirectToAction(nameof(Edit), new {projectId = form.ProjectId});
         }
 
         // GET: Projects/Delete/5

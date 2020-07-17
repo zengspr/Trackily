@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -100,17 +101,31 @@ namespace Trackily.Services.Business
             project.Members = _userProjectService.CreateUserProjectsForNames(form.AddMembers, project);
 
             _context.Projects.Add(project);
-            _context.SaveChanges();
+            _context.SaveChanges(true);
+        }
+
+        private List<Tuple<string, string>> GetNamesForMembers(Project project)
+        {
+            var members = new List<Tuple<string, string>>();
+
+            foreach (var member in project.Members)
+            {
+                string name = $"{member.User.FirstName} {member.User.LastName}";
+                var memberTuple = Tuple.Create(name, member.User.UserName);
+                members.Add(memberTuple);
+            }
+
+            return members;
         }
 
         public DetailsProjectViewModel CreateDetailsProjectViewModel(Guid projectId)
         {
             var project = _context.Projects
-                .Include(p => p.Tickets)
-                    .ThenInclude(t => t.Assigned)
-                .Include(p => p.Members)
-                    .ThenInclude(ut => ut.User)
-                .Single(p => p.ProjectId == projectId);
+                                .Include(p => p.Tickets)
+                                    .ThenInclude(t => t.Assigned)
+                                .Include(p => p.Members)
+                                    .ThenInclude(ut => ut.User)
+                                .Single(p => p.ProjectId == projectId);
 
             var viewModel = new DetailsProjectViewModel()
             {
@@ -123,15 +138,44 @@ namespace Trackily.Services.Business
             };
 
             viewModel.Tickets.AddRange(project.Tickets);
-
-            foreach (var member in project.Members)
-            {
-                string name = $"{member.User.FirstName} {member.User.LastName}";
-                var memberTuple = Tuple.Create(name, member.User.UserName);
-                viewModel.Members.Add(memberTuple);
-            }
+            viewModel.Members = GetNamesForMembers(project);
 
             return viewModel;
+        }
+
+        public EditProjectViewModel CreateEditProjectViewModel(Guid projectId)
+        {
+            var project = _context.Projects
+                                .Include(p => p.Members)
+                                    .ThenInclude(ut => ut.User)
+                                .Single(p => p.ProjectId == projectId);
+
+            var viewModel = new EditProjectViewModel()
+            {
+                CreatedDate = project.CreatedDate,
+                Description = project.Description,
+                ProjectId = project.ProjectId,
+                Title = project.Title,
+                Members = new List<Tuple<string, string>>()
+            };
+
+            viewModel.Members = GetNamesForMembers(project);
+
+            return viewModel;
+        }
+
+        public void EditProject(EditProjectBinding form)
+        {
+            var project = _context.Projects
+                                .Include(p => p.Members)
+                                .Single(p => p.ProjectId == form.ProjectId);
+
+            project.Title = form.Title;
+            project.Description = form.Description;
+
+            _userProjectService.AddMembersToProject(form.AddMembers, project);
+
+            _context.SaveChanges(true);
         }
     }
 }

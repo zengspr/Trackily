@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Trackily.Areas.Identity.Data;
@@ -30,16 +31,22 @@ namespace Trackily.Services.Business
             };
         }
 
-        public List<UserProject> CreateUserProjectsForNames(string[] usernames, Project project)
+        public void AddMembersToProject(string[] usernames, Project project)
         {
-            var userProjects = new List<UserProject>();
+            Debug.Assert(project.Members != null);
 
             foreach (var username in usernames.Where(entry => entry != null))
             {
                 var user = _dbService.GetUser(username);
                 var userProject = CreateUserProject(user, project);
-                userProjects.Add(userProject);
+                project.Members.Add(userProject);
             }
+        }
+
+        public List<UserProject> CreateUserProjectsForNames(string[] usernames, Project project)
+        {
+            var userProjects = new List<UserProject>();
+            AddMembersToProject(usernames, project);
 
             return userProjects;
         }
