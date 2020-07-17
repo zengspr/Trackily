@@ -107,12 +107,14 @@ namespace Trackily.Services.Business
         {
             var project = _context.Projects
                 .Include(p => p.Tickets)
+                    .ThenInclude(t => t.Assigned)
                 .Include(p => p.Members)
                     .ThenInclude(ut => ut.User)
                 .Single(p => p.ProjectId == projectId);
 
             var viewModel = new DetailsProjectViewModel()
             {
+                ProjectId = projectId,
                 Title = project.Title,
                 Description = project.Description,
                 CreatedDate = project.CreatedDate,

@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Trackily.Areas.Identity.Data;
 using Trackily.Models.Binding;
 using Trackily.Models.Binding.Ticket;
@@ -66,23 +69,25 @@ namespace Trackily.Services.Business
         /// <summary>
         /// Creates a new Ticket object using the binding model and saves it to the database.
         /// </summary>
-        /// <param name="input">Binding model for creating a new Ticket object.</param>
+        /// <param name="form">Binding model for creating a new Ticket object.</param>
         /// <param name="request">The HttpContext of the current request.</param>
         /// <returns>N/A</returns>
-        public async Task CreateTicket(CreateTicketBinding input, HttpContext request)
+        public async Task CreateTicket(CreateTicketBinding form, HttpContext request)
         {
             var ticket = new Ticket
             {
-                Title = input.Title,
+                Title = form.Title,
                 Creator = await _userManager.GetUserAsync(request.User),
-                Content = input.Content,
+                Content = form.Content,
                 CommentThreads = new List<CommentThread>(),
-                Assigned = new List<UserTicket>()
+                Assigned = new List<UserTicket>(),
+                Project = await _context.Projects.SingleAsync(p => p.Title.Equals(form.SelectedProject))
             };
 
-            foreach (string username in input.AddAssigned.Where(entry => entry != null))
+            foreach (string username in form.AddAssigned.Where(entry => entry != null))
             {
                 var user = await _dbService.GetUserAsync(username);
+                Debug.Assert(user != null);
                 var userTicket = _userTicketService.CreateUserTicket(user, ticket);
                 ticket.Assigned.Add(userTicket);
             }
@@ -108,6 +113,11 @@ namespace Trackily.Services.Business
                 Errors = new List<string>()
             };
 
+            var projectTitles = _context.Projects
+                                                .Select(p => p.Title)
+                                                .ToList();
+            viewModel.Projects = new SelectList(projectTitles);
+
             if (ticket != null)
             {
                 viewModel.Title = ticket.Title;
@@ -122,6 +132,7 @@ namespace Trackily.Services.Business
                     viewModel.Errors.Add(error.ErrorMessage);
                 }
             }
+
             return viewModel;
         }
 
@@ -246,7 +257,7 @@ namespace Trackily.Services.Business
         }
 
         /// <summary>
-        /// Updates the properties of the Ticket using values from the input.
+        /// Updates the properties of the Ticket using values from the form.
         /// </summary>
         /// <param name="ticket">Ticket object to be updated.</param>
         /// <param name="input">EditTicketBinding model containing POSTed values.</param>

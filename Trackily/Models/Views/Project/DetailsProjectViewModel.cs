@@ -9,6 +9,7 @@ namespace Trackily.Models.Views.Project
 {
     public class DetailsProjectViewModel
     {
+        public Guid ProjectId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
 
