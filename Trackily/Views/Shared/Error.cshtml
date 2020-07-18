@@ -4,14 +4,11 @@
 }
 
 <div class="container-fluid">
-    <h1 class="text-danger">Error.</h1>
-    <h2 class="text-danger">An error occurred while processing your request.</h2>
-
-    @if (Model.ShowRequestId)
-    {
-        <p>
-            <strong>Request ID:</strong> <code>@Model.RequestId</code>
-        </p>
-    }
+    <div class="text-center">
+        <div class="error mx-auto" data-text="Error">Error</div>
+        <p class="lead text-gray-800 mb-5">@Model.RequestId</p>
+        <p class="text-gray-500 mb-0">An error occurred while processing your request.</p>
+        <a asp-controller="Home" asp-action="Index">&larr; Back to Homepage</a>
+    </div>
 </div>
 
