@@ -3,7 +3,7 @@
 
 namespace Trackily.Areas.Identity.Policies.Requirements
 {
-    public class EditPrivilegesRequirement : IAuthorizationRequirement
+    public class TicketEditPrivilegesRequirement : IAuthorizationRequirement
     {
     }
 }

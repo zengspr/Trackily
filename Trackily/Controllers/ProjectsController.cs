@@ -18,10 +18,12 @@ namespace Trackily.Controllers
     public class ProjectsController : Controller
     {
         private readonly ProjectService _projectService;
+        private readonly IAuthorizationService _authService;
 
-        public ProjectsController(ProjectService projectService)
+        public ProjectsController(ProjectService projectService, IAuthorizationService authService)
         {
             _projectService = projectService;
+            _authService = authService;
         }
 
         // GET: Projects
@@ -32,8 +34,14 @@ namespace Trackily.Controllers
         }
 
         // GET: Projects/Details/5
-        public ActionResult Details(Guid projectId)
+        public async Task<ActionResult> Details(Guid projectId)
         {
+            var authResult = await _authService.AuthorizeAsync(HttpContext.User, projectId, "ProjectEditPrivileges");
+            if (!authResult.Succeeded)
+            {
+                return new ForbidResult();
+            }
+
             var viewModel = _projectService.CreateDetailsProjectViewModel(projectId);
             return View(viewModel);
         }
@@ -85,8 +93,15 @@ namespace Trackily.Controllers
         }
 
         // Projects/Delete/5
-        public ActionResult Delete(Guid projectId)
+        
+        public async Task<ActionResult> Delete(Guid projectId)
         {
+            var authResult = await _authService.AuthorizeAsync(HttpContext.User, projectId, "ProjectDeletePrivileges");
+            if (!authResult.Succeeded)
+            {
+                return new ForbidResult();
+            }
+
             _projectService.DeleteProject(projectId);
             return RedirectToAction(nameof(Index));
         }

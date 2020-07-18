@@ -68,19 +68,27 @@ namespace Trackily
             services.AddScoped<CommentService>();
             services.AddScoped<ProjectService>();
             services.AddScoped<UserProjectService>();
-            services.AddScoped<IAuthorizationHandler, EditPrivilegesUserIdHandler>();
 
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(
-                    "IsManager",
-                    policyBuilder => policyBuilder.RequireClaim("IsManager"));
-                options.AddPolicy(
-                    "HasEditPrivileges",
+                    "TicketEditPrivileges",
                     policyBuilder => policyBuilder.AddRequirements(
-                        new EditPrivilegesRequirement()
+                        new TicketEditPrivilegesRequirement()
                     ));
+                options.AddPolicy(
+                    "ProjectEditPrivileges",
+                    policyBuilder => policyBuilder.AddRequirements(
+                        new ProjectEditPrivilegesRequirement()));
+                options.AddPolicy(
+                    "ProjectDeletePrivileges",
+                    policyBuilder => policyBuilder.AddRequirements(
+                        new ProjectDeletePrivilegesRequirement()));
             });
+
+            services.AddScoped<IAuthorizationHandler, TicketEditPrivilegesUserIdHandler>();
+            services.AddScoped<IAuthorizationHandler, ProjectEditPrivilegesProjectIdHandler>();
+            services.AddScoped<IAuthorizationHandler, ProjectDeletePrivilegesProjectIdHandler>();
         }
 
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<TrackilyUser> userManager)
