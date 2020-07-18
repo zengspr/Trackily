@@ -4,16 +4,16 @@
     <div class="col">
         <div class="row">
             <h1>@Model.Title</h1>
-            <hr>
         </div>
-        
+        <hr>
+
         <div class="row">
             <span>@Model.Description</span>
         </div>
         <div class="row mt-2">
             <span>Created: @Html.DisplayFor(m => m.CreatedDate)</span>
         </div>
-        
+
         <div class="row mt-3">
             <h4 class="h4 mb-2 text-gray-800">
                 <label asp-for="Tickets"></label>
@@ -54,35 +54,53 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="row mt-3">
-            <h4 class="h4 mb-2 text-gray-800">
-                <label asp-for="Members"></label>
-            </h4>
+            <h4 class="h4 mb-2 text-gray-800">Members</h4>
         </div>
         <div class="row">
-            @if (Model.Members.Count == 0)
+            @if ((Model.Developers.Count + Model.Managers.Count) == 0)
             {
                 <p class="text-secondary">This project has no members.</p>
             }
-            <ul class="list-group mb-3">
-                @foreach (var member in Model.Members)
-                {
-                    <li class="list-group-item d-inline-flex justify-content-between align-items-center text-nowrap p-2">
-                        @member.Item1
-                        <span class="badge badge-secondary ml-3">@member.Item2</span>
-                    </li>
-                }
-            </ul>
+            else
+            {
+                <div class="col-md-5">
+                    <label asp-for="Developers"></label>
+                    <ul class="list-group mb-3">
+                        @foreach (var member in Model.Developers)
+                        {
+                            <li class="list-group-item d-inline-flex justify-content-between align-items-center text-nowrap p-2">
+                                @member.Item1
+                                <span class="badge badge-secondary ml-3">@member.Item2</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div class="col-md-5">
+                    <label asp-for="Managers"></label>
+                    <ul class="list-group mb-3">
+                        @foreach (var member in Model.Managers)
+                        {
+                            <li class="list-group-item d-inline-flex justify-content-between align-items-center text-nowrap p-2">
+                                @member.Item1
+                                <span class="badge badge-secondary ml-3">@member.Item2</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
         </div>
 
         <div class="row mt-4">
-            <a asp-action="Index">Back to Tickets</a>
-            <a class="btn btn-primary btn-circle btn-lg ml-5 active"
-               asp-action="Edit" 
-               asp-route-projectId="@Model.ProjectId">
-                <i class="fas fa-sm fa-edit"></i>
-            </a>
+            <div class="col-md-10">
+                <a class="float-left" asp-action="Index">Back to Tickets</a>
+                <a class="btn btn-primary btn-circle btn-lg float-right active"
+                   asp-action="Edit"
+                   asp-route-projectId="@Model.ProjectId">
+                    <i class="fas fa-sm fa-edit"></i>
+                </a>
+            </div>
         </div>
     </div>
 </div>

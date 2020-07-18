@@ -20,7 +20,10 @@ namespace Trackily.Models.Views.Project
         [DisplayName("Tickets")]
         public List<Domain.Ticket> Tickets { get; set; }
 
-        [DisplayName("Members")]
-        public List<Tuple<string, string>> Members { get; set; }  // (name, username).
+        [DisplayName("Developers")]
+        public List<Tuple<string, string>> Developers { get; set; }  // (name, username).
+
+        [DisplayName("Managers")] 
+        public List<Tuple<string, string>> Managers { get; set; }
     }
 }

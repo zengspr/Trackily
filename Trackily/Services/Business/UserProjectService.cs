@@ -40,13 +40,5 @@ namespace Trackily.Services.Business
                 project.Members.Add(userProject);
             }
         }
-
-        public List<UserProject> CreateUserProjectsForNames(string[] usernames, Project project)
-        {
-            var userProjects = new List<UserProject>();
-            AddMembersToProject(usernames, project);
-
-            return userProjects;
-        }
     }
 }

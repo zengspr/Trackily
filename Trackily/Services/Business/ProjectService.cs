@@ -126,10 +126,11 @@ namespace Trackily.Services.Business
                 Title = form.Title,
                 Description = form.Description,
                 Creator = await _userManager.GetUserAsync(request.User),
-                Tickets = new List<Ticket>()
+                Tickets = new List<Ticket>(),
+                Members = new List<UserProject>()
             };
             
-            project.Members = _userProjectService.CreateUserProjectsForNames(form.AddMembers, project);
+            _userProjectService.AddMembersToProject(form.AddMembers, project);
 
             _context.Projects.Add(project);
             _context.SaveChanges(true);
@@ -149,6 +150,20 @@ namespace Trackily.Services.Business
             return members;
         }
 
+        private List<Tuple<string, string>> GetNamesOfUsers(ICollection<TrackilyUser> users)
+        {
+            var names = new List<Tuple<string, string>>();
+
+            foreach (var user in users)
+            {
+                string name = $"{user.FirstName} {user.LastName}";
+                var memberTuple = Tuple.Create(name, user.UserName);
+                names.Add(memberTuple);
+            }
+
+            return names;
+        }
+
         public DetailsProjectViewModel CreateDetailsProjectViewModel(Guid projectId)
         {
             var project = _context.Projects
@@ -165,11 +180,26 @@ namespace Trackily.Services.Business
                 Description = project.Description,
                 CreatedDate = project.CreatedDate,
                 Tickets = new List<Ticket>(),
-                Members = new List<Tuple<string, string>>()
+                Managers = new List<Tuple<string, string>>(),
+                Developers = new List<Tuple<string, string>>()
             };
 
             viewModel.Tickets.AddRange(project.Tickets);
-            viewModel.Members = GetNamesForMembers(project);
+
+            var managers = _context.UserProjects
+                .Include(up => up.User)
+                .Where(up => up.ProjectId == projectId && up.User.Role == TrackilyUser.UserRole.Manager)
+                .Select(up => up.User)
+                .ToList();
+            
+            var developers = _context.UserProjects
+                .Include(up => up.User)
+                .Where(up => up.ProjectId == projectId && up.User.Role == TrackilyUser.UserRole.Developer)
+                .Select(up => up.User)
+                .ToList();
+
+            viewModel.Managers = GetNamesOfUsers(managers);
+            viewModel.Developers = GetNamesOfUsers(developers);
 
             return viewModel;
         }
