@@ -18,7 +18,8 @@
             <h4 class="h4 mb-2 text-gray-800">
                 <label asp-for="Tickets"></label>
             </h4>
-
+        </div>
+        <div class="row">
             <div class="card shadow mb-2 overflow-hidden">
                 <div class="card-body overflow-hidden">
                     <div class="table-responsive overflow-hidden">
@@ -59,25 +60,29 @@
                 <label asp-for="Members"></label>
             </h4>
         </div>
-        <ul class="list-group mb-3">
-            @foreach (var member in Model.Members)
+        <div class="row">
+            @if (Model.Members.Count == 0)
             {
-                <li class="list-group-item w-50 d-inline-flex justify-content-between align-items-center text-nowrap">
-                    @member.Item1
-                    <span class="badge badge-secondary ml-3">@member.Item2</span>
-                </li>
+                <p class="text-secondary">This project has no members.</p>
             }
-        </ul>
+            <ul class="list-group mb-3">
+                @foreach (var member in Model.Members)
+                {
+                    <li class="list-group-item d-inline-flex justify-content-between align-items-center text-nowrap p-2">
+                        @member.Item1
+                        <span class="badge badge-secondary ml-3">@member.Item2</span>
+                    </li>
+                }
+            </ul>
+        </div>
 
         <div class="row mt-4">
-            <div class="col-md-6">
-                <a asp-action="Index">Back to Tickets</a>
-                <a class="btn btn-primary btn-circle float-right active"
-                   asp-action="Edit" 
-                   asp-route-projectId="@Model.ProjectId">
-                    <i class="fas fa-sm fa-edit"></i>
-                </a>
-            </div>
+            <a asp-action="Index">Back to Tickets</a>
+            <a class="btn btn-primary btn-circle btn-lg ml-5 active"
+               asp-action="Edit" 
+               asp-route-projectId="@Model.ProjectId">
+                <i class="fas fa-sm fa-edit"></i>
+            </a>
         </div>
     </div>
 </div>

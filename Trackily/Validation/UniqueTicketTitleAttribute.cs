@@ -17,8 +17,8 @@ namespace Trackily.Validation
 
             switch (validationContext.ObjectType.Name)
             {
-                case "EditTicketBinding":
-                {
+                case nameof(EditTicketBinding):
+                { 
                     var input = (EditTicketBinding) validationContext.ObjectInstance;
                     if (context.Tickets.Single(t => t.TicketId == input.TicketId).Title == input.Title)
                     {
@@ -31,7 +31,7 @@ namespace Trackily.Validation
 
                     break;
                 }
-                case "CreateTicketBinding":
+                case nameof(CreateTicketBinding):
                 {
                     var input = (CreateTicketBinding)validationContext.ObjectInstance;
                     if (context.Tickets.Any(t => t.Title == input.Title))
@@ -44,6 +44,7 @@ namespace Trackily.Validation
                 default:
                     throw new Exception("Object type being validated is not known.");
             }
+
             return ValidationResult.Success;
         }
     }

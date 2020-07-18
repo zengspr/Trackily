@@ -71,29 +71,22 @@ namespace Trackily.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(EditProjectBinding form)
         {
+            if (!ModelState.IsValid)
+            {
+                IEnumerable<ModelError> errors = ModelState.Values.SelectMany(v => v.Errors);
+                var viewModel = _projectService.EditProjectViewModel(form, errors);
+                return View(viewModel);
+            }
+
             _projectService.EditProject(form);
             return RedirectToAction(nameof(Edit), new {projectId = form.ProjectId});
         }
 
-        // GET: Projects/Delete/5
+        // Projects/Delete/5
         public ActionResult Delete(Guid projectId)
         {
-            return View();
-        }
-
-        // POST: Projects/Delete/5 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(Guid projectId, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            _projectService.DeleteProject(projectId);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

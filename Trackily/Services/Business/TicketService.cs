@@ -26,16 +26,19 @@ namespace Trackily.Services.Business
         private readonly UserTicketService _userTicketService;
         private readonly DbService _dbService;
         private readonly TrackilyContext _context;
+        private readonly UserProjectService _userProjectService;
 
         public TicketService(UserManager<TrackilyUser> userManager, 
                              DbService dbService, 
                              TrackilyContext context, 
-                             UserTicketService userTicketService)
+                             UserTicketService userTicketService,
+                             UserProjectService userProjectService)
         {
             _userManager = userManager;
             _userTicketService = userTicketService;
             _dbService = dbService;
             _context = context;
+            _userProjectService = userProjectService;
         }
 
         /// <summary>
@@ -84,12 +87,20 @@ namespace Trackily.Services.Business
                 Project = await _context.Projects.SingleAsync(p => p.Title.Equals(form.SelectedProject))
             };
 
+            var project = _context.Projects
+                                .Include(p => p.Members)
+                                .Single(p => p.ProjectId == ticket.Project.ProjectId);
+
             foreach (string username in form.AddAssigned.Where(entry => entry != null))
             {
                 var user = await _dbService.GetUserAsync(username);
                 Debug.Assert(user != null);
+
                 var userTicket = _userTicketService.CreateUserTicket(user, ticket);
                 ticket.Assigned.Add(userTicket);
+
+                var userProject = _userProjectService.CreateUserProject(user, project);
+                project.Members.Add(userProject);
             }
 
             _context.Add(ticket);

@@ -16,5 +16,12 @@ namespace Trackily.Models.Views.Project
 
         [DisplayName("Members")]
         public List<Tuple<string, string>> Members { get; set; }  // (name, username).
+
+        public List<string> Errors { get; set; }
+
+        public EditProjectViewModel()
+        {
+            Errors = new List<string>();
+        }
     }
 }

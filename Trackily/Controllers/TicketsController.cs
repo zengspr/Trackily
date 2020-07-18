@@ -126,11 +126,15 @@ namespace Trackily.Controllers
         // GET: Tickets/Create
         public IActionResult Create()
         {
+            if (!_context.Projects.Any())
+            {
+                return RedirectToAction("Create", "Projects");
+            }
+
             var viewModel = _ticketService.CreateTicketViewModel();
             return View(viewModel);
         }
 
-        // TODO: Include project. Need to update view, binding model, and service.
         // POST: Tickets/Create
         [HttpPost]
         [ValidateAntiForgeryToken]

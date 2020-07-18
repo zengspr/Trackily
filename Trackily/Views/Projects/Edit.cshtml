@@ -10,19 +10,24 @@
                 <div class="form-group col-md-6">
                     <label asp-for="Title"></label>
                     <input class="form-control" asp-for="Title"/>
-                    <span asp-validation-for="Title"></span>
+                    <span class="text-danger" asp-validation-for="Title"></span>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-10">
                     <label asp-for="Description"></label>
                     <input class="form-control" asp-for="Description"/>
-                    <span asp-validation-for="Description"></span>
+                    <span class="text-danger" asp-validation-for="Description"></span>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-5">
                     <label asp-for="Members"></label>
+                    @if (Model.Members.Count == 0)
+                    {
+                        <p class="text-secondary">This project has no members.</p>
+                    }
+
                     <ul class="list-group mb-3">
                         @foreach (var member in Model.Members)
                         {
@@ -49,13 +54,20 @@
                 </div>
             </div>
             <div class="form-row mt-4">
-                <div class="form-group col-md-6">
-                    <a asp-action="Index">Back to Tickets</a>
-                    <a class="btn btn-danger btn-circle float-right active"
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-success btn-lg btn-circle float-left">
+                        <i class="fas fa-check"></i>
+                    </button>
+                    <a class="btn btn-danger btn-circle btn-lg float-right active"
                        asp-action="Delete"
-                       asp-route-id="@Model.ProjectId">
+                       asp-route-projectId="@Model.ProjectId">
                         <i class="fas fa-trash"></i>
                     </a>
+                </div>
+            </div>
+            <div class="form-row mt-3">
+                <div class="form-group col-md-6">
+                    <a asp-action="Index">Back to Tickets</a>
                 </div>
             </div>
         </form>

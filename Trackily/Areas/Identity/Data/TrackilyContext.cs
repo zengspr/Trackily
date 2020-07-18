@@ -27,8 +27,7 @@ namespace Trackily.Areas.Identity.Data
             builder.Entity<Project>()
                 .HasMany(p => p.Tickets)
                 .WithOne(t => t.Project)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.NoAction);
+                .IsRequired();
 
             builder.Entity<Project>()
                 .HasMany(p => p.Members)

@@ -33,8 +33,6 @@ namespace Trackily.Services.Business
 
         public void AddMembersToProject(string[] usernames, Project project)
         {
-            Debug.Assert(project.Members != null);
-
             foreach (var username in usernames.Where(entry => entry != null))
             {
                 var user = _dbService.GetUser(username);

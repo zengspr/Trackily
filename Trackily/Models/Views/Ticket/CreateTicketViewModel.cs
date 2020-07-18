@@ -8,7 +8,7 @@ namespace Trackily.Models.Views.Ticket
     // Derived from CreateTicketBinding to save filled form if an error occurred while submitting.
     public class CreateTicketViewModel : CreateTicketBinding
     {
-        [DisplayName("Projects")]
+        [DisplayName("Project")]
         public SelectList Projects { get; set; }
         public List<string> Errors { get; set; }
     }

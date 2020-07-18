@@ -57,6 +57,37 @@ namespace Trackily.Services.Business
             return viewModel;
         }
 
+        // TODO: Refactor methods for generating view models when there are model errors.
+        public EditProjectViewModel EditProjectViewModel(
+            EditProjectBinding binding = null,
+            IEnumerable<ModelError> errors = null)
+        {
+            var viewModel = new EditProjectViewModel();
+            var project = _context.Projects
+                                .Include(p => p.Members)
+                                    .ThenInclude(m => m.User)
+                                .Single(p => p.ProjectId == binding.ProjectId);
+
+            if (binding != null)
+            {
+                viewModel.ProjectId = binding.ProjectId;
+                viewModel.Title = binding.Title;
+                viewModel.Description = binding.Description;
+                viewModel.AddMembers = binding.AddMembers;
+                viewModel.Members = GetNamesForMembers(project);
+            }
+
+            if (errors != null)
+            {
+                foreach (var error in errors)
+                {
+                    viewModel.Errors.Add(error.ErrorMessage);
+                }
+            }
+
+            return viewModel;
+        }
+
         public List<IndexProjectViewModel> CreateIndexProjectViewModels()
         {
             List<Project> projects = _context.Projects
@@ -175,6 +206,13 @@ namespace Trackily.Services.Business
 
             _userProjectService.AddMembersToProject(form.AddMembers, project);
 
+            _context.SaveChanges(true);
+        }
+
+        public void DeleteProject(Guid projectId)
+        {
+            var project = _context.Projects.Find(projectId);
+            _context.Remove(project);
             _context.SaveChanges(true);
         }
     }
