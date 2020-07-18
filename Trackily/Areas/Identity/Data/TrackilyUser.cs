@@ -14,11 +14,11 @@ namespace Trackily.Areas.Identity.Data
         public string LastName { get; set; }
         public override string UserName { get; set; }
 
-        
+
         public ICollection<UserProject>? AssignedProjects { get; set; }
-        public ICollection<Ticket>? CreatedTickets { get; set; } 
-        public ICollection<UserTicket>? AssignedTo { get; set; } 
-        public ICollection<CommentThread>? CreatedThreads { get; set; }  
+        public ICollection<Ticket>? CreatedTickets { get; set; }
+        public ICollection<UserTicket>? AssignedTo { get; set; }
+        public ICollection<CommentThread>? CreatedThreads { get; set; }
         public ICollection<Comment>? CreatedComments { get; set; }
     }
 }

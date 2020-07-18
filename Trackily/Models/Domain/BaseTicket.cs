@@ -14,7 +14,7 @@ namespace Trackily.Models.Domain
         public BaseTicket()
         {
             UpdatedDate = DateTime.Now;
-            CreatedDate = DateTime.Now; 
+            CreatedDate = DateTime.Now;
         }
     }
 }

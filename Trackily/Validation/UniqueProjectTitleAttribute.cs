@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Trackily.Areas.Identity.Data;
-using Trackily.Models.Binding;
 using Trackily.Models.Binding.Project;
 
 namespace Trackily.Validation
@@ -21,29 +17,29 @@ namespace Trackily.Validation
             switch (validationContext.ObjectType.Name)
             {
                 case nameof(BaseProjectBinding):
-                {
-                    var input = (BaseProjectBinding) validationContext.ObjectInstance;
-                    if (context.Projects.Any(p => p.Title == (string) projectTitle))
                     {
-                        return new ValidationResult("Title cannot be identical to another Project's.");
-                    }
+                        var input = (BaseProjectBinding)validationContext.ObjectInstance;
+                        if (context.Projects.Any(p => p.Title == (string)projectTitle))
+                        {
+                            return new ValidationResult("Title cannot be identical to another Project's.");
+                        }
 
-                    break;
-                }
+                        break;
+                    }
                 case nameof(EditProjectBinding):
-                {
-                    var input = (EditProjectBinding) validationContext.ObjectInstance;
-                    if (context.Projects.Single(p => p.ProjectId == input.ProjectId).Title == input.Title)
                     {
-                        return ValidationResult.Success;
-                    }
-                    if (context.Projects.Any(p => p.Title == (string)projectTitle))
-                    {
-                        return new ValidationResult("Title cannot be identical to another Project's.");
-                    }
+                        var input = (EditProjectBinding)validationContext.ObjectInstance;
+                        if (context.Projects.Single(p => p.ProjectId == input.ProjectId).Title == input.Title)
+                        {
+                            return ValidationResult.Success;
+                        }
+                        if (context.Projects.Any(p => p.Title == (string)projectTitle))
+                        {
+                            return new ValidationResult("Title cannot be identical to another Project's.");
+                        }
 
-                    break;
-                }
+                        break;
+                    }
                 default:
                     throw new Exception("Object type being validated is not known.");
             }

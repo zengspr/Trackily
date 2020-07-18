@@ -6,7 +6,7 @@ using static Trackily.Models.Domain.Ticket;
 namespace Trackily.Models.Views.Ticket
 {
     [MetadataType(typeof(IndexTicketViewModel))]
-    public class IndexTicketViewModel 
+    public class IndexTicketViewModel
     {
         public Guid CreatorId { get; set; }
         public Guid TicketId { get; set; }
@@ -28,7 +28,7 @@ namespace Trackily.Models.Views.Ticket
 
         [DisplayName("# Assigned")]
         public int NumAssignedUsers { get; set; }
-        
+
         [DisplayName("Created")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:g}")]
         public DateTime CreatedDate { get; set; }

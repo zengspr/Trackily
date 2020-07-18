@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
@@ -6,10 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Trackily.Areas.Identity.Data;
 using Trackily.Controllers.Filters;
-using Trackily.Models.Binding;
 using Trackily.Models.Binding.Ticket;
 using Trackily.Models.Domain;
 using Trackily.Models.Views.Ticket;
@@ -29,7 +28,7 @@ namespace Trackily.Controllers
         private readonly IAuthorizationService _authService;
         private readonly UserManager<TrackilyUser> _userManager;
 
-        public TicketsController(TrackilyContext context, 
+        public TicketsController(TrackilyContext context,
             TicketService ticketService, DbService dbService, CommentService commentService,
             IAuthorizationService authService, UserManager<TrackilyUser> userManager)
         {
@@ -77,7 +76,7 @@ namespace Trackily.Controllers
 
             indexViewModel = _ticketService.CreateIndexViewModel(tickets);
             ViewData["indexScope"] = scope;
-            return View(indexViewModel); 
+            return View(indexViewModel);
         }
 
         // GET: Tickets/Details/5
@@ -100,7 +99,8 @@ namespace Trackily.Controllers
         public async Task<IActionResult> Details(Guid id, DetailsTicketBinding input)
         {
             var ticket = await _dbService.GetTicket(id);
-            if (ticket == null) { return NotFound(); }
+            if (ticket == null)
+            { return NotFound(); }
 
             if (!ModelState.IsValid)
             {
@@ -148,7 +148,7 @@ namespace Trackily.Controllers
             }
 
             await _ticketService.CreateTicket(input, HttpContext);
-            return RedirectToAction("Index", new {scope = "created"});
+            return RedirectToAction("Index", new { scope = "created" });
         }
 
         // GET: Tickets/Edit/5
@@ -156,7 +156,8 @@ namespace Trackily.Controllers
         public async Task<IActionResult> Edit(Guid id)
         {
             var ticket = await _dbService.GetTicket(id);
-            if (ticket == null) { return NotFound(); }
+            if (ticket == null)
+            { return NotFound(); }
 
             var viewModel = await _ticketService.EditTicketViewModel(ticket);
             return View(viewModel);
@@ -190,7 +191,7 @@ namespace Trackily.Controllers
             await _ticketService.EditTicket(ticket, input, HttpContext);
             await _context.SaveChangesAsync();
 
-            return ticket.Status == Ticket.TicketStatus.Closed ? RedirectToAction("Index", new {scope = "closed"}) : RedirectToAction("Index");
+            return ticket.Status == Ticket.TicketStatus.Closed ? RedirectToAction("Index", new { scope = "closed" }) : RedirectToAction("Index");
         }
 
         [NullIdActionFilter]

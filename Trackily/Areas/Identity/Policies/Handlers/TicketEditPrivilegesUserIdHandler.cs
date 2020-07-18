@@ -1,7 +1,7 @@
-﻿using System;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Trackily.Areas.Identity.Data;
 using Trackily.Areas.Identity.Policies.Requirements;

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Trackily.Areas.Identity.Data;
 
 namespace Trackily.Models.Domain
 {
@@ -12,4 +8,3 @@ namespace Trackily.Models.Domain
         public CommentThread Parent { get; set; }
     }
 }
- 

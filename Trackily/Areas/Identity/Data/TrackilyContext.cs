@@ -1,7 +1,7 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
 using Trackily.Models.Domain;
 
 namespace Trackily.Areas.Identity.Data
@@ -44,7 +44,7 @@ namespace Trackily.Areas.Identity.Data
             builder.Entity<TrackilyUser>()
                 .HasMany(c => c.CreatedThreads)
                 .WithOne(e => e.Creator)
-                .OnDelete(DeleteBehavior.NoAction); 
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<TrackilyUser>()
                 .HasMany(c => c.CreatedComments)
@@ -79,7 +79,7 @@ namespace Trackily.Areas.Identity.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<UserProject>()
-                .HasKey(createKey => new {createKey.Id, createKey.ProjectId});
+                .HasKey(createKey => new { createKey.Id, createKey.ProjectId });
 
             builder.Entity<UserProject>()
                 .HasOne(up => up.User)

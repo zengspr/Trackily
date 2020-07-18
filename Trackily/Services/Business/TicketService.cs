@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using Trackily.Areas.Identity.Data;
-using Trackily.Models.Binding;
 using Trackily.Models.Binding.Ticket;
 using Trackily.Models.Domain;
 using Trackily.Models.Views.Ticket;
@@ -20,7 +19,7 @@ namespace Trackily.Services.Business
     /// <summary>
     /// Contains methods which generate view and binding models related to Tickets.
     /// </summary>
-    public class TicketService 
+    public class TicketService
     {
         private readonly UserManager<TrackilyUser> _userManager;
         private readonly UserTicketService _userTicketService;
@@ -28,9 +27,9 @@ namespace Trackily.Services.Business
         private readonly TrackilyContext _context;
         private readonly UserProjectService _userProjectService;
 
-        public TicketService(UserManager<TrackilyUser> userManager, 
-                             DbService dbService, 
-                             TrackilyContext context, 
+        public TicketService(UserManager<TrackilyUser> userManager,
+                             DbService dbService,
+                             TrackilyContext context,
                              UserTicketService userTicketService,
                              UserProjectService userProjectService)
         {
@@ -186,7 +185,7 @@ namespace Trackily.Services.Business
                     viewModel.Errors.Add(error.ErrorMessage);
                 }
             }
-            
+
             return viewModel;
         }
 
@@ -203,7 +202,7 @@ namespace Trackily.Services.Business
         {
             var viewModel = new EditTicketViewModel
             {
-                TicketId = ticket.TicketId,  
+                TicketId = ticket.TicketId,
                 Title = ticket.Title,
                 CreatedDate = ticket.CreatedDate,
                 UpdatedDate = ticket.UpdatedDate,
@@ -308,7 +307,7 @@ namespace Trackily.Services.Business
             }
         }
 
-         
+
 
     }
 }

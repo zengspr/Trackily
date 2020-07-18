@@ -1,11 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Trackily.Areas.Identity.Data;
-using Trackily.Models.Binding;
 using Trackily.Models.Binding.Ticket;
 using Trackily.Models.Domain;
 
@@ -65,7 +63,7 @@ namespace Trackily.Services.Business
             // Want to avoid adding empty comments, since all comments are POSted.
             foreach (var (replyTo, content) in input.NewReplies.Where(r => r.Value != null))
             {
-                var commentThread = await GetCommentThread(replyTo); 
+                var commentThread = await GetCommentThread(replyTo);
                 var comment = new Comment
                 {
                     Content = content,

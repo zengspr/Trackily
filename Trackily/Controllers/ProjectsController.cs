@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Trackily.Areas.Identity.Data;
-using Trackily.Models.Binding;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Trackily.Models.Binding.Project;
 using Trackily.Models.Views.Project;
 using Trackily.Services.Business;
@@ -89,11 +87,11 @@ namespace Trackily.Controllers
             }
 
             _projectService.EditProject(form);
-            return RedirectToAction(nameof(Edit), new {projectId = form.ProjectId});
+            return RedirectToAction(nameof(Edit), new { projectId = form.ProjectId });
         }
 
         // Projects/Delete/5
-        
+
         public async Task<ActionResult> Delete(Guid projectId)
         {
             var authResult = await _authService.AuthorizeAsync(HttpContext.User, projectId, "ProjectDeletePrivileges");

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Trackily.Areas.Identity.Data;
 using Trackily.Models.Binding.Project;
-using Trackily.Models.Domain;
 
 namespace Trackily.Validation
 {
@@ -25,7 +21,7 @@ namespace Trackily.Validation
                 return ValidationResult.Success;
             }
 
-            var project = (BaseProjectBinding) validationContext.ObjectInstance;
+            var project = (BaseProjectBinding)validationContext.ObjectInstance;
             var loadProject = context.Projects
                 .Include(p => p.Members)
                 .ThenInclude(up => up.User)

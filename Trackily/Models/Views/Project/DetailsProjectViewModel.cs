@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Trackily.Models.Views.Project
 {
@@ -23,7 +21,7 @@ namespace Trackily.Models.Views.Project
         [DisplayName("Developers")]
         public List<Tuple<string, string>> Developers { get; set; }  // (name, username).
 
-        [DisplayName("Managers")] 
+        [DisplayName("Managers")]
         public List<Tuple<string, string>> Managers { get; set; }
     }
 }

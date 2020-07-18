@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Trackily.Areas.Identity.Data;
-using Trackily.Models.Binding;
 using Trackily.Models.Binding.Project;
 using Trackily.Models.Domain;
 using Trackily.Models.Views.Project;
@@ -23,7 +21,7 @@ namespace Trackily.Services.Business
         private readonly DbService _dbService;
         private readonly UserManager<TrackilyUser> _userManager;
 
-        public ProjectService(TrackilyContext context, 
+        public ProjectService(TrackilyContext context,
             UserProjectService userProjectService, DbService dbService, UserManager<TrackilyUser> userManager)
         {
             _context = context;
@@ -37,7 +35,7 @@ namespace Trackily.Services.Business
             IEnumerable<ModelError> errors = null)
         {
             var viewModel = new CreateProjectViewModel();
-            
+
             if (binding != null)
             {
                 viewModel.ProjectId = binding.ProjectId;
@@ -129,7 +127,7 @@ namespace Trackily.Services.Business
                 Tickets = new List<Ticket>(),
                 Members = new List<UserProject>()
             };
-            
+
             _userProjectService.AddMembersToProject(form.AddMembers, project);
 
             _context.Projects.Add(project);
@@ -191,7 +189,7 @@ namespace Trackily.Services.Business
                 .Where(up => up.ProjectId == projectId && up.User.Role == TrackilyUser.UserRole.Manager)
                 .Select(up => up.User)
                 .ToList();
-            
+
             var developers = _context.UserProjects
                 .Include(up => up.User)
                 .Where(up => up.ProjectId == projectId && up.User.Role == TrackilyUser.UserRole.Developer)

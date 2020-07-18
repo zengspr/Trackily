@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Trackily.Areas.Identity.Data;
 using Trackily.Models.Binding.Ticket;
-using Trackily.Models.Domain;
 
 namespace Trackily.Validation
 {
@@ -15,7 +11,7 @@ namespace Trackily.Validation
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var context = (TrackilyContext) validationContext.GetService(typeof(TrackilyContext));
+            var context = (TrackilyContext)validationContext.GetService(typeof(TrackilyContext));
             Debug.Assert(context != null);
 
 
@@ -25,7 +21,7 @@ namespace Trackily.Validation
                 return ValidationResult.Success;
             }
 
-            var ticket = (BaseTicketBinding) validationContext.ObjectInstance;
+            var ticket = (BaseTicketBinding)validationContext.ObjectInstance;
 
             var loadTicket = context.Tickets
                 .Include(t => t.Assigned)

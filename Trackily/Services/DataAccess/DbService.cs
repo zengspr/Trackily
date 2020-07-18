@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.TagHelpers.Cache;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Trackily.Areas.Identity.Data;
@@ -40,8 +38,8 @@ namespace Trackily.Services.DataAccess
         public async Task<Ticket> GetTicket(Guid ticketId)
         {
             var ticket = await _context.Tickets.Include(t => t.Creator)
-                                                .Include(t => t.Assigned)   
-                                                    .ThenInclude(a => a.User)   
+                                                .Include(t => t.Assigned)
+                                                    .ThenInclude(a => a.User)
                                                 .Include(t => t.CommentThreads)
                                                     .ThenInclude(ct => ct.Comments)
                                                         .ThenInclude(c => c.Creator)

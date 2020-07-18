@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
 using System.ComponentModel;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Trackily.Models.Binding.Ticket;
 
 namespace Trackily.Models.Views.Ticket
