@@ -45,35 +45,32 @@ namespace Trackily.Controllers
         {
             var currentUser = await _userManager.GetUserAsync(HttpContext.User);
             List<Ticket> tickets;
-            
+
+            var query = _context.Tickets.Include(t => t.Assigned)
+                                                                        .Include(t => t.Project);
             switch (scope)
             {
                 case "created":
-                    tickets = await _context.Tickets.Include(t => t.Assigned)
-                                                    .Where(t => t.Project.Members.Select(up => up.User).Contains(currentUser) & 
-                                                                t.Creator == currentUser)
-                                                    .ToListAsync();
+                    tickets = query.Where(t => t.Project.Members.Select(up => up.User).Contains(currentUser) & 
+                                               t.Creator == currentUser)
+                                    .ToList();
                     break;
                 case "assigned":
-                    tickets = await _context.Tickets.Include(t => t.Assigned)
-                                                    .Include(t => t.Creator)
-                                                    .Where(t => t.Project.Members.Select(up => up.User).Contains(currentUser) & 
-                                                                t.Assigned.Select(ut => ut.User).Contains(currentUser))
-                                                    .ToListAsync();
+                    tickets = query.Include(t => t.Creator)
+                                    .Where(t => t.Project.Members.Select(up => up.User).Contains(currentUser) & 
+                                                t.Assigned.Select(ut => ut.User).Contains(currentUser))
+                                    .ToList();
                     break;
                 case "closed":
-                    tickets = await _context.Tickets.Include(t => t.Assigned)
-                                                    .Include(t => t.Creator)
-                                                    .Where(t => t.Project.Members.Select(up => up.User).Contains(currentUser) & 
-                                                                t.Status == Ticket.TicketStatus.Closed)
-                                                    .ToListAsync();
+                    tickets = query.Include(t => t.Creator).Where(t => t.Project.Members.Select(up => up.User).Contains(currentUser) & 
+                                                                       t.Status == Ticket.TicketStatus.Closed)
+                                                            .ToList();
                     break;
                 default: // Get all tickets.
-                    tickets = await _context.Tickets.Include(t => t.Assigned)
-                                                    .Include(t => t.Creator)
-                                                    .Where(t => t.Project.Members.Select(up => up.User).Contains(currentUser) &
-                                                                t.Status != Ticket.TicketStatus.Closed)
-                                                    .ToListAsync();
+                    tickets = query.Include(t => t.Creator)
+                                    .Where(t => t.Project.Members.Select(up => up.User).Contains(currentUser) & 
+                                                t.Status != Ticket.TicketStatus.Closed)
+                                    .ToList();
                     break;
             }
 

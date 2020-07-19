@@ -5,7 +5,6 @@ using static Trackily.Models.Domain.Ticket;
 
 namespace Trackily.Models.Views.Ticket
 {
-    [MetadataType(typeof(IndexTicketViewModel))]
     public class IndexTicketViewModel
     {
         public Guid CreatorId { get; set; }
@@ -16,6 +15,9 @@ namespace Trackily.Models.Views.Ticket
 
         [DisplayName("Title")]
         public string Title { get; set; }
+
+        [DisplayName("Project Title")]
+        public string ProjectTitle { get; set; }
 
         [DisplayName("Priority")]
         public TicketPriority Priority { get; set; }

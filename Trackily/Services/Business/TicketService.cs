@@ -56,6 +56,7 @@ namespace Trackily.Services.Business
                     TicketId = ticket.TicketId,
                     CreatorName = $"{ticket.Creator.FirstName} {ticket.Creator.LastName}",
                     Title = ticket.Title,
+                    ProjectTitle = ticket.Project.Title,
                     Priority = ticket.Priority,
                     Type = ticket.Type,
                     Status = ticket.Status,
