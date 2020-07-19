@@ -8,30 +8,31 @@
 
     <title>@ViewData["Title"] - Trackily</title>
 
-    <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css">
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/vendor/datatables/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="~/vendor/fontawesome-free/css/all.min.css" type="text/css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+
     <environment include="Development">
         <link rel="stylesheet" href="~/css/sb-admin-2.css" />
     </environment>
-    
+
     <environment exclude="Development">
         <link rel="stylesheet" href="~/css/sb-admin-2.min.css" />
     </environment>
 
-    <script src="https://cdn.tiny.cloud/1/7armcrgh0x3xyxu8l2jziuggai5fkym97fal9av16uygh22o/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
-    <script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-    <script src="~/js/site.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js" integrity="sha384-1CmrxMRARb6aLqgBO7yyAxTOQE2AKb9GfXnEo760AUcUmFx3ibVJJAzGytlQcNXd" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/401db1d0e4.js" crossorigin="anonymous"></script>
     <script src="~/js/sb-admin-2.min.js"></script>
-    <script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <script src="https://cdn.tiny.cloud/1/7armcrgh0x3xyxu8l2jziuggai5fkym97fal9av16uygh22o/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js" integrity="sha512-0QbL0ph8Tc8g5bLhfVzSqxe9GERORsKhIn1IrpxDAgUsbBGz/V7iSav2zzW325XGd1OMLdL4UiqRJj702IeqnQ==" crossorigin="anonymous"></script>
+    
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
 
     @RenderSection("Scripts", required: false)
 </head>
@@ -46,63 +47,79 @@
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" asp-controller="Home" asp-action="Index">
-                <div class="sidebar-brand-icon rotate-n-15">
+                <div class="sidebar-brand-icon rotate-n-15" style="color:rgb(0, 255, 51)">
                     <i class="fas fa-bug"></i>
                 </div>
                 <div class="sidebar-brand-text mx-3">Trackily</div>
             </a>
 
-            <!-- Nav item - Create Ticket -->
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link btn btn-sm btn-success btn-icon-split pt-sm-2 pb-sm-2" asp-controller="Tickets" asp-action="Create">
-                    <i class="fas fa-plus-circle fa-lg"></i>
+                    <i class="fas fa-plus fa-lg"></i>
                     <span class="text">New Ticket</span>
                 </a>
             </li>
 
-            <!-- Heading -->
+            <!-- Tickets -->
             <div class="sidebar-heading mt-3">
                 Tickets
             </div>
 
-            <!-- Nav Item - Dashboard -->
             <li class="nav-item">
                 <a class="nav-link" asp-controller="Tickets" asp-action="Index" asp-route-scope="all">
                     <i class="fas fa-fw fa-tasks"></i>
                     <span>Active Tickets</span>
                 </a>
             </li>
-            
             <li class="nav-item">
                 <a class="nav-link" asp-controller="Tickets" asp-action="Index" asp-route-scope="created">
                     <i class="fas fa-fw fa-user"></i>
                     <span>My Tickets</span>
                 </a>
             </li>
-            
             <li class="nav-item">
                 <a class="nav-link" asp-controller="Tickets" asp-action="Index" asp-route-scope="assigned">
                     <i class="fas fa-fw fa-clipboard-list"></i>
                     <span>Assigned Tickets</span>
                 </a>
             </li>
-            
             <li class="nav-item">
                 <a class="nav-link" asp-controller="Tickets" asp-action="Index" asp-route-scope="closed">
                     <i class="fas fa-fw fa-archive"></i>
                     <span>Archived Tickets</span>
                 </a>
             </li>
-            
+
             <hr class="sidebar-divider mb-0">
             
+            <!-- Projects -->
+            <div class="sidebar-heading mt-3">
+                Projects
+            </div>
+
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Projects" asp-action="Create">
+                    <i class="fas fa-fw fa-plus"></i>
+                    <span>New Project</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Projects" asp-action="Index">
+                    <i class="fas fa-fw fa-project-diagram"></i>
+                    <span>View Projects</span>
+                </a>
+            </li>
+
+            <hr class="sidebar-divider mb-0">
+
             <li class="nav-item">
                 <a class="nav-link" asp-controller="Home" asp-action="About">
-                    <i class="fas fa-fw fa-question-circle"></i>
+                    <i class="fas fa-question-circle fa-fw"></i>
                     <span>About</span>
                 </a>
             </li>
-            
+
+
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
         </ul>
@@ -130,7 +147,7 @@
             <footer class="sticky-footer bg-white mt-1" id="footer">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span><i class="far fa-copyright"></i> Trackily 2020 - <a href="https://sprzeng.github.io/">Spencer Zeng</a> - <a href="https://github.com/sprzeng/Trackily"><i class="fab fa-lg fa-github"></i></a></span>
+                        <span><i class="far fa-copyright"></i> Trackily 2020 - <a href="https://sprzeng.github.io/">Spencer Zeng</a> - <a href="https://github.com/sprzeng"><i class="fab fa-lg fa-github"></i></a></span>
                     </div>
                 </div>
             </footer>

@@ -1,39 +1,75 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using System.Diagnostics;
+using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Trackily.Areas.Identity.Data;
-using Trackily.Models;
+using Trackily.Models.Domain;
+using Trackily.Models.Views;
+using Trackily.Models.Views.Home;
+using Trackily.Services.Business;
 using Trackily.Services.DataAccess;
 
 namespace Trackily.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly UserManager<TrackilyUser> _userManager;
         private readonly SignInManager<TrackilyUser> _signInManager;
+        private readonly ProjectService _projectService;
 
-        public HomeController(ILogger<HomeController> logger, 
-            UserManager<TrackilyUser> userManager, SignInManager<TrackilyUser> signInManager)
+        public HomeController(
+            UserManager<TrackilyUser> userManager,
+            SignInManager<TrackilyUser> signInManager,
+            ProjectService projectService,
+            TrackilyContext context)
         {
-            _logger = logger;
             _userManager = userManager;
             _signInManager = signInManager;
+            _projectService = projectService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            if (!_signInManager.IsSignedIn(User))
+            {
+                return View();
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            Debug.Assert(user != null);
+
+            List<Project> projects = _projectService.GetProjectsForUserId(user.Id);
+
+            var viewModels = new List<IndexHomeViewModel>();
+            foreach (var project in projects)
+            {
+                var viewModel = new IndexHomeViewModel
+                {
+                    ProjectTitle = project.Title,
+                    Tickets = new List<Ticket>()
+                };
+                var recentTickets = project.Tickets.Where(t => (DateTime.Now - t.CreatedDate).TotalHours <= 10);
+                viewModel.Tickets.AddRange(recentTickets);
+
+                viewModels.Add(viewModel);
+            }
+
+            return View(viewModels);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult Error(int id)
         {
+            if (id == 404)
+            {
+                return View("Error404");
+            }
+
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 

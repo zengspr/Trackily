@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Trackily.Models.View.IndexViewModel>
+﻿@model IEnumerable<Trackily.Models.Views.Ticket.IndexTicketViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -9,16 +9,16 @@
     @switch (ViewData["indexScope"])
     {
         case "created":
-            <partial name="_CreatedTicketsTablePartial"/>
+            <partial name="~/Views/Shared/TicketsTablePartial/_CreatedTicketsTablePartial.cshtml"/>
             break;
         case "assigned":
-            <partial name="_AssignedTicketsTablePartial"/>
+            <partial name="~/Views/Shared/TicketsTablePartial/_AssignedTicketsTablePartial.cshtml"/>
             break;
         case "closed":
-            <partial name="_ClosedTicketsTablePartial"/>
+            <partial name="~/Views/Shared/TicketsTablePartial/_ClosedTicketsTablePartial.cshtml"/>
             break;
         default:
-            <partial name="_ActiveTicketsTablePartial"/>
+            <partial name="~/Views/Shared/TicketsTablePartial/_ActiveTicketsTablePartial.cshtml"/>
             break;
     }
 </div>

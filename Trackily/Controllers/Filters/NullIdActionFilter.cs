@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
-using System;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
-using Trackily.Data;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 
 namespace Trackily.Controllers.Filters

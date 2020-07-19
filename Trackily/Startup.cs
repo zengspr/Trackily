@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,7 +9,6 @@ using Microsoft.Extensions.Hosting;
 using Trackily.Areas.Identity.Data;
 using Trackily.Areas.Identity.Policies.Handlers;
 using Trackily.Areas.Identity.Policies.Requirements;
-using Trackily.Data;
 using Trackily.Services.Business;
 using Trackily.Services.DataAccess;
 
@@ -67,19 +65,29 @@ namespace Trackily
             services.AddScoped<TicketService>();
             services.AddScoped<UserTicketService>();
             services.AddScoped<CommentService>();
-            services.AddScoped<IAuthorizationHandler, EditPrivilegesUserIdHandler>();
+            services.AddScoped<ProjectService>();
+            services.AddScoped<UserProjectService>();
 
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(
-                    "IsManager",
-                    policyBuilder => policyBuilder.RequireClaim("IsManager"));
-                options.AddPolicy(
-                    "HasEditPrivileges",
+                    "TicketEditPrivileges",
                     policyBuilder => policyBuilder.AddRequirements(
-                        new EditPrivilegesRequirement()
+                        new TicketEditPrivilegesRequirement()
                     ));
+                options.AddPolicy(
+                    "ProjectEditPrivileges",
+                    policyBuilder => policyBuilder.AddRequirements(
+                        new ProjectEditPrivilegesRequirement()));
+                options.AddPolicy(
+                    "ProjectDeletePrivileges",
+                    policyBuilder => policyBuilder.AddRequirements(
+                        new ProjectDeletePrivilegesRequirement()));
             });
+
+            services.AddScoped<IAuthorizationHandler, TicketEditPrivilegesUserIdHandler>();
+            services.AddScoped<IAuthorizationHandler, ProjectEditPrivilegesProjectIdHandler>();
+            services.AddScoped<IAuthorizationHandler, ProjectDeletePrivilegesProjectIdHandler>();
         }
 
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<TrackilyUser> userManager)
@@ -92,9 +100,18 @@ namespace Trackily
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.Use(async (context, next) =>
+            {
+                await next();
+                if (context.Response.StatusCode == 404)
+                {
+                    context.Request.Path = "/Home/Error/404";
+                    await next();
+                }
+            });
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -114,5 +131,5 @@ namespace Trackily
 
             DbSeeder.SeedUsers(userManager);
         }
-        }
     }
+}

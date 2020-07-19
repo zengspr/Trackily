@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Trackily.Areas.Identity.Data;
-using Trackily.Data;
 using Trackily.Models.Domain;
-using Trackily.Services.Business;
-using Trackily.Services.DataAccess;
 
 namespace Trackily.Services.Business
 {
-    public class UserTicketService 
+    public class UserTicketService
     {
         private readonly TrackilyContext _context;
 

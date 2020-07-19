@@ -1,0 +1,58 @@
+﻿@model Trackily.Models.Views.Project.CreateProjectViewModel
+
+<div class="container float-left">
+    <div class="col-md-10">
+        <h1>New Project</h1>
+        <hr>
+        <form asp-action="Create">
+            <input type="hidden" asp-for="ProjectId" />
+            <div class="form-row">
+                <div class="form-group col-md-10">
+                    <label asp-for="Title"></label>
+                    <input class="form-control" asp-for="Title">
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-10">
+                    <label asp-for="Description"></label>
+                    <input class="form-control" asp-for="Description">
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Add members to Project</label>
+                    <span asp-validation-for="AddMembers" class="text-danger text-nowrap"></span>
+                    <table class="table table-borderless p-0" id="formTable">
+                        <tbody>
+                            <tr>
+                                <td class="p-0"><input asp-for="AddMembers" class="form-control" placeholder="username" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <a class="btn btn-primary btn-circle mt-0" href="javascript:addRow()" role="button">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="form-row mt-4">
+                <div class="form-group col-md-10">
+                    <button type="submit" class="btn btn-success btn-circle btn-lg float-left">
+                        <i class="fas fa-check"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="form-row">
+                <a asp-action="Index">Back to Projects</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("~/Views/Shared/ScriptsPartial/_ProjectsScriptsPartial.cshtml");
+    }
+}

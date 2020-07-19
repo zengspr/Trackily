@@ -1,0 +1,120 @@
+﻿@model Trackily.Models.Views.Project.DetailsProjectViewModel
+
+<div class="container-fluid float-left">
+    <div class="col">
+        <div class="row">
+            <h1>@Model.Title</h1>
+        </div>
+        <hr>
+
+        <div class="row">
+            <span>@Model.Description</span>
+        </div>
+        <div class="row mt-2">
+            <span>Created: @Html.DisplayFor(m => m.CreatedDate)</span>
+        </div>
+
+        <div class="row mt-3">
+            <h4 class="h4 mb-2 text-gray-800">
+                <label asp-for="Tickets"></label>
+            </h4>
+        </div>
+        <div class="row">
+            <div class="card shadow mb-2 overflow-hidden">
+                <div class="card-body overflow-hidden">
+                    <div class="table-responsive overflow-hidden">
+                        <table id="ticketsTable" class="table table-hover table-bordered text-nowrap" width="100%">
+                            <thead>
+                                <tr>
+                                    <th data-halign="center" data-align="center" data-sortable="true">Title</th>
+                                    <th data-halign="center" data-align="center" data-sortable="true">Priority</th>
+                                    <th data-halign="center" data-align="center" data-sortable="true">Type</th>
+                                    <th data-halign="center" data-align="center" data-sortable="true">Status</th>
+                                    <th data-halign="center" data-align="center" data-sortable="true"># Assigned</th>
+                                    <th data-halign="center" data-align="center" data-sortable="true">Last updated</th>
+                                    <th data-halign="center" data-align="center" data-sortable="true">Creator</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var ticket in Model.Tickets)
+                                {
+                                    <tr>
+                                        <td>@ticket.Title</td>
+                                        <td>@ticket.Priority</td>
+                                        <td>@ticket.Type</td>
+                                        <td>@ticket.Status</td>
+                                        <td>@ticket.Assigned.Count</td>
+                                        <td>@ticket.UpdatedDate.ToString("D")</td>
+                                        <td>@ticket.Creator.FirstName @ticket.Creator.LastName</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <h4 class="h4 mb-2 text-gray-800">Members</h4>
+        </div>
+        <div class="row">
+            @if ((Model.Developers.Count + Model.Managers.Count) == 0)
+            {
+                <p class="text-secondary">This project has no members.</p>
+            }
+            else
+            {
+                <div class="col-md-5">
+                    <label class="d-block" asp-for="Developers"></label>
+                    <ul class="list-group mb-3 d-inline-flex">
+                        @foreach (var member in Model.Developers)
+                        {
+                            <li class="list-group-item justify-content-between align-items-center text-nowrap p-2">
+                                @member.Item1
+                                <span class="badge badge-secondary ml-3">@member.Item2</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div class="col-md-5">
+                    <label class="d-block" asp-for="Managers"></label>
+                    <ul class="list-group mb-3 d-inline-flex">
+                        @foreach (var member in Model.Managers)
+                        {
+                            <li class="list-group-item justify-content-between align-items-center text-nowrap p-2">
+                                @member.Item1
+                                <span class="badge badge-secondary ml-3">@member.Item2</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-10">
+                <a class="float-left" asp-action="Index">Back to Tickets</a>
+                <a class="btn btn-primary btn-circle btn-lg float-right active"
+                   asp-action="Edit"
+                   asp-route-projectId="@Model.ProjectId">
+                    <i class="fas fa-sm fa-edit"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#ticketsTable').dataTable({
+            "scrollY": '70vh',
+            "scrollX": true,
+            "scrollCollapse": true,
+            "language": {
+                "emptyTable": "This project currently has no Tickets."
+            },
+            "order": [[5, "desc"]]
+        } );
+    });
+</script>

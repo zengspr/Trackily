@@ -19,7 +19,7 @@ namespace Trackily.Areas.Identity.Pages.Account
         private readonly SignInManager<TrackilyUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<TrackilyUser> signInManager, 
+        public LoginModel(SignInManager<TrackilyUser> signInManager,
             ILogger<LoginModel> logger,
             UserManager<TrackilyUser> userManager)
         {

@@ -1,4 +1,4 @@
-﻿@model Trackily.Models.View.DetailsTicketViewModel
+﻿@model Trackily.Models.Views.Ticket.DetailsTicketViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -16,31 +16,35 @@
     <div class="col-md-6">
             <hr />
             <div class="form-row">
-                <div class="form-group col-md-5">
+                <div class="form-group col-md-6">
                     <label style="font-weight: bold" asp-for="CreatorName"></label>
-                    <input type="text" class="form-control-plaintext" readonly asp-for="CreatorName" />
+                    <div class="form-control-plaintext" disabled>@Model.CreatorName</div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label style="font-weight: bold" asp-for="ProjectTitle"></label>
+                    <div class="form-control-plaintext" disabled>@Model.ProjectTitle</div>
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-md-5">
+                <div class="form-group col-md-6">
                     <label style="font-weight: bold" asp-for="CreatedDate"></label>
                     <div class="form-control-plaintext" disabled>@Html.DisplayFor(model => model.CreatedDate)</div>
                 </div>
-                <div class="form-group col-md-5">
+                <div class="form-group col-md-6">
                     <label style="font-weight: bold" asp-for="UpdatedDate"></label>
                     <div class="form-control-plaintext" disabled>@Html.DisplayFor(model => model.UpdatedDate)</div>
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                     <label style="font-weight: bold" asp-for="Status"></label>
                     <div class="form-control-plaintext" disabled>@Html.DisplayFor(model => model.Status)</div>
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                     <label style="font-weight: bold" asp-for="Type"></label>
                     <div class="form-control-plaintext" disabled>@Html.DisplayFor(model => model.Type)</div>
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                     <label style="font-weight: bold" asp-for="Priority"></label>
                     <div class="form-control-plaintext" disabled>@Html.DisplayFor(model => model.Priority)</div>
                 </div>
@@ -64,13 +68,13 @@
                 </div>
             </div>
             <div class="form-row mt-0 pt-0">
-                <div class="form-group col-md-10">
+                <div class="form-group col-md-12">
                     <label style="font-weight: bold">Ticket content</label>
                     <textarea class="form-control TinyMCE">@Model.Content</textarea>
                 </div>
             </div>
-            <div class="form-row">
-                <div class="form-group col-md-10">
+            <div class="form-row mt-2">
+                <div class="form-group col-md-12">
                     <a class="float-left" asp-action="Index">Back to Tickets</a>
                     <a class="btn btn-primary btn-circle btn-lg float-right active"
                         creator="@Model.CreatorId"
@@ -235,6 +239,6 @@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        await Html.RenderPartialAsync("_DetailsScriptsPartial");
+        await Html.RenderPartialAsync("~/Views/Shared/ScriptsPartial/_DetailsScriptsPartial.cshtml");
     }
 }

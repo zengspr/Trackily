@@ -1,0 +1,8 @@
+﻿<script>
+    function addRow() {
+        //copy the table row and clear the value of the input, then append the row to the end of the table
+        $("#formTable tbody tr:first").clone().find("input").each(function() {
+            $(this).val('');
+        }).end().appendTo("#formTable");
+    }
+</script>

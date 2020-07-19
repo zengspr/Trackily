@@ -11,7 +11,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Trackily.Areas.Identity.Data;
 
@@ -125,7 +124,7 @@ namespace Trackily.Areas.Identity.Pages.Account
                         userClaims.Add(new Claim("IsManager", "True"));
                     }
                     await _userManager.AddClaimsAsync(user, userClaims);
-                    
+
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);
                 }

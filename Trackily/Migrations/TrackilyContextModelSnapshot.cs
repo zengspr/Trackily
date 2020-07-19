@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Trackily.Data;
+using Trackily.Areas.Identity.Data;
 
 namespace Trackily.Migrations
 {
@@ -287,6 +287,31 @@ namespace Trackily.Migrations
                     b.ToTable("CommentThreads");
                 });
 
+            modelBuilder.Entity("Trackily.Models.Domain.Project", b =>
+                {
+                    b.Property<Guid>("ProjectId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ProjectId");
+
+                    b.HasIndex("CreatorId");
+
+                    b.ToTable("Projects");
+                });
+
             modelBuilder.Entity("Trackily.Models.Domain.Ticket", b =>
                 {
                     b.Property<Guid>("TicketId")
@@ -305,6 +330,9 @@ namespace Trackily.Migrations
                     b.Property<int>("Priority")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -321,7 +349,24 @@ namespace Trackily.Migrations
 
                     b.HasIndex("CreatorId");
 
+                    b.HasIndex("ProjectId");
+
                     b.ToTable("Tickets");
+                });
+
+            modelBuilder.Entity("Trackily.Models.Domain.UserProject", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id", "ProjectId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("UserProjects");
                 });
 
             modelBuilder.Entity("Trackily.Models.Domain.UserTicket", b =>
@@ -418,12 +463,40 @@ namespace Trackily.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Trackily.Models.Domain.Project", b =>
+                {
+                    b.HasOne("Trackily.Areas.Identity.Data.TrackilyUser", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId");
+                });
+
             modelBuilder.Entity("Trackily.Models.Domain.Ticket", b =>
                 {
                     b.HasOne("Trackily.Areas.Identity.Data.TrackilyUser", "Creator")
                         .WithMany("CreatedTickets")
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Trackily.Models.Domain.Project", "Project")
+                        .WithMany("Tickets")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Trackily.Models.Domain.UserProject", b =>
+                {
+                    b.HasOne("Trackily.Areas.Identity.Data.TrackilyUser", "User")
+                        .WithMany("AssignedProjects")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Trackily.Models.Domain.Project", "Project")
+                        .WithMany("Members")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

@@ -1,15 +1,17 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Trackily.Areas.Identity.Data;
-using Trackily.Data;
-using Trackily.Models.Binding;
+using Trackily.Models.Binding.Ticket;
 using Trackily.Models.Domain;
-using Trackily.Models.View;
+using Trackily.Models.Views.Ticket;
 using Trackily.Services.DataAccess;
 
 namespace Trackily.Services.Business
@@ -17,22 +19,25 @@ namespace Trackily.Services.Business
     /// <summary>
     /// Contains methods which generate view and binding models related to Tickets.
     /// </summary>
-    public class TicketService 
+    public class TicketService
     {
         private readonly UserManager<TrackilyUser> _userManager;
         private readonly UserTicketService _userTicketService;
         private readonly DbService _dbService;
         private readonly TrackilyContext _context;
+        private readonly UserProjectService _userProjectService;
 
-        public TicketService(UserManager<TrackilyUser> userManager, 
-                             DbService dbService, 
-                             TrackilyContext context, 
-                             UserTicketService userTicketService)
+        public TicketService(UserManager<TrackilyUser> userManager,
+                             DbService dbService,
+                             TrackilyContext context,
+                             UserTicketService userTicketService,
+                             UserProjectService userProjectService)
         {
             _userManager = userManager;
             _userTicketService = userTicketService;
             _dbService = dbService;
             _context = context;
+            _userProjectService = userProjectService;
         }
 
         /// <summary>
@@ -40,17 +45,18 @@ namespace Trackily.Services.Business
         /// </summary>
         /// <param name="allTickets">Collection containing all Ticket objects currently in the database. </param>
         /// <returns>A list of view models for each Ticket in the database.</returns>
-        public List<IndexViewModel> CreateIndexViewModel(IEnumerable<Ticket> selectedTickets)
+        public List<IndexTicketViewModel> CreateIndexViewModel(IEnumerable<Ticket> selectedTickets)
         {
-            var viewModels = new List<IndexViewModel>();
+            var viewModels = new List<IndexTicketViewModel>();
             foreach (var ticket in selectedTickets)
             {
-                viewModels.Add(new IndexViewModel
+                viewModels.Add(new IndexTicketViewModel
                 {
                     CreatorId = ticket.Creator.Id,
                     TicketId = ticket.TicketId,
                     CreatorName = $"{ticket.Creator.FirstName} {ticket.Creator.LastName}",
                     Title = ticket.Title,
+                    ProjectTitle = ticket.Project.Title,
                     Priority = ticket.Priority,
                     Type = ticket.Type,
                     Status = ticket.Status,
@@ -66,28 +72,40 @@ namespace Trackily.Services.Business
         /// <summary>
         /// Creates a new Ticket object using the binding model and saves it to the database.
         /// </summary>
-        /// <param name="input">Binding model for creating a new Ticket object.</param>
+        /// <param name="form">Binding model for creating a new Ticket object.</param>
         /// <param name="request">The HttpContext of the current request.</param>
         /// <returns>N/A</returns>
-        public async Task CreateTicket(CreateTicketBinding input, HttpContext request)
+        public async Task CreateTicket(CreateTicketBinding form, HttpContext request)
         {
             var ticket = new Ticket
             {
-                Title = input.Title,
+                Title = form.Title,
                 Creator = await _userManager.GetUserAsync(request.User),
-                Content = input.Content,
+                Content = form.Content,
                 CommentThreads = new List<CommentThread>(),
-                Assigned = new List<UserTicket>()
+                Assigned = new List<UserTicket>(),
+                Project = _context.Projects.Include(p => p.Members).Single(p => p.Title.Equals(form.SelectedProject))
             };
 
-            foreach (string username in input.AddAssigned.Where(entry => entry != null))
+            var projectMemberIds = ticket.Project.Members.Select(m => m.Id).ToList();
+
+            foreach (string username in form.AddAssigned.Where(entry => entry != null))
             {
-                var user = await _dbService.GetUser(username);
+                var user = await _dbService.GetUserAsync(username);
+                Debug.Assert(user != null);
+
                 var userTicket = _userTicketService.CreateUserTicket(user, ticket);
                 ticket.Assigned.Add(userTicket);
+
+                // If the user is not already a member of the given project, add them as a member.
+                if (!projectMemberIds.Contains(user.Id))
+                {
+                    var userProject = _userProjectService.CreateUserProject(user, ticket.Project);
+                    ticket.Project.Members.Add(userProject);
+                }
             }
 
-            _context.Add(ticket);
+            _context.Tickets.Add(ticket);
             await _context.SaveChangesAsync();
         }
 
@@ -108,6 +126,11 @@ namespace Trackily.Services.Business
                 Errors = new List<string>()
             };
 
+            var projectTitles = _context.Projects
+                                                .Select(p => p.Title)
+                                                .ToList();
+            viewModel.Projects = new SelectList(projectTitles);
+
             if (ticket != null)
             {
                 viewModel.Title = ticket.Title;
@@ -122,6 +145,7 @@ namespace Trackily.Services.Business
                     viewModel.Errors.Add(error.ErrorMessage);
                 }
             }
+
             return viewModel;
         }
 
@@ -144,7 +168,8 @@ namespace Trackily.Services.Business
                 Type = ticket.Type,
                 Status = ticket.Status,
                 Priority = ticket.Priority,
-                Content = ticket.Content
+                Content = ticket.Content,
+                ProjectTitle = ticket.Project.Title
             };
 
             if (ticket.CommentThreads != null)
@@ -164,7 +189,7 @@ namespace Trackily.Services.Business
                     viewModel.Errors.Add(error.ErrorMessage);
                 }
             }
-            
+
             return viewModel;
         }
 
@@ -181,7 +206,7 @@ namespace Trackily.Services.Business
         {
             var viewModel = new EditTicketViewModel
             {
-                TicketId = ticket.TicketId,  
+                TicketId = ticket.TicketId,
                 Title = ticket.Title,
                 CreatedDate = ticket.CreatedDate,
                 UpdatedDate = ticket.UpdatedDate,
@@ -190,6 +215,7 @@ namespace Trackily.Services.Business
                 Status = ticket.Status,
                 Priority = ticket.Priority,
                 Content = ticket.Content,
+                ProjectTitle = ticket.Project.Title,
                 RemoveAssigned = new Dictionary<string, bool>()
             };
 
@@ -246,7 +272,7 @@ namespace Trackily.Services.Business
         }
 
         /// <summary>
-        /// Updates the properties of the Ticket using values from the input.
+        /// Updates the properties of the Ticket using values from the form.
         /// </summary>
         /// <param name="ticket">Ticket object to be updated.</param>
         /// <param name="input">EditTicketBinding model containing POSTed values.</param>
@@ -280,13 +306,13 @@ namespace Trackily.Services.Business
             // Assign the users to the ticket by creating new UserTickets.
             foreach (string username in input.AddAssigned.Where(entry => entry != null))
             {
-                var user = await _dbService.GetUser(username);
+                var user = await _dbService.GetUserAsync(username);
                 var userTicket = _userTicketService.CreateUserTicket(user, ticket);
                 ticket.Assigned.Add(userTicket);
             }
         }
 
-         
+
 
     }
 }

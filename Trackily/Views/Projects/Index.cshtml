@@ -1,0 +1,52 @@
+﻿@model List<Trackily.Models.Views.Project.IndexProjectViewModel>
+
+<div class="container-fluid float-left">
+    @if (Model.Count == 0)
+    {
+        <p>There are currently no projects.</p>
+        <a asp-action="Create">Create the first one!</a>
+    }
+
+    <div class="row">
+        <div class="col">
+            @for (int i = 0; i < Model.Count; i += 2)
+            {
+                <div class="card shadow mb-3">
+                    <a asp-action="Details" asp-route-projectId="@Model[i].ProjectId" class="stretched-link"></a>
+                    <div class="card-header pb-0">
+                        <h5 class="card-title">@Model[i].Title</h5>
+                        <p class="float-left small">Creator: @Model[i].CreatorName</p>
+                        <p class="float-right small">Created: @Html.DisplayFor(p => Model[i].CreatedDate)</p>
+                    </div>
+                    <div class="card-body pt-2 pb-0">
+                        <p>@Model[i].Description</p>
+                    </div>
+                    <div class="card-footer pb-0">
+                        <p class="float-left small">Tickets: @Model[i].NumTickets</p>
+                        <p class="float-right small">Members: @Model[i].NumMembers</p>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col">
+            @for (int i = 1; i < Model.Count; i += 2)
+            {
+                <div class="card shadow mb-3">
+                    <a asp-action="Details" asp-route-projectId="@Model[i].ProjectId" class="stretched-link"></a>
+                    <div class="card-header pb-0">
+                        <h5 class="card-title">@Model[i].Title</h5>
+                        <p class="float-left small">Creator: @Model[i].CreatorName</p>
+                        <p class="float-right small">Created: @Html.DisplayFor(p => Model[i].CreatedDate)</p>
+                    </div>
+                    <div class="card-body pt-2 pb-0">
+                        <p>@Model[i].Description</p>
+                    </div>
+                    <div class="card-footer pb-0">
+                        <p class="float-left small">Tickets: @Model[i].NumTickets</p>
+                        <p class="float-right small">Members: @Model[i].NumMembers</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

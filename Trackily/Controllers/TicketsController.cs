@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
@@ -6,13 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Trackily.Areas.Identity.Data;
 using Trackily.Controllers.Filters;
-using Trackily.Data;
-using Trackily.Models.Binding;
+using Trackily.Models.Binding.Ticket;
 using Trackily.Models.Domain;
-using Trackily.Models.View;
+using Trackily.Models.Views.Ticket;
 using Trackily.Services.Business;
 using Trackily.Services.DataAccess;
 
@@ -29,7 +28,7 @@ namespace Trackily.Controllers
         private readonly IAuthorizationService _authService;
         private readonly UserManager<TrackilyUser> _userManager;
 
-        public TicketsController(TrackilyContext context, 
+        public TicketsController(TrackilyContext context,
             TicketService ticketService, DbService dbService, CommentService commentService,
             IAuthorizationService authService, UserManager<TrackilyUser> userManager)
         {
@@ -44,40 +43,40 @@ namespace Trackily.Controllers
         // GET: Tickets
         public async Task<IActionResult> Index(string scope)
         {
-            List<Ticket> tickets;
-            List<IndexViewModel> indexViewModel;
             var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            List<Ticket> tickets;
 
+            var query = _context.Tickets.Include(t => t.Assigned)
+                                                                        .Include(t => t.Project);
             switch (scope)
             {
                 case "created":
-                    tickets = await _context.Tickets.Include(t => t.Assigned)
-                                                    .Where(t => t.Creator == currentUser)
-                                                    .ToListAsync();
+                    tickets = query.Where(t => t.Project.Members.Select(up => up.User).Contains(currentUser) & 
+                                               t.Creator == currentUser)
+                                    .ToList();
                     break;
                 case "assigned":
-                    tickets = await _context.Tickets.Include(t => t.Assigned)
-                                                    .Include(t => t.Creator)
-                                                    .Where(t => t.Assigned.Select(ut => ut.User).Contains(currentUser))
-                                                    .ToListAsync();
+                    tickets = query.Include(t => t.Creator)
+                                    .Where(t => t.Project.Members.Select(up => up.User).Contains(currentUser) & 
+                                                t.Assigned.Select(ut => ut.User).Contains(currentUser))
+                                    .ToList();
                     break;
                 case "closed":
-                    tickets = await _context.Tickets.Include(t => t.Assigned)
-                                                    .Include(t => t.Creator)
-                                                    .Where(t => t.Status == Ticket.TicketStatus.Closed)
-                                                    .ToListAsync();
+                    tickets = query.Include(t => t.Creator).Where(t => t.Project.Members.Select(up => up.User).Contains(currentUser) & 
+                                                                       t.Status == Ticket.TicketStatus.Closed)
+                                                            .ToList();
                     break;
                 default: // Get all tickets.
-                    tickets = await _context.Tickets.Include(t => t.Assigned)
-                                                    .Include(t => t.Creator)
-                                                    .Where(t => t.Status != Ticket.TicketStatus.Closed)
-                                                    .ToListAsync();
+                    tickets = query.Include(t => t.Creator)
+                                    .Where(t => t.Project.Members.Select(up => up.User).Contains(currentUser) & 
+                                                t.Status != Ticket.TicketStatus.Closed)
+                                    .ToList();
                     break;
             }
 
-            indexViewModel = _ticketService.CreateIndexViewModel(tickets);
+            List<IndexTicketViewModel> indexViewModel = _ticketService.CreateIndexViewModel(tickets);
             ViewData["indexScope"] = scope;
-            return View(indexViewModel); 
+            return View(indexViewModel);
         }
 
         // GET: Tickets/Details/5
@@ -100,7 +99,8 @@ namespace Trackily.Controllers
         public async Task<IActionResult> Details(Guid id, DetailsTicketBinding input)
         {
             var ticket = await _dbService.GetTicket(id);
-            if (ticket == null) { return NotFound(); }
+            if (ticket == null)
+            { return NotFound(); }
 
             if (!ModelState.IsValid)
             {
@@ -115,7 +115,7 @@ namespace Trackily.Controllers
             }
             if (input.NewReplies != null)
             {
-                await _commentService.AddComments(ticket, input, HttpContext);
+                await _commentService.AddComments(input, HttpContext);
             }
 
             ticket.UpdatedDate = DateTime.Now;
@@ -126,12 +126,16 @@ namespace Trackily.Controllers
         // GET: Tickets/Create
         public IActionResult Create()
         {
+            if (!_context.Projects.Any())
+            {
+                return RedirectToAction("Create", "Projects");
+            }
+
             var viewModel = _ticketService.CreateTicketViewModel();
             return View(viewModel);
         }
 
         // POST: Tickets/Create
-        // Note: Must be logged in for Create to work!
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateTicketBinding input)
@@ -144,7 +148,7 @@ namespace Trackily.Controllers
             }
 
             await _ticketService.CreateTicket(input, HttpContext);
-            return RedirectToAction("Index", new {scope = "created"});
+            return RedirectToAction("Index", new { scope = "created" });
         }
 
         // GET: Tickets/Edit/5
@@ -152,7 +156,8 @@ namespace Trackily.Controllers
         public async Task<IActionResult> Edit(Guid id)
         {
             var ticket = await _dbService.GetTicket(id);
-            if (ticket == null) { return NotFound(); }
+            if (ticket == null)
+            { return NotFound(); }
 
             var viewModel = await _ticketService.EditTicketViewModel(ticket);
             return View(viewModel);
@@ -186,7 +191,7 @@ namespace Trackily.Controllers
             await _ticketService.EditTicket(ticket, input, HttpContext);
             await _context.SaveChangesAsync();
 
-            return ticket.Status == Ticket.TicketStatus.Closed ? RedirectToAction("Index", new {scope = "closed"}) : RedirectToAction("Index");
+            return ticket.Status == Ticket.TicketStatus.Closed ? RedirectToAction("Index", new { scope = "closed" }) : RedirectToAction("Index");
         }
 
         [NullIdActionFilter]
