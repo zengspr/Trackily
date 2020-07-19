@@ -43,38 +43,41 @@ namespace Trackily.Controllers
         // GET: Tickets
         public async Task<IActionResult> Index(string scope)
         {
-            List<Ticket> tickets;
-            List<IndexTicketViewModel> indexViewModel;
             var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-
+            List<Ticket> tickets;
+            
             switch (scope)
             {
                 case "created":
                     tickets = await _context.Tickets.Include(t => t.Assigned)
-                                                    .Where(t => t.Creator == currentUser)
+                                                    .Where(t => t.Project.Members.Select(up => up.User).Contains(currentUser) & 
+                                                                t.Creator == currentUser)
                                                     .ToListAsync();
                     break;
                 case "assigned":
                     tickets = await _context.Tickets.Include(t => t.Assigned)
                                                     .Include(t => t.Creator)
-                                                    .Where(t => t.Assigned.Select(ut => ut.User).Contains(currentUser))
+                                                    .Where(t => t.Project.Members.Select(up => up.User).Contains(currentUser) & 
+                                                                t.Assigned.Select(ut => ut.User).Contains(currentUser))
                                                     .ToListAsync();
                     break;
                 case "closed":
                     tickets = await _context.Tickets.Include(t => t.Assigned)
                                                     .Include(t => t.Creator)
-                                                    .Where(t => t.Status == Ticket.TicketStatus.Closed)
+                                                    .Where(t => t.Project.Members.Select(up => up.User).Contains(currentUser) & 
+                                                                t.Status == Ticket.TicketStatus.Closed)
                                                     .ToListAsync();
                     break;
                 default: // Get all tickets.
                     tickets = await _context.Tickets.Include(t => t.Assigned)
                                                     .Include(t => t.Creator)
-                                                    .Where(t => t.Status != Ticket.TicketStatus.Closed)
+                                                    .Where(t => t.Project.Members.Select(up => up.User).Contains(currentUser) &
+                                                                t.Status != Ticket.TicketStatus.Closed)
                                                     .ToListAsync();
                     break;
             }
 
-            indexViewModel = _ticketService.CreateIndexViewModel(tickets);
+            List<IndexTicketViewModel> indexViewModel = _ticketService.CreateIndexViewModel(tickets);
             ViewData["indexScope"] = scope;
             return View(indexViewModel);
         }

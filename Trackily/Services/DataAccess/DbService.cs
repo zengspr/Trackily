@@ -45,6 +45,7 @@ namespace Trackily.Services.DataAccess
                                                         .ThenInclude(c => c.Creator)
                                                 .Include(t => t.CommentThreads)
                                                     .ThenInclude(ct => ct.Creator)
+                                                .Include(t => t.Project)
                                                 .SingleOrDefaultAsync(t => t.TicketId == ticketId);
             return ticket;
         }

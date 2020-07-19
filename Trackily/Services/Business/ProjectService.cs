@@ -243,5 +243,14 @@ namespace Trackily.Services.Business
             _context.Remove(project);
             _context.SaveChanges(true);
         }
+
+        public List<Project> GetProjectsForUserId(Guid userId)
+        {
+            return _context.UserProjects.Include(up => up.Project)
+                                        .ThenInclude(p => p.Tickets)
+                                        .Where(up => up.Id == userId)
+                                        .Select(up => up.Project)
+                                        .ToList();
+        }
     }
 }

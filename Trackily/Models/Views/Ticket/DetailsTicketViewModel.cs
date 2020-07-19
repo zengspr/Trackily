@@ -14,6 +14,9 @@ namespace Trackily.Models.Views.Ticket
         public Guid TicketId { get; set; }
         public string Title { get; set; }
 
+        [Display(Name = "Project")]
+        public string ProjectTitle { get; set; }
+
         [Display(Name = "Created")]
         [DataType(DataType.DateTime)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:f}")]

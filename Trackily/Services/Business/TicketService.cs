@@ -74,6 +74,7 @@ namespace Trackily.Services.Business
         /// <param name="form">Binding model for creating a new Ticket object.</param>
         /// <param name="request">The HttpContext of the current request.</param>
         /// <returns>N/A</returns>
+        ///  TODO: Fix multiple tracking issue. Might be from loading project twice or from App.Use(...)
         public async Task CreateTicket(CreateTicketBinding form, HttpContext request)
         {
             var ticket = new Ticket
@@ -83,12 +84,9 @@ namespace Trackily.Services.Business
                 Content = form.Content,
                 CommentThreads = new List<CommentThread>(),
                 Assigned = new List<UserTicket>(),
-                Project = await _context.Projects.SingleAsync(p => p.Title.Equals(form.SelectedProject))
+                Project = _context.Projects.Include(p => p.Members)
+                                            .Single(p => p.Title.Equals(form.SelectedProject))
             };
-
-            var project = _context.Projects
-                                .Include(p => p.Members)
-                                .Single(p => p.ProjectId == ticket.Project.ProjectId);
 
             foreach (string username in form.AddAssigned.Where(entry => entry != null))
             {
@@ -98,8 +96,8 @@ namespace Trackily.Services.Business
                 var userTicket = _userTicketService.CreateUserTicket(user, ticket);
                 ticket.Assigned.Add(userTicket);
 
-                var userProject = _userProjectService.CreateUserProject(user, project);
-                project.Members.Add(userProject);
+                var userProject = _userProjectService.CreateUserProject(user, ticket.Project);
+                ticket.Project.Members.Add(userProject);
             }
 
             _context.Add(ticket);
@@ -165,7 +163,8 @@ namespace Trackily.Services.Business
                 Type = ticket.Type,
                 Status = ticket.Status,
                 Priority = ticket.Priority,
-                Content = ticket.Content
+                Content = ticket.Content,
+                ProjectTitle = ticket.Project.Title
             };
 
             if (ticket.CommentThreads != null)
@@ -211,6 +210,7 @@ namespace Trackily.Services.Business
                 Status = ticket.Status,
                 Priority = ticket.Priority,
                 Content = ticket.Content,
+                ProjectTitle = ticket.Project.Title,
                 RemoveAssigned = new Dictionary<string, bool>()
             };
 

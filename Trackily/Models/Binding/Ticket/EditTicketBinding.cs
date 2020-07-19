@@ -23,10 +23,11 @@ namespace Trackily.Models.Binding.Ticket
         [Required]
         public Domain.Ticket.TicketStatus Status { get; set; }
 
+        [Display(Name = "Assign users")]
         [EditTicketAssigned]
         public string[] AddAssigned { get; set; }
 
-        [Display(Name = "Unassign Users")]
+        [Display(Name = "Unassign users")]
         public Dictionary<string, bool> RemoveAssigned { get; set; }    // RemoveAssigned[username] = true -> Unassign user.
     }
 }

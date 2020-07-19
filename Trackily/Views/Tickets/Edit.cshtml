@@ -13,27 +13,31 @@
         <form asp-action="Edit">
             <input type="hidden" asp-for="TicketId" />
             <div class="form-row">
-                <div class="form-group col-md-7">
+                <div class="form-group col-md-6">
                     <label asp-for="Title"></label>
                     <div ><span asp-validation-for="Title" class="text-danger"></span></div>
                     <input asp-for="Title" class="form-control" />
                     <small class="text-muted">Must be 10-60 characters long.</small>
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                     <label asp-for="CreatorName"></label>
                     <input type="text" class="form-control-plaintext" readonly asp-for="CreatorName"/>
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-md-5">
+                <div class="form-group col-md-3">
                     <label asp-for="CreatedDate"></label>
                     <div class="form-control-plaintext" disabled>@Html.DisplayFor(model => model.CreatedDate)</div>
                     <input type="hidden" asp-for="CreatedDate" />
                 </div>
-                <div class="form-group col-md-5">
+                <div class="form-group col-md-3">
                     <label asp-for="UpdatedDate"></label>
                     <div class="form-control-plaintext" disabled>@Html.DisplayFor(model => model.UpdatedDate)</div>
                     <input type="hidden" asp-for="UpdatedDate" />
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="ProjectTitle"></label>
+                    <div class="form-control-plaintext" disabled>@Model.ProjectTitle</div>
                 </div>
             </div>
             <div class="form-row">
@@ -54,8 +58,8 @@
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-md-5">
-                    <label>Assign users to Ticket</label>
+                <div class="form-group col-md-3">
+                    <label asp-for="AddAssigned"></label>
                     <div><span asp-validation-for="AddAssigned" class="text-danger"></span></div>
                     <table class="table table-borderless p-0" id="formTable">
                         <tbody>
@@ -68,7 +72,7 @@
                         <i class="fas fa-plus"></i>
                     </a>
                 </div>
-                <div class="form-group col-md-5">
+                <div class="form-group col-md-4">
                     <label asp-for="RemoveAssigned"></label>
                     @foreach (var key in Model.RemoveAssigned.Keys)
                     {
@@ -96,7 +100,7 @@
                     </a>
                 </div>
             </div>
-            <div class="form-row">
+            <div class="form-row mt-2">
                 <a asp-action="Index">Back to Tickets</a>
             </div>
         </form>
