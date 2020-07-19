@@ -74,7 +74,6 @@ namespace Trackily.Services.Business
         /// <param name="form">Binding model for creating a new Ticket object.</param>
         /// <param name="request">The HttpContext of the current request.</param>
         /// <returns>N/A</returns>
-        ///  TODO: Fix multiple tracking issue. Might be from loading project twice or from App.Use(...)
         public async Task CreateTicket(CreateTicketBinding form, HttpContext request)
         {
             var ticket = new Ticket
@@ -84,9 +83,10 @@ namespace Trackily.Services.Business
                 Content = form.Content,
                 CommentThreads = new List<CommentThread>(),
                 Assigned = new List<UserTicket>(),
-                Project = _context.Projects.Include(p => p.Members)
-                                            .Single(p => p.Title.Equals(form.SelectedProject))
+                Project = _context.Projects.Include(p => p.Members).Single(p => p.Title.Equals(form.SelectedProject))
             };
+
+            var projectMemberIds = ticket.Project.Members.Select(m => m.Id).ToList();
 
             foreach (string username in form.AddAssigned.Where(entry => entry != null))
             {
@@ -96,11 +96,15 @@ namespace Trackily.Services.Business
                 var userTicket = _userTicketService.CreateUserTicket(user, ticket);
                 ticket.Assigned.Add(userTicket);
 
-                var userProject = _userProjectService.CreateUserProject(user, ticket.Project);
-                ticket.Project.Members.Add(userProject);
+                // If the user is not already a member of the given project, add them as a member.
+                if (!projectMemberIds.Contains(user.Id))
+                {
+                    var userProject = _userProjectService.CreateUserProject(user, ticket.Project);
+                    ticket.Project.Members.Add(userProject);
+                }
             }
 
-            _context.Add(ticket);
+            _context.Tickets.Add(ticket);
             await _context.SaveChangesAsync();
         }
 
