@@ -47,7 +47,7 @@ namespace Trackily.Services.Business
             return await _context.CommentThreads.FindAsync(id);
         }
 
-        public async Task AddCommentThread(Ticket ticket, DetailsTicketBinding input, HttpContext request)
+        public async Task AddCommentThread(Ticket ticket, TicketDetailsBindingModel input, HttpContext request)
         {
             var commentThread = new CommentThread
             {
@@ -58,7 +58,7 @@ namespace Trackily.Services.Business
             ticket.CommentThreads.Add(commentThread);
         }
 
-        public async Task AddComments(DetailsTicketBinding input, HttpContext request)
+        public async Task AddComments(TicketDetailsBindingModel input, HttpContext request)
         {
             // Want to avoid adding empty comments, since all comments are POSted.
             foreach (var (replyTo, content) in input.NewReplies.Where(r => r.Value != null))

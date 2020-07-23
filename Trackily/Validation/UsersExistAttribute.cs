@@ -12,22 +12,14 @@ namespace Trackily.Validation
             var context = (TrackilyContext)validationContext.GetService(typeof(TrackilyContext));
             Debug.Assert(context != null);
 
+            var usernames = (string[]) value;
 
-            var usernames = (string[])value;
-            if (usernames.All(u => u == null)) // Not adding any users. 
+            if (ValidationHelper.SomeUsersDoNotExist(usernames, context))
             {
-                return ValidationResult.Success;
+                return new ValidationResult("One or more assigned users do not exist.");
             }
 
-            foreach (string username in usernames.Where(u => u != null))
-            {
-                // Check whether username exists in the database.
-                if (!context.Users.Any(u => u.UserName == username))
-                {
-                    return new ValidationResult("One or more assigned users do not exist.");
-                }
-            }
-
+            // If no users are being added, SomeUsersDoNotExist is false and validation succeeds.
             return ValidationResult.Success;
         }
     }

@@ -3,7 +3,7 @@ using Trackily.Areas.Identity.Data;
 
 namespace Trackily.Models.Domain
 {
-    public class BaseTicket
+    public class TicketBase
     {
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
@@ -11,7 +11,7 @@ namespace Trackily.Models.Domain
         public string Title { get; set; }
         public string Content { get; set; }
 
-        public BaseTicket()
+        public TicketBase()
         {
             UpdatedDate = DateTime.Now;
             CreatedDate = DateTime.Now;

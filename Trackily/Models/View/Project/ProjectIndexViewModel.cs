@@ -3,9 +3,9 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Trackily.Models.Binding.Project;
 
-namespace Trackily.Models.Views.Project
+namespace Trackily.Models.View.Project
 {
-    public class IndexProjectViewModel : BaseProjectBinding
+    public class ProjectIndexViewModel : ProjectBaseViewModel
     {
         [DisplayName("Creator")]
         public string CreatorName { get; set; }

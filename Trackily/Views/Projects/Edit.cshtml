@@ -1,4 +1,4 @@
-﻿@model Trackily.Models.Views.Project.EditProjectViewModel
+﻿@model Trackily.Models.View.Project.ProjectEditViewModel
 
 <div class="container">
     <div class="col-md-10">
@@ -10,7 +10,7 @@
                 <div class="form-group col-md-6">
                     <label asp-for="Title"></label>
                     <input class="form-control" asp-for="Title"/>
-                    <span class="text-danger" asp-validation-for="Title"></span>
+                    <span class="text-danger text-nowrap" asp-validation-for="Title"></span>
                 </div>
             </div>
             <div class="form-row">
@@ -22,14 +22,14 @@
             </div>
             <div class="form-row">
                 <div class="form-group col-md-5">
-                    <label asp-for="Members"></label>
-                    @if (Model.Members.Count == 0)
+                    <label asp-for="ExistingMembers"></label>
+                    @if (Model.ExistingMembers.Count == 0)
                     {
                         <p class="text-secondary">This project has no members.</p>
                     }
 
                     <ul class="list-group mb-3">
-                        @foreach (var member in Model.Members)
+                        @foreach (var member in Model.ExistingMembers)
                         {
                             <li class="list-group-item form-group d-inline-flex justify-content-between align-items-center text-nowrap p-2">
                                 @member.Item1

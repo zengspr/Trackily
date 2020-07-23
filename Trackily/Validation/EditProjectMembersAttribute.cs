@@ -11,38 +11,25 @@ namespace Trackily.Validation
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var context = (TrackilyContext)validationContext.GetService(typeof(TrackilyContext));
+            var context = (TrackilyContext) validationContext.GetService(typeof(TrackilyContext));
             Debug.Assert(context != null);
 
-
             var usernames = (string[])value;
-            if (usernames.All(u => u == null)) // Not adding any users. 
+
+            if (ValidationHelper.SomeUsersDoNotExist(usernames, context))
             {
-                return ValidationResult.Success;
+                return new ValidationResult("One or more assigned users do not exist.");
             }
 
-            var project = (BaseProjectBinding)validationContext.ObjectInstance;
-            var loadProject = context.Projects
-                .Include(p => p.Members)
-                .ThenInclude(up => up.User)
-                .Single(p => p.ProjectId == project.ProjectId);
+            var projectToValidate = (ProjectBaseBindingModel)validationContext.ObjectInstance;
+            var project = context.Projects
+                                .Include(p => p.Members)
+                                    .ThenInclude(up => up.User)
+                                .Single(p => p.ProjectId == projectToValidate.ProjectId);
 
-            foreach (string username in usernames.Where(u => u != null))
+            if (ValidationHelper.SomeUsersAlreadyMembersOfProject(usernames, project))
             {
-                // Check whether username exists in the database.
-                if (!context.Users.Any(u => u.UserName == username))
-                {
-                    return new ValidationResult("One or more assigned users do not exist.");
-                }
-
-                // Check whether user is already assigned to the ticket.
-                var user = context.Users.Single(u => u.UserName == username);
-                Debug.Assert(user != null);
-
-                if (loadProject.Members.Any(ut => ut.User.UserName == username))
-                {
-                    return new ValidationResult("One or more users are already assigned to the Ticket.");
-                }
+                return new ValidationResult("One or more users are already members of this Project.");
             }
 
             return ValidationResult.Success;

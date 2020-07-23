@@ -4,7 +4,7 @@ using Trackily.Validation;
 
 namespace Trackily.Models.Binding.Project
 {
-    public class BaseProjectBinding
+    public class ProjectBaseBindingModel
     {
         public Guid ProjectId { get; set; }
 

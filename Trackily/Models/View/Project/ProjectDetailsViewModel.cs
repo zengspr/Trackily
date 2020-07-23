@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Trackily.Models.Views.Project
+namespace Trackily.Models.View.Project
 {
-    public class DetailsProjectViewModel
+    public class ProjectDetailsViewModel : ProjectBaseViewModel
     {
-        public Guid ProjectId { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-
         [DisplayName("Created")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
         public DateTime CreatedDate { get; set; }

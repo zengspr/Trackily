@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Trackily.Models.Domain
 {
-    public class CommentThread : BaseComment
+    public class CommentThread : CommentBase
     {
         public Guid CommentThreadId { get; set; }
 

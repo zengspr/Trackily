@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Trackily.Areas.Identity.Data;
 using Trackily.Models.Domain;
-using Trackily.Models.Views;
-using Trackily.Models.Views.Home;
+using Trackily.Models.View;
+using Trackily.Models.View.Home;
 using Trackily.Services.Business;
 using Trackily.Services.DataAccess;
 
@@ -45,10 +45,10 @@ namespace Trackily.Controllers
 
             List<Project> projects = _projectService.GetProjectsForUserId(user.Id);
 
-            var viewModels = new List<IndexHomeViewModel>();
+            var viewModels = new List<HomeIndexViewModel>();
             foreach (var project in projects)
             {
-                var viewModel = new IndexHomeViewModel
+                var viewModel = new HomeIndexViewModel
                 {
                     ProjectTitle = project.Title,
                     Tickets = new List<Ticket>()

@@ -6,10 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Trackily.Areas.Identity.Data;
 using Trackily.Models.Binding.Project;
 using Trackily.Models.Domain;
-using Trackily.Models.Views.Project;
+using Trackily.Models.View.Project;
 using Trackily.Services.DataAccess;
 
 namespace Trackily.Services.Business
@@ -30,11 +31,11 @@ namespace Trackily.Services.Business
             _userManager = userManager;
         }
 
-        public CreateProjectViewModel CreateProjectViewModel(
-            BaseProjectBinding binding = null,
+        public ProjectCreateViewModel CreateProjectViewModel(
+            ProjectBaseBindingModel binding = null,
             IEnumerable<ModelError> errors = null)
         {
-            var viewModel = new CreateProjectViewModel();
+            var viewModel = new ProjectCreateViewModel();
 
             if (binding != null)
             {
@@ -46,6 +47,7 @@ namespace Trackily.Services.Business
 
             if (errors != null)
             {
+                viewModel.Errors = new List<string>();
                 foreach (var error in errors)
                 {
                     viewModel.Errors.Add(error.ErrorMessage);
@@ -56,15 +58,23 @@ namespace Trackily.Services.Business
         }
 
         // TODO: Refactor methods for generating view models when there are model errors.
-        public EditProjectViewModel EditProjectViewModel(
-            EditProjectBinding binding = null,
+        public ProjectEditViewModel EditProjectViewModel(
+            Guid projectId,
+            ProjectEditBindingModel binding = null,
             IEnumerable<ModelError> errors = null)
         {
-            var viewModel = new EditProjectViewModel();
             var project = _context.Projects
-                                .Include(p => p.Members)
-                                    .ThenInclude(m => m.User)
-                                .Single(p => p.ProjectId == binding.ProjectId);
+                                    .Include(p => p.Members)
+                                        .ThenInclude(m => m.User)
+                                    .Single(p => p.ProjectId == projectId);
+
+            if (binding == null && errors == null)
+            {
+                return CreateEditProjectViewModel(project);
+            }
+
+            // Otherwise return a view model populated with the form data and errors.
+            var viewModel = new ProjectEditViewModel();
 
             if (binding != null)
             {
@@ -72,11 +82,12 @@ namespace Trackily.Services.Business
                 viewModel.Title = binding.Title;
                 viewModel.Description = binding.Description;
                 viewModel.AddMembers = binding.AddMembers;
-                viewModel.Members = GetNamesForMembers(project);
-            }
+                viewModel.ExistingMembers = GetNamesForMembers(project);
+            } 
 
             if (errors != null)
             {
+                viewModel.Errors = new List<string>();
                 foreach (var error in errors)
                 {
                     viewModel.Errors.Add(error.ErrorMessage);
@@ -86,7 +97,7 @@ namespace Trackily.Services.Business
             return viewModel;
         }
 
-        public List<IndexProjectViewModel> CreateIndexProjectViewModels()
+        public List<ProjectIndexViewModel> CreateIndexProjectViewModels()
         {
             List<Project> projects = _context.Projects
                                         .Include(p => p.Creator)
@@ -94,11 +105,11 @@ namespace Trackily.Services.Business
                                         .Include(p => p.Tickets)
                                         .ToList();
 
-            var viewModels = new List<IndexProjectViewModel>();
+            var viewModels = new List<ProjectIndexViewModel>();
 
             foreach (var project in projects)
             {
-                var viewModel = new IndexProjectViewModel()
+                var viewModel = new ProjectIndexViewModel()
                 {
                     CreatedDate = project.CreatedDate,
                     CreatorName = _dbService.GetCreatorName(project),
@@ -115,7 +126,7 @@ namespace Trackily.Services.Business
             return viewModels;
         }
 
-        public async Task CreateProject(BaseProjectBinding form, HttpContext request)
+        public async Task CreateProject(ProjectBaseBindingModel form, HttpContext request)
         {
             var project = new Project
             {
@@ -162,7 +173,7 @@ namespace Trackily.Services.Business
             return names;
         }
 
-        public DetailsProjectViewModel CreateDetailsProjectViewModel(Guid projectId)
+        public ProjectDetailsViewModel CreateDetailsProjectViewModel(Guid projectId)
         {
             var project = _context.Projects
                                 .Include(p => p.Tickets)
@@ -171,7 +182,7 @@ namespace Trackily.Services.Business
                                     .ThenInclude(ut => ut.User)
                                 .Single(p => p.ProjectId == projectId);
 
-            var viewModel = new DetailsProjectViewModel()
+            var viewModel = new ProjectDetailsViewModel()
             {
                 ProjectId = projectId,
                 Title = project.Title,
@@ -202,28 +213,23 @@ namespace Trackily.Services.Business
             return viewModel;
         }
 
-        public EditProjectViewModel CreateEditProjectViewModel(Guid projectId)
+        private ProjectEditViewModel CreateEditProjectViewModel(Project project)
         {
-            var project = _context.Projects
-                                .Include(p => p.Members)
-                                    .ThenInclude(ut => ut.User)
-                                .Single(p => p.ProjectId == projectId);
-
-            var viewModel = new EditProjectViewModel()
+            var viewModel = new ProjectEditViewModel()
             {
                 CreatedDate = project.CreatedDate,
                 Description = project.Description,
                 ProjectId = project.ProjectId,
                 Title = project.Title,
-                Members = new List<Tuple<string, string>>()
+                ExistingMembers = new List<Tuple<string, string>>()
             };
 
-            viewModel.Members = GetNamesForMembers(project);
+            viewModel.ExistingMembers = GetNamesForMembers(project);
 
             return viewModel;
         }
 
-        public void EditProject(EditProjectBinding form)
+        public void EditProject(ProjectBaseBindingModel form)
         {
             var project = _context.Projects
                                 .Include(p => p.Members)

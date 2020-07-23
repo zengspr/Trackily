@@ -14,34 +14,21 @@ namespace Trackily.Validation
             var context = (TrackilyContext)validationContext.GetService(typeof(TrackilyContext));
             Debug.Assert(context != null);
 
-            switch (validationContext.ObjectType.Name)
+            if (validationContext.ObjectType.Name == nameof(ProjectEditBindingModel))
             {
-                case nameof(BaseProjectBinding):
-                    {
-                        var input = (BaseProjectBinding)validationContext.ObjectInstance;
-                        if (context.Projects.Any(p => p.Title == (string)projectTitle))
-                        {
-                            return new ValidationResult("Title cannot be identical to another Project's.");
-                        }
+                // Only in the case when we are editing a project do we need to return a successful validation when the
+                // title is not being changed (since all form values are POSTed).
+                var input = (ProjectEditBindingModel)validationContext.ObjectInstance;
 
-                        break;
-                    }
-                case nameof(EditProjectBinding):
-                    {
-                        var input = (EditProjectBinding)validationContext.ObjectInstance;
-                        if (context.Projects.Single(p => p.ProjectId == input.ProjectId).Title == input.Title)
-                        {
-                            return ValidationResult.Success;
-                        }
-                        if (context.Projects.Any(p => p.Title == (string)projectTitle))
-                        {
-                            return new ValidationResult("Title cannot be identical to another Project's.");
-                        }
+                if (ValidationHelper.NotChangingProjectTitle(input.Title, input.ProjectId, context))
+                {
+                    return ValidationResult.Success;
+                }
+            }
 
-                        break;
-                    }
-                default:
-                    throw new Exception("Object type being validated is not known.");
+            if ( ValidationHelper.ProjectTitleInUse((string) projectTitle, context) )
+            {
+                return new ValidationResult("Title cannot be identical to another existing Project's title.");
             }
 
             return ValidationResult.Success;

@@ -4,7 +4,7 @@ using Trackily.Validation;
 
 namespace Trackily.Models.Binding.Ticket
 {
-    public class CreateTicketBinding : BaseTicketBinding
+    public class TicketCreateBindingModel : TicketBaseBindingModel
     {
         [DisplayName("Assign users")]
         [UsersExist]

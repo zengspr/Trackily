@@ -3,9 +3,9 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using static Trackily.Models.Domain.Ticket;
 
-namespace Trackily.Models.Views.Ticket
+namespace Trackily.Models.View.Ticket
 {
-    public class IndexTicketViewModel
+    public class TicketIndexViewModel : TicketBaseViewModel
     {
         public Guid CreatorId { get; set; }
         public Guid TicketId { get; set; }
@@ -13,17 +13,8 @@ namespace Trackily.Models.Views.Ticket
         [DisplayName("Creator")]
         public string CreatorName { get; set; }
 
-        [DisplayName("Title")]
-        public string Title { get; set; }
-
         [DisplayName("Project Title")]
         public string ProjectTitle { get; set; }
-
-        [DisplayName("Priority")]
-        public TicketPriority Priority { get; set; }
-
-        [DisplayName("Type")]
-        public TicketType Type { get; set; }
 
         [DisplayName("Status")]
         public TicketStatus Status { get; set; }

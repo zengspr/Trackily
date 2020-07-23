@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using Trackily.Areas.Identity.Data;
 using Trackily.Models.Binding.Ticket;
 using Trackily.Models.Domain;
-using Trackily.Models.Views.Ticket;
+using Trackily.Models.View.Ticket;
 using Trackily.Services.DataAccess;
 
 namespace Trackily.Services.Business
@@ -45,12 +45,12 @@ namespace Trackily.Services.Business
         /// </summary>
         /// <param name="allTickets">Collection containing all Ticket objects currently in the database. </param>
         /// <returns>A list of view models for each Ticket in the database.</returns>
-        public List<IndexTicketViewModel> CreateIndexViewModel(IEnumerable<Ticket> selectedTickets)
+        public List<TicketIndexViewModel> CreateIndexViewModel(IEnumerable<Ticket> selectedTickets)
         {
-            var viewModels = new List<IndexTicketViewModel>();
+            var viewModels = new List<TicketIndexViewModel>();
             foreach (var ticket in selectedTickets)
             {
-                viewModels.Add(new IndexTicketViewModel
+                viewModels.Add(new TicketIndexViewModel
                 {
                     CreatorId = ticket.Creator.Id,
                     TicketId = ticket.TicketId,
@@ -75,7 +75,7 @@ namespace Trackily.Services.Business
         /// <param name="form">Binding model for creating a new Ticket object.</param>
         /// <param name="request">The HttpContext of the current request.</param>
         /// <returns>N/A</returns>
-        public async Task CreateTicket(CreateTicketBinding form, HttpContext request)
+        public async Task CreateTicket(TicketCreateBindingModel form, HttpContext request)
         {
             var ticket = new Ticket
             {
@@ -118,10 +118,10 @@ namespace Trackily.Services.Business
         /// <param name="ticket">Ticket binding model that failed validation.</param>
         /// <param name="errors">Collection of ModelError related to failed Ticket creation.</param>
         /// <returns>CreateTicketViewModel object</returns>
-        public CreateTicketViewModel CreateTicketViewModel(CreateTicketBinding ticket = null,
+        public TicketCreateViewModel CreateTicketViewModel(TicketCreateBindingModel ticket = null,
                                                            IEnumerable<ModelError> errors = null)
         {
-            var viewModel = new CreateTicketViewModel
+            var viewModel = new TicketCreateViewModel
             {
                 Errors = new List<string>()
             };
@@ -154,9 +154,9 @@ namespace Trackily.Services.Business
         /// </summary>
         /// <param name="ticket">Ticket object to create the Details view for.</param>
         /// <returns>DetailsTicketViewModel object</returns>
-        public DetailsTicketViewModel DetailsTicketViewModel(Ticket ticket, IEnumerable<ModelError> allErrors = null)
+        public TicketDetailsViewModel DetailsTicketViewModel(Ticket ticket, IEnumerable<ModelError> allErrors = null)
         {
-            var viewModel = new DetailsTicketViewModel
+            var viewModel = new TicketDetailsViewModel
             {
                 CreatorId = ticket.Creator.Id,
                 TicketId = ticket.TicketId,
@@ -198,13 +198,13 @@ namespace Trackily.Services.Business
         /// </summary>
         /// <remarks>
         /// To generate view models for binding models with errors, see
-        /// <see cref="TicketService.EditTicketViewModel(EditTicketBinding, IEnumerable{ModelError})"/>.
+        /// <see cref="TicketService.EditTicketViewModel(TicketEditBindingModel, IEnumerable{ModelError})"/>.
         /// </remarks>
         /// <param name="ticket">Ticket object to create the Edit view for.</param>
         /// <returns>EditTicketViewModel object.</returns>
-        public async Task<EditTicketViewModel> EditTicketViewModel(Ticket ticket)
+        public TicketEditViewModel EditTicketViewModel(Ticket ticket)
         {
-            var viewModel = new EditTicketViewModel
+            var viewModel = new TicketEditViewModel
             {
                 TicketId = ticket.TicketId,
                 Title = ticket.Title,
@@ -223,6 +223,7 @@ namespace Trackily.Services.Business
             {
                 viewModel.RemoveAssigned.Add(username, false);
             }
+
             return viewModel;
         }
 
@@ -236,9 +237,9 @@ namespace Trackily.Services.Business
         /// <param name="invalidInput">EditTicketBinding model with validation errors.</param>
         /// <param name="errors">Collection of ModelError for the invalid binding model.</param>
         /// <returns>EditTicketViewModel object.</returns>
-        public EditTicketViewModel EditTicketViewModel(EditTicketBinding invalidInput, IEnumerable<ModelError> errors)
+        public TicketEditViewModel EditTicketViewModel(TicketEditBindingModel invalidInput, IEnumerable<ModelError> errors)
         {
-            var viewModel = new EditTicketViewModel
+            var viewModel = new TicketEditViewModel
             {
                 TicketId = invalidInput.TicketId,
                 Title = invalidInput.Title,
@@ -278,7 +279,7 @@ namespace Trackily.Services.Business
         /// <param name="input">EditTicketBinding model containing POSTed values.</param>
         /// <param name="request"></param>
         /// <returns>N/A</returns>
-        public async Task EditTicket(Ticket ticket, EditTicketBinding input, HttpContext request)
+        public async Task EditTicket(Ticket ticket, TicketEditBindingModel input, HttpContext request)
         {
             var currentUser = await _userManager.GetUserAsync(request.User);
 

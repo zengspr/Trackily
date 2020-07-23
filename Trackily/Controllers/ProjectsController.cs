@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Trackily.Models.Binding.Project;
-using Trackily.Models.Views.Project;
+using Trackily.Models.View.Project;
 using Trackily.Services.Business;
 
 namespace Trackily.Controllers
@@ -27,7 +27,7 @@ namespace Trackily.Controllers
         // GET: Projects
         public ActionResult Index()
         {
-            List<IndexProjectViewModel> projects = _projectService.CreateIndexProjectViewModels();
+            List<ProjectIndexViewModel> projects = _projectService.CreateIndexProjectViewModels();
             return View(projects);
         }
 
@@ -54,7 +54,7 @@ namespace Trackily.Controllers
         // POST: Projects/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(BaseProjectBinding form)
+        public async Task<ActionResult> Create(ProjectBaseBindingModel form)
         {
             if (!ModelState.IsValid)
             {
@@ -70,14 +70,14 @@ namespace Trackily.Controllers
         // GET: Projects/Edit/5
         public ActionResult Edit(Guid projectId)
         {
-            var viewModel = _projectService.CreateEditProjectViewModel(projectId);
+            var viewModel = _projectService.EditProjectViewModel(projectId);
             return View(viewModel);
         }
 
         // POST: Projects/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(EditProjectBinding form)
+        public ActionResult Edit(ProjectEditBindingModel form)
         {
             if (!ModelState.IsValid)
             {

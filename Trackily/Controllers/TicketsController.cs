@@ -11,7 +11,7 @@ using Trackily.Areas.Identity.Data;
 using Trackily.Controllers.Filters;
 using Trackily.Models.Binding.Ticket;
 using Trackily.Models.Domain;
-using Trackily.Models.Views.Ticket;
+using Trackily.Models.View.Ticket;
 using Trackily.Services.Business;
 using Trackily.Services.DataAccess;
 
@@ -74,7 +74,7 @@ namespace Trackily.Controllers
                     break;
             }
 
-            List<IndexTicketViewModel> indexViewModel = _ticketService.CreateIndexViewModel(tickets);
+            List<TicketIndexViewModel> indexViewModel = _ticketService.CreateIndexViewModel(tickets);
             ViewData["indexScope"] = scope;
             return View(indexViewModel);
         }
@@ -96,7 +96,7 @@ namespace Trackily.Controllers
         // POST: Tickets/Details/5  
         [HttpPost]
         [NullIdActionFilter]
-        public async Task<IActionResult> Details(Guid id, DetailsTicketBinding input)
+        public async Task<IActionResult> Details(Guid id, TicketDetailsBindingModel input)
         {
             var ticket = await _dbService.GetTicket(id);
             if (ticket == null)
@@ -138,7 +138,7 @@ namespace Trackily.Controllers
         // POST: Tickets/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateTicketBinding input)
+        public async Task<IActionResult> Create(TicketCreateBindingModel input)
         {
             if (!ModelState.IsValid)
             {
@@ -159,7 +159,7 @@ namespace Trackily.Controllers
             if (ticket == null)
             { return NotFound(); }
 
-            var viewModel = await _ticketService.EditTicketViewModel(ticket);
+            var viewModel = _ticketService.EditTicketViewModel(ticket);
             return View(viewModel);
         }
 
@@ -167,7 +167,7 @@ namespace Trackily.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [NullIdActionFilter]
-        public async Task<IActionResult> Edit(Guid id, EditTicketBinding input)
+        public async Task<IActionResult> Edit(Guid id, TicketEditBindingModel input)
         {
             if (!ModelState.IsValid)
             {

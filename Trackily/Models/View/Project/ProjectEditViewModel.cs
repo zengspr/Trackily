@@ -2,24 +2,21 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Trackily.Models.Binding.Project;
 
-namespace Trackily.Models.Views.Project
+namespace Trackily.Models.View.Project
 {
-    public class EditProjectViewModel : EditProjectBinding
+    public class ProjectEditViewModel : ProjectBaseViewModel
     {
         [DisplayName("Created")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
         public DateTime CreatedDate { get; set; }
 
+        [DisplayName("Add members")]
+        public string[] AddMembers { get; set; }
+
         [DisplayName("Members")]
-        public List<Tuple<string, string>> Members { get; set; }  // (name, username).
+        public List<Tuple<string, string>> ExistingMembers { get; set; }  // (name, username).
 
         public List<string> Errors { get; set; }
-
-        public EditProjectViewModel()
-        {
-            Errors = new List<string>();
-        }
     }
 }

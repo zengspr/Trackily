@@ -4,7 +4,7 @@ using Trackily.Areas.Identity.Data;
 
 namespace Trackily.Models.Domain
 {
-    public class BaseComment
+    public class CommentBase
     {
         [Display(Name = "Created")]
         [DataType(DataType.DateTime)]
@@ -19,7 +19,7 @@ namespace Trackily.Models.Domain
         public TrackilyUser Creator { get; set; }
         public string Content { get; set; }
 
-        public BaseComment()
+        public CommentBase()
         {
             UpdatedDate = DateTime.Now;
             CreatedDate = DateTime.Now;

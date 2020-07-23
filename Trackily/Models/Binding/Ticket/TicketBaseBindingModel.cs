@@ -5,7 +5,7 @@ using static Trackily.Models.Domain.Ticket;
 
 namespace Trackily.Models.Binding.Ticket
 {
-    public class BaseTicketBinding
+    public class TicketBaseBindingModel
     {
         public Guid TicketId { get; set; }
 

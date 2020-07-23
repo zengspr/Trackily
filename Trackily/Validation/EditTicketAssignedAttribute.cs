@@ -11,41 +11,30 @@ namespace Trackily.Validation
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var context = (TrackilyContext)validationContext.GetService(typeof(TrackilyContext));
+            var context = (TrackilyContext) validationContext.GetService( typeof(TrackilyContext) );
             Debug.Assert(context != null);
 
+            var usernames = (string[]) value;
 
-            var usernames = (string[])value;
-            if (usernames.All(u => u == null)) // Not adding any users. 
+            if (ValidationHelper.SomeUsersDoNotExist(usernames, context))
             {
-                return ValidationResult.Success;
+                return new ValidationResult("One or more assigned users do not exist.");
             }
 
-            var ticket = (BaseTicketBinding)validationContext.ObjectInstance;
+            var ticketToValidate = (TicketBaseBindingModel) validationContext.ObjectInstance;
 
-            var loadTicket = context.Tickets
-                .Include(t => t.Assigned)
-                .ThenInclude(ut => ut.User)
-                .Single(t => t.TicketId == ticket.TicketId);
+            // Need to load the ticket from the database because the Assigned.User property is not included by default. 
+            var ticket = context.Tickets
+                                .Include(t => t.Assigned)
+                                    .ThenInclude(ut => ut.User)
+                                .Single(t => t.TicketId == ticketToValidate.TicketId);
 
-            foreach (string username in usernames.Where(u => u != null))
+            if (ValidationHelper.SomeUsersAlreadyAssignedToTicket(usernames, ticket))
             {
-                // Check whether username exists in the database.
-                if (!context.Users.Any(u => u.UserName == username))
-                {
-                    return new ValidationResult("One or more assigned users do not exist.");
-                }
-
-                // Check whether user is already assigned to the ticket.
-                var user = context.Users.Single(u => u.UserName == username);
-                Debug.Assert(user != null);
-
-                if (loadTicket.Assigned.Any(ut => ut.User.UserName == username))
-                {
-                    return new ValidationResult("One or more users are already assigned to the Ticket.");
-                }
+                return new ValidationResult("One or more users are already assigned to this Ticket.");
             }
 
+            // If no users are being added, both ValidationHelper methods are false and validation succeeds.
             return ValidationResult.Success;
         }
     }
