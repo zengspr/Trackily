@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 
 namespace Trackily.Models.Binding.Project
 {
-    public class ProjectEditBindingModel : ProjectBaseBindingModel
+    public class ProjectCreateBindingModel : ProjectBaseBindingModel
     {
-        public Dictionary<string, bool> RemoveMembers { get; set; }
     }
 }

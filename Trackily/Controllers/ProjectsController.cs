@@ -54,7 +54,7 @@ namespace Trackily.Controllers
         // POST: Projects/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(ProjectBaseBindingModel form)
+        public async Task<ActionResult> Create(ProjectCreateBindingModel form)
         {
             if (!ModelState.IsValid)
             {
@@ -70,7 +70,7 @@ namespace Trackily.Controllers
         // GET: Projects/Edit/5
         public ActionResult Edit(Guid projectId)
         {
-            var viewModel = _projectService.EditProjectViewModel(projectId);
+            var viewModel = _projectService.CreateEditProjectViewModel(projectId);
             return View(viewModel);
         }
 
@@ -82,7 +82,7 @@ namespace Trackily.Controllers
             if (!ModelState.IsValid)
             {
                 IEnumerable<ModelError> errors = ModelState.Values.SelectMany(v => v.Errors);
-                var viewModel = _projectService.EditProjectViewModel(form, errors);
+                var viewModel = _projectService.CreateEditProjectViewModel(form.ProjectId, form, errors);
                 return View(viewModel);
             }
 

@@ -36,5 +36,16 @@ namespace Trackily.Services.Business
                 project.Members.Add(userProject);
             }
         }
+
+        public void RemoveMembersFromProject(string[] usernames, Project project)
+        {
+            foreach (var username in usernames.Where(entry => entry != null))
+            {
+                var userProject =
+                    _context.UserProjects.Single(up => up.User.UserName == username & up.Project == project);
+
+                project.Members.Remove(userProject);
+            }
+        }
     }
 }

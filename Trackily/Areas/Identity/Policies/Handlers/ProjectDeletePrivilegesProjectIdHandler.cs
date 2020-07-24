@@ -21,6 +21,7 @@ namespace Trackily.Areas.Identity.Policies.Handlers
             _userManager = userManager;
         }
 
+        // Only the creator of a Project may delete it.
         protected override async Task HandleRequirementAsync(
             AuthorizationHandlerContext context,
             ProjectDeletePrivilegesRequirement requirement,

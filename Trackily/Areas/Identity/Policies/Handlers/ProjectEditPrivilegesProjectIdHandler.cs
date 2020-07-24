@@ -21,6 +21,8 @@ namespace Trackily.Areas.Identity.Policies.Handlers
             _userManager = userManager;
         }
 
+        // Any member of a project may edit the project. 
+        // TODO: Only managers who are members of the project can edit the project. 
         protected override async Task HandleRequirementAsync(
             AuthorizationHandlerContext context,
             ProjectEditPrivilegesRequirement requirement,

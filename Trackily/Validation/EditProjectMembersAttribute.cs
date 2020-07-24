@@ -21,7 +21,7 @@ namespace Trackily.Validation
                 return new ValidationResult("One or more assigned users do not exist.");
             }
 
-            var projectToValidate = (ProjectBaseBindingModel)validationContext.ObjectInstance;
+            var projectToValidate = (ProjectEditBindingModel)validationContext.ObjectInstance;
             var project = context.Projects
                                 .Include(p => p.Members)
                                     .ThenInclude(up => up.User)

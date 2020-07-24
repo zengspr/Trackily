@@ -21,7 +21,7 @@ namespace Trackily.Validation
                 return new ValidationResult("One or more assigned users do not exist.");
             }
 
-            var ticketToValidate = (TicketBaseBindingModel) validationContext.ObjectInstance;
+            var ticketToValidate = (TicketEditBindingModel) validationContext.ObjectInstance;
 
             // Need to load the ticket from the database because the Assigned.User property is not included by default. 
             var ticket = context.Tickets
