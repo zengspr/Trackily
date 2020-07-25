@@ -9,8 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Trackily.Areas.Identity.Data;
 using Trackily.Areas.Identity.Policies.Handlers;
 using Trackily.Areas.Identity.Policies.Requirements;
-using Trackily.Services.Business;
-using Trackily.Services.DataAccess;
+using Trackily.Services;
 
 namespace Trackily
 {
@@ -61,7 +60,6 @@ namespace Trackily
                 });
             }
 
-            services.AddScoped<DbService>();
             services.AddScoped<TicketService>();
             services.AddScoped<UserTicketService>();
             services.AddScoped<CommentService>();

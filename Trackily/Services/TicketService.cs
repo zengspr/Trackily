@@ -12,27 +12,23 @@ using Trackily.Areas.Identity.Data;
 using Trackily.Models.Binding.Ticket;
 using Trackily.Models.Domain;
 using Trackily.Models.View.Ticket;
-using Trackily.Services.DataAccess;
 
-namespace Trackily.Services.Business
+namespace Trackily.Services
 {
     public class TicketService
     {
         private readonly UserManager<TrackilyUser> _userManager;
         private readonly UserTicketService _userTicketService;
-        private readonly DbService _dbService;
         private readonly TrackilyContext _context;
         private readonly UserProjectService _userProjectService;
 
         public TicketService(UserManager<TrackilyUser> userManager,
-                             DbService dbService,
                              TrackilyContext context,
                              UserTicketService userTicketService,
                              UserProjectService userProjectService)
         {
             _userManager = userManager;
             _userTicketService = userTicketService;
-            _dbService = dbService;
             _context = context;
             _userProjectService = userProjectService;
         }
@@ -77,7 +73,7 @@ namespace Trackily.Services.Business
 
             foreach (string username in form.AddAssigned.Where(entry => entry != null))
             {
-                var user = await _dbService.GetUserAsync(username);
+                var user = _context.Users.Single(u => u.UserName == username);
                 Debug.Assert(user != null);
 
                 var userTicket = _userTicketService.CreateUserTicket(user, ticket);
@@ -92,7 +88,7 @@ namespace Trackily.Services.Business
             }
 
             _context.Tickets.Add(ticket);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges(true);
         }
 
         public TicketCreateViewModel CreateTicketViewModel(TicketCreateBindingModel ticket = null,
@@ -240,11 +236,11 @@ namespace Trackily.Services.Business
             if (input.RemoveAssigned != null)
             {
                 // Unassign the flagged users from the Ticket. 
-                foreach (var (userKey, remove) in input.RemoveAssigned
+                foreach (var (username, remove) in input.RemoveAssigned
                                                                   .Where(entry => entry.Value == true))
                 {
-                    var userId = await _dbService.GetKey(userKey);
-                    var userTicket = await _userTicketService.GetUserTicket(ticket.TicketId, userId);
+                    var userId = _context.Users.Single(u => u.UserName == username).Id;
+                    var userTicket = _context.UserTickets.Find(userId, ticket.TicketId);
                     ticket.Assigned.Remove(userTicket);
                     _context.UserTickets.Remove(userTicket);
                 }
@@ -253,7 +249,7 @@ namespace Trackily.Services.Business
             // Assign the users to the ticket by creating new UserTickets.
             foreach (string username in input.AddAssigned.Where(entry => entry != null))
             {
-                var user = await _dbService.GetUserAsync(username);
+                var user = _context.Users.Single(u => u.UserName == username);
                 var userTicket = _userTicketService.CreateUserTicket(user, ticket);
                 ticket.Assigned.Add(userTicket);
             }

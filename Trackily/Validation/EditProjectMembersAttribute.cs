@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
@@ -12,10 +12,10 @@ namespace Trackily.Validation
     {
         protected override ValidationResult IsValid(object usernames, ValidationContext validationContext)
         {
-            var context = (TrackilyContext) validationContext.GetService(typeof(TrackilyContext));
+            var context = (TrackilyContext)validationContext.GetService(typeof(TrackilyContext));
             Debug.Assert(context != null);
 
-            if (ValidationHelper.SomeUsersDoNotExist((List<string>) usernames, context))
+            if (ValidationHelper.SomeUsersDoNotExist((List<string>)usernames, context))
             {
                 return new ValidationResult("One or more assigned users do not exist.");
             }
@@ -26,7 +26,7 @@ namespace Trackily.Validation
                                     .ThenInclude(up => up.User)
                                 .Single(p => p.ProjectId == projectToValidate.ProjectId);
 
-            if (ValidationHelper.SomeUsersAlreadyMembersOfProject((List<string>) usernames, project))
+            if (ValidationHelper.SomeUsersAlreadyMembersOfProject((List<string>)usernames, project))
             {
                 return new ValidationResult("One or more users are already members of this Project.");
             }

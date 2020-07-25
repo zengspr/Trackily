@@ -9,7 +9,7 @@ namespace Trackily.Validation
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var input = (TicketDetailsBindingModel) validationContext.ObjectInstance;
+            var input = (TicketDetailsBindingModel)validationContext.ObjectInstance;
 
             // If the user does not click reply, then NewReplies == null. If the user clicks reply but does not include any 
             // text in the reply, the NewReplies != null but the value of each item in NewReplies is null.

@@ -17,7 +17,7 @@ namespace Trackily.Models.Binding.Ticket
         public Domain.Ticket.TicketStatus Status { get; set; }
 
         [EditTicketAssigned]
-        public string[] AddAssigned { get; set; }
+        public List<string> AddAssigned { get; set; }
 
         public Dictionary<string, bool> RemoveAssigned { get; set; }    // RemoveAssigned[username] = true -> Unassign user.
     }

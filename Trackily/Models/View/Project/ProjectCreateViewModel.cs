@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using Trackily.Models.Binding.Project;
 
 namespace Trackily.Models.View.Project
 {
@@ -9,7 +7,7 @@ namespace Trackily.Models.View.Project
     public class ProjectCreateViewModel : ProjectBaseViewModel
     {
         [DisplayName("Members")]
-        public List<string> AddMembers { get; set; }  
+        public List<string> AddMembers { get; set; }
 
         public List<string> Errors { get; set; }
         public bool Redirected { get; set; }

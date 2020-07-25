@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
-using System.Linq;
 using Trackily.Areas.Identity.Data;
 
 namespace Trackily.Validation
@@ -13,7 +12,7 @@ namespace Trackily.Validation
             var context = (TrackilyContext)validationContext.GetService(typeof(TrackilyContext));
             Debug.Assert(context != null);
 
-            if (ValidationHelper.SomeUsersDoNotExist((List<string>) usernames, context))
+            if (ValidationHelper.SomeUsersDoNotExist((List<string>)usernames, context))
             {
                 return new ValidationResult("One or more assigned users do not exist.");
             }

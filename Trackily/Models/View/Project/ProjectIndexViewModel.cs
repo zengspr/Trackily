@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Trackily.Models.Binding.Project;
 
 namespace Trackily.Models.View.Project
 {

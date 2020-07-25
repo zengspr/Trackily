@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Trackily.Models.Binding.Project;
 using Trackily.Models.View.Project;
-using Trackily.Services.Business;
+using Trackily.Services;
 
 namespace Trackily.Controllers
 {

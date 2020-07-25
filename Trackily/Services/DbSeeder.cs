@@ -2,7 +2,7 @@
 using System;
 using Trackily.Areas.Identity.Data;
 
-namespace Trackily.Services.DataAccess
+namespace Trackily.Services
 {
     public static class DbSeeder
     {
@@ -10,11 +10,6 @@ namespace Trackily.Services.DataAccess
         public const string DevGuestPassword = "devguest@trackily.ca";
         public const string ManagerGuestName = "manguest";
         public const string ManagerGuestPassword = "manguest@trackily.ca";
-
-        public static void SeedTickets(TrackilyContext context)
-        {
-
-        }
 
         public static void SeedUsers(UserManager<TrackilyUser> userManager)
         {

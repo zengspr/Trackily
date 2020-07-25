@@ -14,7 +14,7 @@ namespace Trackily.Models.View.Project
         [DisplayName("Add members")]
         public List<string> AddMembers { get; set; }
 
-        [DisplayName("Remove members")] 
+        [DisplayName("Remove members")]
         public Dictionary<string, bool> RemoveMembers { get; set; }
 
         [DisplayName("Members")]

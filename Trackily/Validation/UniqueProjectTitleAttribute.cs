@@ -1,7 +1,5 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
-using System.Linq;
 using Trackily.Areas.Identity.Data;
 using Trackily.Models.Binding.Project;
 
@@ -26,7 +24,7 @@ namespace Trackily.Validation
                 }
             }
 
-            if ( ValidationHelper.ProjectTitleInUse((string) projectTitle, context) )
+            if (ValidationHelper.ProjectTitleInUse((string)projectTitle, context))
             {
                 return new ValidationResult("Title cannot be identical to another existing Project's title.");
             }

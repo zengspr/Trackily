@@ -7,33 +7,28 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Trackily.Areas.Identity.Data;
 using Trackily.Models.Binding.Project;
 using Trackily.Models.Domain;
 using Trackily.Models.View.Project;
-using Trackily.Services.DataAccess;
 
-namespace Trackily.Services.Business
+namespace Trackily.Services
 {
     public class ProjectService
     {
         private readonly TrackilyContext _context;
         private readonly UserProjectService _userProjectService;
-        private readonly DbService _dbService;
         private readonly UserManager<TrackilyUser> _userManager;
         private readonly UserTicketService _userTicketService;
 
         public ProjectService(
             TrackilyContext context,
-            UserProjectService userProjectService, 
-            DbService dbService, 
+            UserProjectService userProjectService,
             UserManager<TrackilyUser> userManager,
             UserTicketService userTicketService)
         {
             _context = context;
             _userProjectService = userProjectService;
-            _dbService = dbService;
             _userManager = userManager;
             _userTicketService = userTicketService;
         }
@@ -81,7 +76,7 @@ namespace Trackily.Services.Business
 
             if (!form.AddMembers.Contains(project.Creator.UserName)) // In case user still adds themselves as a member.
             {
-                form.AddMembers.Add(project.Creator.UserName); 
+                form.AddMembers.Add(project.Creator.UserName);
             }
 
             _userProjectService.AddMembersToProject(form.AddMembers, project);
@@ -102,10 +97,13 @@ namespace Trackily.Services.Business
 
             foreach (var project in projects)
             {
+                var reloadProject = _context.Projects.Include(p => p.Creator)
+                    .Single(p => p.ProjectId == project.ProjectId);
+
                 var viewModel = new ProjectIndexViewModel()
                 {
                     CreatedDate = project.CreatedDate,
-                    CreatorName = _dbService.GetCreatorName(project),
+                    CreatorName = $"{reloadProject.Creator.FirstName} {reloadProject.Creator.LastName}",
                     NumMembers = project.Members.Count,
                     NumTickets = project.Tickets.Count,
                     ProjectId = project.ProjectId,
@@ -194,7 +192,7 @@ namespace Trackily.Services.Business
             _userProjectService.AddMembersToProject(form.AddMembers, project);
 
             if (form.RemoveMembers != null)
-            { 
+            {
                 // Remove UserProjects.
                 var usernamesToRemove = form.RemoveMembers.Where(m => m.Value == true)
                                                                             .Select(m => m.Key) // Username.
@@ -260,7 +258,6 @@ namespace Trackily.Services.Business
             _context.SaveChanges(true);
         }
 
-        // TODO: Methods below should probably be in DbService instead?
         public List<Project> GetProjectsForUserId(Guid userId)
         {
             return _context.UserProjects.Include(up => up.Project)

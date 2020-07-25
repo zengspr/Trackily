@@ -77,7 +77,7 @@ namespace Trackily.Areas.Identity.Data
                 .HasOne(pt => pt.Ticket)
                 .WithMany(t => t.Assigned)
                 .HasForeignKey(pt => pt.TicketId)
-                .OnDelete(DeleteBehavior.Cascade); 
+                .OnDelete(DeleteBehavior.Cascade);
 
             // One-to-many relationship between CommentThreads and Comments.
             builder.Entity<CommentThread>()

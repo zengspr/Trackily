@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Trackily.Areas.Identity.Data;
 using Trackily.Models.Domain;
 using Trackily.Models.View;
 using Trackily.Models.View.Home;
-using Trackily.Services.Business;
-using Trackily.Services.DataAccess;
+using Trackily.Services;
 
 namespace Trackily.Controllers
 {
@@ -25,8 +22,7 @@ namespace Trackily.Controllers
         public HomeController(
             UserManager<TrackilyUser> userManager,
             SignInManager<TrackilyUser> signInManager,
-            ProjectService projectService,
-            TrackilyContext context)
+            ProjectService projectService)
         {
             _userManager = userManager;
             _signInManager = signInManager;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Trackily.Models.Binding.Ticket;
 using Trackily.Models.Domain;
 using static Trackily.Models.Domain.Ticket;
 
@@ -33,7 +32,7 @@ namespace Trackily.Models.View.Ticket
 
         public string Content { get; set; }
         public TicketStatus Status { get; set; }
-        
+
         public ICollection<CommentThread> CommentThreads { get; set; }
         public List<string> Errors { get; set; }
     }

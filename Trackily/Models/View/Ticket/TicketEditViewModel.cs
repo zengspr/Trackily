@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Trackily.Models.Binding.Ticket;
 
 namespace Trackily.Models.View.Ticket
 {
@@ -30,7 +29,7 @@ namespace Trackily.Models.View.Ticket
         public string Content { get; set; }
 
         public Domain.Ticket.TicketStatus Status { get; set; }
-        
+
         [DisplayName("Assigned users")]
         public string[] AddAssigned { get; set; }
 

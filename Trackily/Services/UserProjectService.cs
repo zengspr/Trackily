@@ -2,19 +2,16 @@
 using System.Linq;
 using Trackily.Areas.Identity.Data;
 using Trackily.Models.Domain;
-using Trackily.Services.DataAccess;
 
-namespace Trackily.Services.Business
+namespace Trackily.Services
 {
     public class UserProjectService
     {
         private readonly TrackilyContext _context;
-        private readonly DbService _dbService;
 
-        public UserProjectService(TrackilyContext context, DbService dbService)
+        public UserProjectService(TrackilyContext context)
         {
             _context = context;
-            _dbService = dbService;
         }
 
         public UserProject CreateUserProject(TrackilyUser user, Project project)
@@ -32,7 +29,7 @@ namespace Trackily.Services.Business
         {
             foreach (var username in usernames.Where(entry => entry != null))
             {
-                var user = _dbService.GetUser(username);
+                var user = _context.Users.Single(u => u.UserName == username);
                 var userProject = CreateUserProject(user, project);
                 project.Members.Add(userProject);
             }
