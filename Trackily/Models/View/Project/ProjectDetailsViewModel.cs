@@ -8,7 +8,7 @@ namespace Trackily.Models.View.Project
     public class ProjectDetailsViewModel : ProjectBaseViewModel
     {
         [DisplayName("Created")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:f}")]
         public DateTime CreatedDate { get; set; }
 
         [DisplayName("Tickets")]

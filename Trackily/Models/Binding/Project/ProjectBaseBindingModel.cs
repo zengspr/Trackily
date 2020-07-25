@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Trackily.Validation;
 
@@ -16,8 +17,5 @@ namespace Trackily.Models.Binding.Project
         [Required]
         [StringLength(125, ErrorMessage = "Project descriptions must be less than {1} characters long.")]
         public string Description { get; set; }
-
-        [UsersExist]
-        public string[] AddMembers { get; set; }
     }
 }

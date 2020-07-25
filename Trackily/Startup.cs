@@ -80,6 +80,10 @@ namespace Trackily
                     policyBuilder => policyBuilder.AddRequirements(
                         new ProjectEditPrivilegesRequirement()));
                 options.AddPolicy(
+                    "ProjectDetailsPrivileges",
+                    policyBuilder => policyBuilder.AddRequirements(
+                        new ProjectDetailsPrivilegesRequirement()));
+                options.AddPolicy(
                     "ProjectDeletePrivileges",
                     policyBuilder => policyBuilder.AddRequirements(
                         new ProjectDeletePrivilegesRequirement()));
@@ -87,6 +91,7 @@ namespace Trackily
 
             services.AddScoped<IAuthorizationHandler, TicketEditPrivilegesUserIdHandler>();
             services.AddScoped<IAuthorizationHandler, ProjectEditPrivilegesProjectIdHandler>();
+            services.AddScoped<IAuthorizationHandler, ProjectDetailsPrivilegesProjectIdHandler>();
             services.AddScoped<IAuthorizationHandler, ProjectDeletePrivilegesProjectIdHandler>();
         }
 

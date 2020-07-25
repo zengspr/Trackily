@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
@@ -9,14 +10,12 @@ namespace Trackily.Validation
 {
     public class EditTicketAssignedAttribute : ValidationAttribute
     {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult IsValid(object usernames, ValidationContext validationContext)
         {
             var context = (TrackilyContext) validationContext.GetService( typeof(TrackilyContext) );
             Debug.Assert(context != null);
 
-            var usernames = (string[]) value;
-
-            if (ValidationHelper.SomeUsersDoNotExist(usernames, context))
+            if (ValidationHelper.SomeUsersDoNotExist((List<string>) usernames, context))
             {
                 return new ValidationResult("One or more assigned users do not exist.");
             }
@@ -29,7 +28,7 @@ namespace Trackily.Validation
                                     .ThenInclude(ut => ut.User)
                                 .Single(t => t.TicketId == ticketToValidate.TicketId);
 
-            if (ValidationHelper.SomeUsersAlreadyAssignedToTicket(usernames, ticket))
+            if (ValidationHelper.SomeUsersAlreadyAssignedToTicket((List<string>) usernames, ticket))
             {
                 return new ValidationResult("One or more users are already assigned to this Ticket.");
             }

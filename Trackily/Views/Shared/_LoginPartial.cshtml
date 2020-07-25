@@ -7,7 +7,7 @@
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-action="PageNotAdded">
+            <a class="nav-link text-dark" asp-controller="Home" asp-action="PageNotAdded">
                 Hello @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!
             </a>
         </li>

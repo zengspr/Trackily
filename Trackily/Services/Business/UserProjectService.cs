@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Trackily.Areas.Identity.Data;
 using Trackily.Models.Domain;
 using Trackily.Services.DataAccess;
@@ -27,7 +28,7 @@ namespace Trackily.Services.Business
             };
         }
 
-        public void AddMembersToProject(string[] usernames, Project project)
+        public void AddMembersToProject(List<string> usernames, Project project)
         {
             foreach (var username in usernames.Where(entry => entry != null))
             {
@@ -37,7 +38,7 @@ namespace Trackily.Services.Business
             }
         }
 
-        public void RemoveMembersFromProject(string[] usernames, Project project)
+        public void RemoveMembersFromProject(List<string> usernames, Project project)
         {
             foreach (var username in usernames.Where(entry => entry != null))
             {

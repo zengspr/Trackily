@@ -19,6 +19,7 @@
                 <label asp-for="Tickets"></label>
             </h4>
         </div>
+        <!--TODO: Tickets table does not expand even though other elements do in container-fluid. -->
         <div class="row">
             <div class="card shadow mb-2 overflow-hidden">
                 <div class="card-body overflow-hidden">
@@ -67,6 +68,10 @@
             {
                 <div class="col-md-5">
                     <label class="d-block" asp-for="Developers"></label>
+                    @if (Model.Developers.Count == 0)
+                    {
+                        <p class="text-secondary">No developers on this project.</p>
+                    }
                     <ul class="list-group mb-3 d-inline-flex">
                         @foreach (var member in Model.Developers)
                         {
@@ -79,6 +84,10 @@
                 </div>
                 <div class="col-md-5">
                     <label class="d-block" asp-for="Managers"></label>
+                    @if (Model.Managers.Count == 0)
+                    {
+                        <p class="text-secondary">No managers on this project.</p>
+                    }
                     <ul class="list-group mb-3 d-inline-flex">
                         @foreach (var member in Model.Managers)
                         {
@@ -94,8 +103,9 @@
 
         <div class="row mt-4">
             <div class="col-md-10">
-                <a class="float-left" asp-action="Index">Back to Tickets</a>
+                <a class="float-left" asp-action="Index">Back to Projects</a>
                 <a class="btn btn-primary btn-circle btn-lg float-right active"
+                   edit-project-id="@Model.ProjectId"
                    asp-action="Edit"
                    asp-route-projectId="@Model.ProjectId">
                     <i class="fas fa-sm fa-edit"></i>

@@ -128,7 +128,7 @@ namespace Trackily.Controllers
         {
             if (!_context.Projects.Any())
             {
-                return RedirectToAction("Create", "Projects");
+                return RedirectToAction("Create", "Projects", new { redirected = true });
             }
 
             var viewModel = _ticketService.CreateTicketViewModel();

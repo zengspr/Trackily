@@ -12,7 +12,7 @@ namespace Trackily.Models.View.Project
         public DateTime CreatedDate { get; set; }
 
         [DisplayName("Add members")]
-        public string[] AddMembers { get; set; }
+        public List<string> AddMembers { get; set; }
 
         [DisplayName("Remove members")] 
         public Dictionary<string, bool> RemoveMembers { get; set; }

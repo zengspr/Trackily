@@ -10,7 +10,7 @@ using Trackily.Areas.Identity.Data;
 namespace Trackily.Migrations
 {
     [DbContext(typeof(TrackilyContext))]
-    [Migration("20200715002444_Initial")]
+    [Migration("20200725003742_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -483,7 +483,7 @@ namespace Trackily.Migrations
                     b.HasOne("Trackily.Models.Domain.Project", "Project")
                         .WithMany("Tickets")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

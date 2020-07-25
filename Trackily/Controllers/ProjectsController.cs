@@ -31,23 +31,11 @@ namespace Trackily.Controllers
             return View(projects);
         }
 
-        // GET: Projects/Details/5
-        public async Task<ActionResult> Details(Guid projectId)
-        {
-            var authResult = await _authService.AuthorizeAsync(HttpContext.User, projectId, "ProjectEditPrivileges");
-            if (!authResult.Succeeded)
-            {
-                return new ForbidResult();
-            }
-
-            var viewModel = _projectService.CreateDetailsProjectViewModel(projectId);
-            return View(viewModel);
-        }
-
         // GET: Projects/Create
-        public ActionResult Create()
+        // Redirected indicates whether or not the user attempted to create a new ticket without an existing project. 
+        public ActionResult Create(bool redirected)
         {
-            var viewModel = _projectService.CreateProjectViewModel();
+            var viewModel = _projectService.CreateProjectViewModel(redirected);
             return View(viewModel);
         }
 
@@ -59,7 +47,7 @@ namespace Trackily.Controllers
             if (!ModelState.IsValid)
             {
                 IEnumerable<ModelError> errors = ModelState.Values.SelectMany(v => v.Errors);
-                var viewModel = _projectService.CreateProjectViewModel(form, errors);
+                var viewModel = _projectService.CreateProjectViewModel(false, form, errors);
                 return View(viewModel);
             }
 
@@ -67,9 +55,28 @@ namespace Trackily.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Projects/Edit/5
-        public ActionResult Edit(Guid projectId)
+        // GET: Projects/Details/5
+        public async Task<ActionResult> Details(Guid projectId)
         {
+            var authResult = await _authService.AuthorizeAsync(HttpContext.User, projectId, "ProjectDetailsPrivileges");
+            if (!authResult.Succeeded)
+            {
+                return new ForbidResult();
+            }
+
+            var viewModel = _projectService.CreateDetailsProjectViewModel(projectId);
+            return View(viewModel);
+        }
+
+        // GET: Projects/Edit/5
+        public async Task<ActionResult> Edit(Guid projectId)
+        {
+            var authResult = await _authService.AuthorizeAsync(HttpContext.User, projectId, "ProjectEditPrivileges");
+            if (!authResult.Succeeded)
+            {
+                return new ForbidResult();
+            }
+
             var viewModel = _projectService.CreateEditProjectViewModel(projectId);
             return View(viewModel);
         }

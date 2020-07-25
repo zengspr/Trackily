@@ -9,8 +9,9 @@ namespace Trackily.Models.View.Project
     public class ProjectCreateViewModel : ProjectBaseViewModel
     {
         [DisplayName("Members")]
-        public string[] AddMembers { get; set; }  
+        public List<string> AddMembers { get; set; }  
 
         public List<string> Errors { get; set; }
+        public bool Redirected { get; set; }
     }
 }

@@ -11,12 +11,7 @@ namespace Trackily.Validation
     public static class ValidationHelper
     {
         // Ticket validation helper methods.
-        public static bool NotAddingUsers(string[] usernames, TrackilyContext context)
-        {
-            return (usernames.All(u => u == null));
-        }
-
-        public static bool SomeUsersDoNotExist(string[] usernames, TrackilyContext context)
+        public static bool SomeUsersDoNotExist(List<string> usernames, TrackilyContext context)
         {
             foreach (string username in usernames.Where(u => u != null))
             {
@@ -28,7 +23,7 @@ namespace Trackily.Validation
             return false;
         }
 
-        public static bool SomeUsersAlreadyAssignedToTicket(string[] usernames, Ticket ticket)
+        public static bool SomeUsersAlreadyAssignedToTicket(List<string> usernames, Ticket ticket)
         {
             foreach (string username in usernames.Where(u => u != null))
             {
@@ -64,7 +59,7 @@ namespace Trackily.Validation
             return context.Projects.Any(p => p.Title == title);
         }
 
-        public static bool SomeUsersAlreadyMembersOfProject(string[] usernames, Project project)
+        public static bool SomeUsersAlreadyMembersOfProject(List<string> usernames, Project project)
         {
             foreach (string username in usernames.Where(u => u != null))
             {

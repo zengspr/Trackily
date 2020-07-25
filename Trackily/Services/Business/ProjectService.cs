@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -21,21 +22,29 @@ namespace Trackily.Services.Business
         private readonly UserProjectService _userProjectService;
         private readonly DbService _dbService;
         private readonly UserManager<TrackilyUser> _userManager;
+        private readonly UserTicketService _userTicketService;
 
-        public ProjectService(TrackilyContext context,
-            UserProjectService userProjectService, DbService dbService, UserManager<TrackilyUser> userManager)
+        public ProjectService(
+            TrackilyContext context,
+            UserProjectService userProjectService, 
+            DbService dbService, 
+            UserManager<TrackilyUser> userManager,
+            UserTicketService userTicketService)
         {
             _context = context;
             _userProjectService = userProjectService;
             _dbService = dbService;
             _userManager = userManager;
+            _userTicketService = userTicketService;
         }
 
         public ProjectCreateViewModel CreateProjectViewModel(
+            bool redirected,
             ProjectCreateBindingModel binding = null,
             IEnumerable<ModelError> errors = null)
         {
             var viewModel = new ProjectCreateViewModel();
+            viewModel.Redirected = redirected;
 
             if (binding != null)
             {
@@ -57,7 +66,6 @@ namespace Trackily.Services.Business
             return viewModel;
         }
 
-        // TODO: The user who created a project should be a non-removable member of the project. 
         public async Task CreateProject(ProjectCreateBindingModel form, HttpContext request)
         {
             var project = new Project
@@ -70,6 +78,11 @@ namespace Trackily.Services.Business
                 Tickets = new List<Ticket>(),
                 Members = new List<UserProject>()
             };
+
+            if (!form.AddMembers.Contains(project.Creator.UserName)) // In case user still adds themselves as a member.
+            {
+                form.AddMembers.Add(project.Creator.UserName); 
+            }
 
             _userProjectService.AddMembersToProject(form.AddMembers, project);
 
@@ -106,7 +119,6 @@ namespace Trackily.Services.Business
             return viewModels;
         }
 
-        // TODO: Do not show the creator's username in RemoveMembers so that they cannot be removed from the project. 
         public ProjectEditViewModel CreateEditProjectViewModel(
             Guid projectId,
             ProjectEditBindingModel binding = null,
@@ -123,16 +135,13 @@ namespace Trackily.Services.Business
             }
 
             // Otherwise return a view model populated with the form data and errors.
-            var viewModel = new ProjectEditViewModel();
+            var viewModel = EditProjectViewModel(project);
 
             if (binding != null)
             {
-                viewModel.ProjectId = binding.ProjectId;
                 viewModel.Title = binding.Title;
                 viewModel.Description = binding.Description;
                 viewModel.AddMembers = binding.AddMembers;
-                viewModel.RemoveMembers = binding.RemoveMembers;
-                viewModel.ExistingMembers = GetNamesForMembers(project);
             }
 
             if (errors != null)
@@ -163,13 +172,16 @@ namespace Trackily.Services.Business
 
             foreach (var username in project.Members.Select(up => up.User.UserName))
             {
+                if (username == project.Creator.UserName)
+                {
+                    continue; // Do not show the Creator so that they cannot be removed from the Project.
+                }
                 viewModel.RemoveMembers.Add(username, false);
             }
 
             return viewModel;
         }
 
-        // TODO: If removing a member from a project, remove all their created tickets in that project. 
         public void EditProject(ProjectEditBindingModel form)
         {
             var project = _context.Projects
@@ -183,10 +195,19 @@ namespace Trackily.Services.Business
 
             if (form.RemoveMembers != null)
             { 
+                // Remove UserProjects.
                 var usernamesToRemove = form.RemoveMembers.Where(m => m.Value == true)
                                                                             .Select(m => m.Key) // Username.
-                                                                            .ToArray();
+                                                                            .ToList();
                 _userProjectService.RemoveMembersFromProject(usernamesToRemove, project);
+
+                // Remove UserTickets.
+                foreach (var username in usernamesToRemove)
+                {
+                    var user = _context.Users.Single(u => u.UserName == username);
+                    Debug.Assert(user != null);
+                    _userTicketService.RemoveTicketsFromProject(user, project);
+                }
             }
 
             _context.SaveChanges(true);
