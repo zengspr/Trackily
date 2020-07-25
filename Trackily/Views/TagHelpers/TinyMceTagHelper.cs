@@ -32,8 +32,8 @@ namespace Trackily.Views.TagHelpers
         {
             // Either a CommentThread or Comment is set as an attribute on the TinyMceTagHelper instance.
             var authResult = CommentThread != null
-                ? await _authService.AuthorizeAsync(_principal, CommentThread, "HasEditPrivileges")
-                : await _authService.AuthorizeAsync(_principal, Comment, "HasEditPrivileges");
+                ? await _authService.AuthorizeAsync(_principal, CommentThread, "TicketEditPrivileges")
+                : await _authService.AuthorizeAsync(_principal, Comment, "TicketEditPrivileges");
 
             output.TagName = "textarea";
             output.TagMode = TagMode.StartTagAndEndTag;

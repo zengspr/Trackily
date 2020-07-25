@@ -21,6 +21,7 @@ namespace Trackily.Areas.Identity.Policies.Handlers
             _userManager = userManager;
         }
 
+        // Only the creator of the project or managers who are members of the project can edit the project. 
         protected override async Task HandleRequirementAsync(
             AuthorizationHandlerContext context,
             ProjectEditPrivilegesRequirement requirement,
@@ -33,7 +34,8 @@ namespace Trackily.Areas.Identity.Policies.Handlers
                                 .Include(p => p.Members)
                                 .Single(p => p.ProjectId == projectId);
 
-            if (project.Members.Any(m => m.Id == currentUser.Id))
+            if (currentUser.Role == TrackilyUser.UserRole.Manager & project.Members.Any(m => m.Id == currentUser.Id) ||
+                currentUser == project.Creator)
             {
                 context.Succeed(requirement);
             }

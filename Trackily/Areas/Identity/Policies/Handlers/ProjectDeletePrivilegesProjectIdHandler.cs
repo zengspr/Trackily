@@ -21,12 +21,13 @@ namespace Trackily.Areas.Identity.Policies.Handlers
             _userManager = userManager;
         }
 
+        // Only the creator of a Project may delete it.
         protected override async Task HandleRequirementAsync(
             AuthorizationHandlerContext context,
             ProjectDeletePrivilegesRequirement requirement,
             Guid projectId)
         {
-            var project = _context.Projects.Include(p => p.Creator).Single();
+            var project = _context.Projects.Include(p => p.Creator).Single(p => p.ProjectId == projectId);
             var currentUser = await _userManager.GetUserAsync(context.User);
             Debug.Assert(currentUser != null);
 

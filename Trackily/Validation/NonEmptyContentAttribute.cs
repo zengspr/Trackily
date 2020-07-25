@@ -9,10 +9,11 @@ namespace Trackily.Validation
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var input = (DetailsTicketBinding)validationContext.ObjectInstance;
+            var input = (TicketDetailsBindingModel)validationContext.ObjectInstance;
 
-            if (input.CommentThreadContent == null &&
-                (input.NewReplies == null || input.NewReplies.All(r => r.Value == null)))
+            // If the user does not click reply, then NewReplies == null. If the user clicks reply but does not include any 
+            // text in the reply, the NewReplies != null but the value of each item in NewReplies is null.
+            if (input.CommentThreadContent == null && (input.NewReplies == null || input.NewReplies.All(r => r.Value == null)))
             {
                 return new ValidationResult("Nothing is being submitted.");
             }

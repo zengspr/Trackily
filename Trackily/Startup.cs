@@ -9,8 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Trackily.Areas.Identity.Data;
 using Trackily.Areas.Identity.Policies.Handlers;
 using Trackily.Areas.Identity.Policies.Requirements;
-using Trackily.Services.Business;
-using Trackily.Services.DataAccess;
+using Trackily.Services;
 
 namespace Trackily
 {
@@ -61,7 +60,6 @@ namespace Trackily
                 });
             }
 
-            services.AddScoped<DbService>();
             services.AddScoped<TicketService>();
             services.AddScoped<UserTicketService>();
             services.AddScoped<CommentService>();
@@ -80,6 +78,10 @@ namespace Trackily
                     policyBuilder => policyBuilder.AddRequirements(
                         new ProjectEditPrivilegesRequirement()));
                 options.AddPolicy(
+                    "ProjectDetailsPrivileges",
+                    policyBuilder => policyBuilder.AddRequirements(
+                        new ProjectDetailsPrivilegesRequirement()));
+                options.AddPolicy(
                     "ProjectDeletePrivileges",
                     policyBuilder => policyBuilder.AddRequirements(
                         new ProjectDeletePrivilegesRequirement()));
@@ -87,6 +89,7 @@ namespace Trackily
 
             services.AddScoped<IAuthorizationHandler, TicketEditPrivilegesUserIdHandler>();
             services.AddScoped<IAuthorizationHandler, ProjectEditPrivilegesProjectIdHandler>();
+            services.AddScoped<IAuthorizationHandler, ProjectDetailsPrivilegesProjectIdHandler>();
             services.AddScoped<IAuthorizationHandler, ProjectDeletePrivilegesProjectIdHandler>();
         }
 

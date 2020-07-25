@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Trackily.Models.Domain
 {
-    public class Ticket : BaseTicket
+    public class Ticket : TicketBase
     {
         public Guid TicketId { get; set; }
         public enum TicketType { Issue, Feature }

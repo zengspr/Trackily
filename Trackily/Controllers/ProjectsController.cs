@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Trackily.Models.Binding.Project;
-using Trackily.Models.Views.Project;
-using Trackily.Services.Business;
+using Trackily.Models.View.Project;
+using Trackily.Services;
 
 namespace Trackily.Controllers
 {
@@ -27,14 +27,38 @@ namespace Trackily.Controllers
         // GET: Projects
         public ActionResult Index()
         {
-            List<IndexProjectViewModel> projects = _projectService.CreateIndexProjectViewModels();
+            List<ProjectIndexViewModel> projects = _projectService.CreateIndexProjectViewModels();
             return View(projects);
+        }
+
+        // GET: Projects/Create
+        // Redirected indicates whether or not the user attempted to create a new ticket without an existing project. 
+        public ActionResult Create(bool redirected)
+        {
+            var viewModel = _projectService.CreateProjectViewModel(redirected);
+            return View(viewModel);
+        }
+
+        // POST: Projects/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Create(ProjectCreateBindingModel form)
+        {
+            if (!ModelState.IsValid)
+            {
+                IEnumerable<ModelError> errors = ModelState.Values.SelectMany(v => v.Errors);
+                var viewModel = _projectService.CreateProjectViewModel(false, form, errors);
+                return View(viewModel);
+            }
+
+            await _projectService.CreateProject(form, HttpContext);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Projects/Details/5
         public async Task<ActionResult> Details(Guid projectId)
         {
-            var authResult = await _authService.AuthorizeAsync(HttpContext.User, projectId, "ProjectEditPrivileges");
+            var authResult = await _authService.AuthorizeAsync(HttpContext.User, projectId, "ProjectDetailsPrivileges");
             if (!authResult.Succeeded)
             {
                 return new ForbidResult();
@@ -44,32 +68,15 @@ namespace Trackily.Controllers
             return View(viewModel);
         }
 
-        // GET: Projects/Create
-        public ActionResult Create()
+        // GET: Projects/Edit/5
+        public async Task<ActionResult> Edit(Guid projectId)
         {
-            var viewModel = _projectService.CreateProjectViewModel();
-            return View(viewModel);
-        }
-
-        // POST: Projects/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(BaseProjectBinding form)
-        {
-            if (!ModelState.IsValid)
+            var authResult = await _authService.AuthorizeAsync(HttpContext.User, projectId, "ProjectEditPrivileges");
+            if (!authResult.Succeeded)
             {
-                IEnumerable<ModelError> errors = ModelState.Values.SelectMany(v => v.Errors);
-                var viewModel = _projectService.CreateProjectViewModel(form, errors);
-                return View(viewModel);
+                return new ForbidResult();
             }
 
-            await _projectService.CreateProject(form, HttpContext);
-            return RedirectToAction(nameof(Index));
-        }
-
-        // GET: Projects/Edit/5
-        public ActionResult Edit(Guid projectId)
-        {
             var viewModel = _projectService.CreateEditProjectViewModel(projectId);
             return View(viewModel);
         }
@@ -77,12 +84,12 @@ namespace Trackily.Controllers
         // POST: Projects/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(EditProjectBinding form)
+        public ActionResult Edit(ProjectEditBindingModel form)
         {
             if (!ModelState.IsValid)
             {
                 IEnumerable<ModelError> errors = ModelState.Values.SelectMany(v => v.Errors);
-                var viewModel = _projectService.EditProjectViewModel(form, errors);
+                var viewModel = _projectService.CreateEditProjectViewModel(form.ProjectId, form, errors);
                 return View(viewModel);
             }
 
