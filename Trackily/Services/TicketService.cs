@@ -254,5 +254,25 @@ namespace Trackily.Services
                 ticket.Assigned.Add(userTicket);
             }
         }
+
+        public Ticket GetTicket(Guid ticketId)
+        {
+            if (_context.Tickets.Find(ticketId) == null)
+            {
+                return null;
+            }
+
+            var ticket = _context.Tickets.Include(t => t.Creator)
+                .Include(t => t.Assigned)
+                .ThenInclude(a => a.User)
+                .Include(t => t.CommentThreads)
+                .ThenInclude(ct => ct.Comments)
+                .ThenInclude(c => c.Creator)
+                .Include(t => t.CommentThreads)
+                .ThenInclude(ct => ct.Creator)
+                .Include(t => t.Project)
+                .Single(t => t.TicketId == ticketId);
+            return ticket;
+        }
     }
 }

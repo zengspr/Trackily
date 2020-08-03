@@ -83,10 +83,10 @@ namespace Trackily.Controllers
         [NullIdActionFilter]
         public IActionResult Details(Guid id)
         {
-            var ticket = GetTicket(id);
+            var ticket = _ticketService.GetTicket(id);
             if (ticket == null)
             {
-                return NotFound();
+                return View("Error404");
             }
 
             var viewModel = _ticketService.DetailsTicketViewModel(ticket);
@@ -98,9 +98,9 @@ namespace Trackily.Controllers
         [NullIdActionFilter]
         public async Task<IActionResult> Details(Guid id, TicketDetailsBindingModel input)
         {
-            var ticket = GetTicket(id);
+            var ticket = _ticketService.GetTicket(id);
             if (ticket == null)
-            { return NotFound(); }
+            { return View("Error404"); }
 
             if (!ModelState.IsValid)
             {
@@ -156,9 +156,9 @@ namespace Trackily.Controllers
         [NullIdActionFilter]
         public IActionResult Edit(Guid id)
         {
-            var ticket = GetTicket(id);
+            var ticket = _ticketService.GetTicket(id);
             if (ticket == null)
-            { return NotFound(); }
+            { return View("Error404"); }
 
             var viewModel = _ticketService.EditTicketViewModel(ticket);
             return View(viewModel);
@@ -177,10 +177,10 @@ namespace Trackily.Controllers
                 return View(viewModel);
             }
 
-            var ticket = GetTicket(id);
+            var ticket = _ticketService.GetTicket(id);
             if (ticket == null)
             {
-                return NotFound();
+                return View("Error404");
             }
 
             var authResult = await _authService.AuthorizeAsync(HttpContext.User, ticket.Creator.Id, "TicketEditPrivileges");
@@ -201,7 +201,7 @@ namespace Trackily.Controllers
             var ticket = _context.Tickets.Find(id);
             if (ticket == null)
             {
-                return NotFound();
+                return View("Error404");
             }
 
             _context.Tickets.Remove(ticket);
@@ -216,7 +216,7 @@ namespace Trackily.Controllers
             var commentThread = _context.CommentThreads.Find(id);
             if (commentThread == null)
             {
-                return NotFound();
+                return View("Error404");
             }
 
             _context.CommentThreads.Remove(commentThread);
@@ -229,28 +229,13 @@ namespace Trackily.Controllers
             var comment = _context.Comments.Find(id);
             if (comment == null)
             {
-                return NotFound();
+                return View("Error404");
             }
 
             _context.Comments.Remove(comment);
             _context.SaveChanges(true);
 
             return RedirectToAction("Details", new { id = ticketId });
-        }
-
-        private Ticket GetTicket(Guid ticketId)
-        {
-            var ticket = _context.Tickets.Include(t => t.Creator)
-                .Include(t => t.Assigned)
-                .ThenInclude(a => a.User)
-                .Include(t => t.CommentThreads)
-                .ThenInclude(ct => ct.Comments)
-                .ThenInclude(c => c.Creator)
-                .Include(t => t.CommentThreads)
-                .ThenInclude(ct => ct.Creator)
-                .Include(t => t.Project)
-                .Single(t => t.TicketId == ticketId);
-            return ticket;
         }
     }
 }

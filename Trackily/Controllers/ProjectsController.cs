@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Trackily.Areas.Identity.Data;
 using Trackily.Models.Binding.Project;
 using Trackily.Models.View.Project;
 using Trackily.Services;
@@ -17,11 +18,14 @@ namespace Trackily.Controllers
     {
         private readonly ProjectService _projectService;
         private readonly IAuthorizationService _authService;
+        private readonly TrackilyContext _context;
 
-        public ProjectsController(ProjectService projectService, IAuthorizationService authService)
+        public ProjectsController(
+            ProjectService projectService, IAuthorizationService authService, TrackilyContext context)
         {
             _projectService = projectService;
             _authService = authService;
+            _context = context;
         }
 
         // GET: Projects
@@ -58,6 +62,11 @@ namespace Trackily.Controllers
         // GET: Projects/Details/5
         public async Task<ActionResult> Details(Guid projectId)
         {
+            if (_context.Projects.Find(projectId) == null)
+            {
+                return View("Error404");
+            }
+
             var authResult = await _authService.AuthorizeAsync(HttpContext.User, projectId, "ProjectDetailsPrivileges");
             if (!authResult.Succeeded)
             {
@@ -71,6 +80,11 @@ namespace Trackily.Controllers
         // GET: Projects/Edit/5
         public async Task<ActionResult> Edit(Guid projectId)
         {
+            if (_context.Projects.Find(projectId) == null)
+            {
+                return View("Error404");
+            }
+
             var authResult = await _authService.AuthorizeAsync(HttpContext.User, projectId, "ProjectEditPrivileges");
             if (!authResult.Succeeded)
             {
@@ -101,6 +115,11 @@ namespace Trackily.Controllers
 
         public async Task<ActionResult> Delete(Guid projectId)
         {
+            if (_context.Projects.Find(projectId) == null)
+            {
+                return View("Error404");
+            }
+
             var authResult = await _authService.AuthorizeAsync(HttpContext.User, projectId, "ProjectDeletePrivileges");
             if (!authResult.Succeeded)
             {

@@ -49,7 +49,7 @@ namespace Trackily.Controllers
                     ProjectTitle = project.Title,
                     Tickets = new List<Ticket>()
                 };
-                var recentTickets = project.Tickets.Where(t => (DateTime.Now - t.CreatedDate).TotalHours <= 10);
+                var recentTickets = project.Tickets.Where(t => (DateTime.Now - t.CreatedDate).TotalHours <= 5);
                 viewModel.Tickets.AddRange(recentTickets);
 
                 viewModels.Add(viewModel);
