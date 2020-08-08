@@ -10,7 +10,7 @@ using Trackily.Areas.Identity.Data;
 namespace Trackily.Migrations
 {
     [DbContext(typeof(TrackilyContext))]
-    [Migration("20200725003742_Initial")]
+    [Migration("20200808182554_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -326,7 +326,7 @@ namespace Trackily.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatorId")
+                    b.Property<Guid?>("CreatorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Priority")
@@ -441,8 +441,7 @@ namespace Trackily.Migrations
                 {
                     b.HasOne("Trackily.Areas.Identity.Data.TrackilyUser", "Creator")
                         .WithMany("CreatedComments")
-                        .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("CreatorId");
 
                     b.HasOne("Trackily.Models.Domain.CommentThread", "Parent")
                         .WithMany("Comments")
@@ -455,8 +454,7 @@ namespace Trackily.Migrations
                 {
                     b.HasOne("Trackily.Areas.Identity.Data.TrackilyUser", "Creator")
                         .WithMany("CreatedThreads")
-                        .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("CreatorId");
 
                     b.HasOne("Trackily.Models.Domain.Ticket", "Parent")
                         .WithMany("CommentThreads")
@@ -476,9 +474,7 @@ namespace Trackily.Migrations
                 {
                     b.HasOne("Trackily.Areas.Identity.Data.TrackilyUser", "Creator")
                         .WithMany("CreatedTickets")
-                        .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("CreatorId");
 
                     b.HasOne("Trackily.Models.Domain.Project", "Project")
                         .WithMany("Tickets")

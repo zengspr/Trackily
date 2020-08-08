@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Trackily.Migrations
 {
@@ -183,7 +183,7 @@ namespace Trackily.Migrations
                     TicketId = table.Column<Guid>(nullable: false),
                     CreatedDate = table.Column<DateTime>(nullable: false),
                     UpdatedDate = table.Column<DateTime>(nullable: false),
-                    CreatorId = table.Column<Guid>(nullable: false),
+                    CreatorId = table.Column<Guid>(nullable: true),
                     Title = table.Column<string>(nullable: true),
                     Content = table.Column<string>(nullable: true),
                     Type = table.Column<int>(nullable: false),
@@ -198,7 +198,8 @@ namespace Trackily.Migrations
                         name: "FK_Tickets_AspNetUsers_CreatorId",
                         column: x => x.CreatorId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Tickets_Projects_ProjectId",
                         column: x => x.ProjectId,
@@ -249,7 +250,8 @@ namespace Trackily.Migrations
                         name: "FK_CommentThreads_AspNetUsers_CreatorId",
                         column: x => x.CreatorId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_CommentThreads_Tickets_ParentTicketId",
                         column: x => x.ParentTicketId,
@@ -300,7 +302,8 @@ namespace Trackily.Migrations
                         name: "FK_Comments_AspNetUsers_CreatorId",
                         column: x => x.CreatorId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Comments_CommentThreads_ParentCommentThreadId",
                         column: x => x.ParentCommentThreadId,
