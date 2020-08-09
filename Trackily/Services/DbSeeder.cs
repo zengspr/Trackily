@@ -7,9 +7,9 @@ namespace Trackily.Services
     public static class DbSeeder
     {
         public const string DevGuestName = "devguest";
-        public const string DevGuestPassword = "devguest@trackily.ca";
+        public const string DevGuestPassword = "devguest1@trackily.ca";
         public const string ManagerGuestName = "manguest";
-        public const string ManagerGuestPassword = "manguest@trackily.ca";
+        public const string ManagerGuestPassword = "manguest1@trackily.ca";
 
         public static void SeedUsers(UserManager<TrackilyUser> userManager)
         {

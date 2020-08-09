@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -52,8 +53,12 @@ namespace Trackily
             {
                 services.Configure<IdentityOptions>(options =>
                 {
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireLowercase = false;
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequireUppercase = false;
+                    options.Password.RequiredLength = 5;
+                    options.Password.RequiredUniqueChars = 0;
                     options.User.AllowedUserNameCharacters =
                         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-.";
                     options.User.RequireUniqueEmail = true;
