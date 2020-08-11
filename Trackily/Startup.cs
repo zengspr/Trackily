@@ -93,6 +93,8 @@ namespace Trackily
             });
 
             services.AddScoped<IAuthorizationHandler, TicketEditPrivilegesUserIdHandler>();
+            services.AddScoped<IAuthorizationHandler, TicketEditPrivilegesCommentThreadHandler>();
+            services.AddScoped<IAuthorizationHandler, TicketEditPrivilegesCommentHandler>();
             services.AddScoped<IAuthorizationHandler, ProjectEditPrivilegesProjectIdHandler>();
             services.AddScoped<IAuthorizationHandler, ProjectDetailsPrivilegesProjectIdHandler>();
             services.AddScoped<IAuthorizationHandler, ProjectDeletePrivilegesProjectIdHandler>();

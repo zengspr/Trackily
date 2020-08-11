@@ -96,7 +96,7 @@ namespace Trackily.Controllers
         // POST: Tickets/Details/5  
         [HttpPost]
         [NullIdActionFilter]
-        public async Task<IActionResult> Details(Guid id, TicketDetailsBindingModel input)
+        public async Task<IActionResult> Details(Guid id, TicketDetailsBindingModel input, string task)
         {
             var ticket = _ticketService.GetTicket(id);
             if (ticket == null)
@@ -109,13 +109,28 @@ namespace Trackily.Controllers
                 return View(viewModel);
             }
 
-            if (input.CommentThreadContent != null)
+            if (task == "create")
             {
-                await _commentService.AddCommentThread(ticket, input, HttpContext);
+                if (input.NewCommentThreadContent != null)
+                {
+                    await _commentService.AddCommentThread(ticket, input, HttpContext);
+                }
+                if (input.NewComments != null)
+                {
+                    await _commentService.AddComments(input, HttpContext);
+                }
             }
-            if (input.NewReplies != null)
+            else
             {
-                await _commentService.AddComments(input, HttpContext);
+                if (input.EditCommentThreads != null)
+                {
+                    _commentService.EditCommentThread(input);
+                }
+
+                if (input.EditComments != null)
+                {
+                    _commentService.EditComments(input);
+                }
             }
 
             ticket.UpdatedDate = DateTime.Now;
