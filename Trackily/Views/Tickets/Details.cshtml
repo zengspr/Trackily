@@ -70,7 +70,7 @@
             <div class="form-row mt-0 pt-0">
                 <div class="form-group col-md-12">
                     <label style="font-weight: bold">Ticket content</label>
-                    <textarea class="form-control TinyMCE">@Model.Content</textarea>
+                    <textarea class="form-control TinyMCE-Readonly">@Model.Content</textarea>
                 </div>
             </div>
             <div class="form-row mt-2">
@@ -89,9 +89,9 @@
         <div class="col-md-6">
             <hr class="mb-0" />
             <form asp-action="Details">
-                <div asp-validation-summary="All" class="text-danger"></div>
+                <div asp-validation-summary="All" class="text-danger mt-2"></div>
                 <input type="hidden" asp-for="TicketId" />
-                
+
                 <div class="form-group">
                     <a class="btn btn-primary btn-icon-split toggle-comment-thread active">
                         <span class="icon text-white-50">
@@ -114,11 +114,11 @@
                             </div>
                             <div class="card-body p-0">
                                 <div>
-                                    <textarea class="TinyMCE" id="NewCommentThreadEditor" name="CommentThreadContent"></textarea>
+                                    <textarea class="TinyMCE" name="NewCommentThreadContent"></textarea>
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <input type="submit" value="Submit" class="btn btn-success float-left" />
+                                <input type="submit" asp-route-task="create" value="Submit" class="btn btn-success float-left" />
                             </div>
                         </div>
                     </div>
@@ -145,7 +145,9 @@
                                         </div>
                                     </div>
                                     <div class="card-body p-0">
-                                        <tiny-mce cmt-thread="commentThread">@commentThread.Content</tiny-mce>
+                                        <tiny-mce cmt-thread="commentThread" name="EditCommentThreads[@commentThread.CommentThreadId]">
+                                            @commentThread.Content
+                                        </tiny-mce>
                                     </div>
                                     <div class="card-footer">
                                         <a class="btn btn-primary btn-circle float-left toggle-comment-thread active" role="button">
@@ -180,11 +182,11 @@
                                     <div class="card-body p-0">
                                         <div class="form-group">
                                             <!--Bind to NewReplies dictionary.-->
-                                            <textarea class="TinyMCE" name="NewReplies[@commentThread.CommentThreadId]"></textarea>
+                                            <textarea class="TinyMCE" name="NewComments[@commentThread.CommentThreadId]"></textarea>
                                         </div>
                                     </div>
                                     <div class="card-footer">
-                                        <input type="submit" value="Submit" class="btn btn-success float-left" />
+                                        <input type="submit" asp-route-task="create" value="Submit" class="btn btn-success float-left" />
                                     </div>
                                 </div>
                             </div>
@@ -201,7 +203,7 @@
                                             <div class="card-header">
                                                 <div class="row">
                                                     <div class="col-sm float-left">
-                                                        <h6>@comment.Creator.UserName</h6>
+                                                        <h6>@comment.Creator.FirstName @comment.Creator.LastName</h6>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -212,7 +214,9 @@
                                             </div>
                                             <div class="card-body p-0">
                                                 <div class="form-group">
-                                                    <tiny-mce cmt="comment">@comment.Content</tiny-mce>
+                                                    <tiny-mce cmt="comment" name="EditComments[@comment.CommentId]">
+                                                        @comment.Content
+                                                    </tiny-mce>
                                                 </div>
                                             </div>
                                             <div creator="@comment.Creator.Id" class="card-footer">
@@ -229,6 +233,13 @@
                             }
                         }
                     }
+                    <div class="form-row mt-4">
+                        <div class="form-group col-md-10">
+                            <button type="submit" asp-route-task="edit" class="btn btn-success btn-circle btn-lg float-left">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    </div>
                 }
             </form>
         </div>

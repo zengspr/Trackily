@@ -10,7 +10,7 @@ using Trackily.Areas.Identity.Data;
 namespace Trackily.Migrations
 {
     [DbContext(typeof(TrackilyContext))]
-    [Migration("20200808182554_Initial")]
+    [Migration("20200809231841_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
