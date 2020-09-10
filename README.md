@@ -5,3 +5,5 @@ I developed Trackily in order to get my feet wet with web development. My primar
 - Create a web app end-to-end using an MVC architecture and deploy it
 - Implement CRUD actions with an ORM and relational database
 - Implement authentication & authorization
+
+I wrote a retrospective on my experience developing Trackily [here](https://medium.com/@spr.zeng/a-retrospective-on-my-first-web-application-565f4601f3bb).
