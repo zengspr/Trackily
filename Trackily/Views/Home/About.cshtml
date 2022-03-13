@@ -3,12 +3,45 @@
         <h1 class="display-4">About Trackily <i class="far fa-file-code"></i></h1>
         <hr class="my-4">
         <p>
-            I developed Trackily in order to get my feet wet with web development. My primary learning goals for this project were to:
+            Trackily is an issue tracker that supports the development process through tickets to track issues and feature requests. 
+            I developed Trackily in order to get my feet wet with full-stack web development. 
+            My primary learning goals for this project were to:
         </p>
         <ul>
             <li>Create a web app using an MVC architecture</li>
             <li>Implement CRUD actions with a relational database</li>
             <li>Implement authentication & authorization</li>
         </ul>
+        <p>
+            <b>Tech stack:</b> 
+            <a href="https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-3.1">ASP.NET Core</a>, 
+            <a href="https://docs.microsoft.com/en-us/ef/core/">EF Core</a>,  
+            <a href="https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-3.1&tabs=visual-studio">ASP.NET Core Identity</a>, 
+            <a href="https://docs.microsoft.com/en-us/aspnet/core/razor-pages/?view=aspnetcore-3.1&tabs=visual-studio">Razor Pages</a>, 
+            <a href="https://getbootstrap.com/">Bootstrap</a>, 
+            <a href="https://www.tiny.cloud/">TinyMCE</a>, 
+            MSSQL (LocalDB dev, Azure prod)
+        </p>
+        <h4>What can I do with Trackily?</h4>
+        <ul>
+            <li>Create <i>projects</i>, which can represent an entire app or a feature of an app</li>
+            <li>Create <i>tickets</i> which can be used to record feature requests or bug fixes for a project</li>
+            <li>Comment on tickets to facilitate discussion related to the ticket contents</li>
+            <li>Create <i>accounts</i> that are associated with projects</li>
+        </ul>
+        <h4>What features does Trackily have?</h4>
+        <ul>
+            <li>CRUD Actions</li>
+                <ul>
+                    <li>Projects, tickets, and comments can be created, updated, and deleted</li>
+                    <li>Deleting an entity will delete any child entities: project → tickets → comments</li>
+                </ul>
+            <li>Authentication & authorization</li>
+                <ul>
+                    <li>Users must be a member of a project to create or view the tickets of that project</li>
+                    <li>A ticket or comment can only be edited or deleted by its creator or a Manager-level user</li>
+                    <li>A project can be edited by its creator or a Manager-level user, but can only be deleted by its creator</li>
+                </ul>
+        </ul>   
     </div>
 </div>
