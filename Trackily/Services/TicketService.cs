@@ -91,17 +91,19 @@ namespace Trackily.Services
             _context.SaveChanges(true);
         }
 
-        public TicketCreateViewModel CreateTicketViewModel(TicketCreateBindingModel ticket = null,
-                                                           IEnumerable<ModelError> errors = null)
+        public async Task<TicketCreateViewModel> CreateTicketViewModel(
+            HttpContext request, TicketCreateBindingModel ticket = null, IEnumerable<ModelError> errors = null)
         {
             var viewModel = new TicketCreateViewModel
             {
                 Errors = new List<string>()
             };
 
+            var currentUser = await _userManager.GetUserAsync(request?.User);
             var projectTitles = _context.Projects
-                                                .Select(p => p.Title)
-                                                .ToList();
+                .Where(p => p.Members.Select(m => m.User).Contains(currentUser))
+                .Select(p => p.Title)
+                .ToList();
             viewModel.Projects = new SelectList(projectTitles);
 
             if (ticket != null)

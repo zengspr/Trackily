@@ -140,14 +140,14 @@ namespace Trackily.Controllers
         }
 
         // GET: Tickets/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             if (!_context.Projects.Any())
             {
                 return RedirectToAction("Create", "Projects", new { redirected = true });
             }
 
-            var viewModel = _ticketService.CreateTicketViewModel();
+            var viewModel = await _ticketService.CreateTicketViewModel(HttpContext);
             return View(viewModel);
         }
 
@@ -159,7 +159,7 @@ namespace Trackily.Controllers
             if (!ModelState.IsValid)
             {
                 IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
-                var viewModel = _ticketService.CreateTicketViewModel(input, allErrors);
+                var viewModel = await _ticketService.CreateTicketViewModel(HttpContext, input, allErrors);
                 return View(viewModel);
             }
 
